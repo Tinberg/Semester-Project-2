@@ -1,0 +1,32 @@
+/* Sets custom values for Bootstrap's Variables */
+$primary: #476367;
+$secondary: #F59E0B;
+$success: #CFDEE0;
+$warning:#E0CFCF;
+$font-family-base: "Lexend", lato, sans-serif;
+
+
+
+
+//---------- Bootstrap import ----------//
+@import "bootstrap/scss/bootstrap";
+
+
+//---------- GoogleFont Import ----------//
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+/* Global Resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-style: none;
+  list-style-type: none;
+}
+html {
+  font-size: 16px;
+}
+html,
+body {
+  scroll-behavior: smooth;
+}
