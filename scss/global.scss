@@ -1,33 +1,85 @@
+//---------- GoogleFont Import ----------//
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
+
 /* Sets custom values for Bootstrap's Variables */
-$primary: #476367;
-$secondary: #F59E0B;
-$success: #CFDEE0;
-$warning:#E0CFCF;
+$primary: #314f53;
+$secondary: #f59e0b;
+$success: #cfdee0;
+$warning: #e0cfcf;
 $font-family-base: "Lexend", lato, sans-serif;
-
-
-
 
 //---------- Bootstrap import ----------//
 @import "bootstrap/scss/bootstrap";
 
-
-//---------- GoogleFont Import ----------//
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
-
-/* Global Resets */
+//---------- Global Resets ----------//
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   border-style: none;
   list-style-type: none;
+  color: #314f53;
 }
 html {
   font-size: 16px;
+}
+body {
+  margin-top: 88px;
 }
 html,
 body {
   scroll-behavior: smooth;
 }
+img {
+  object-fit: cover;
+}
+a:hover {
+  transform: scale(1.05);
+}
 
+//---------- Global Custom Styles ----------//
+//-- Custom background for section
+.bg-gray-custom {
+  background-color: #f5f5f5;
+}
+//-- Margin for sections
+.mt-mb-75 {
+  margin: 75px 0;
+}
+//-- This class is designed for use with `container-fluid` to restrict its maximum width to 1440px, while centering it within the parent.
+.limited-width {
+  max-width: 1440px;
+  margin-right: auto;
+  margin-left: auto;
+}
+//circle image bottom (HeroImg and ProfileImg)
+.rounded-circle-bottom {
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+//Additional style for Bootstrap card
+.card-img-top-container {
+    padding-top: 80%;
+  }
+
+//---------- Header & Footer----------//
+//--Header
+//--To make ul element to center of the navbar
+.unordered-list {
+  padding-left: 150px;
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+//--Footer
+footer {
+  font-size: 0.9rem;
+}
+
+//---------- Header MQ----------//
+//--To make ul element to center of the navbar on lg screens and smaller
+@media (max-width: 992px) {
+  .unordered-list {
+    padding-left: 0px;
+  }
+}

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon-32x32.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore Biddzy Auction House's extensive collection, where every auction is a doorway to unique treasures. Sort through the newest to oldest listings, filter by categories, and search to find exactly what you're looking for. Your next extraordinary find awaits."
+    />
+    <title>
+      Explore Auctions: Discover Your Next Treasure at Biddzy Auction House
+    </title>
+    <!--Js scripts-->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/pages/explore.js"></script>
+    <!--Fontawsome script-->
+    <script
+      src="https://kit.fontawesome.com/0933736d52.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!----------Header---------->
+    <header>
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-primary bg-nav-footer fixed-top"
+        aria-label="Main navigation"
+      >
+        <div class="container-fluid p-3 px-4 px-sm-5">
+          <!-- Brand/logo -->
+          <a class="navbar-brand text-light" href="#">Biddzy</a>
+          <button
+            class="navbar-toggler text-light"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <!-- Navbar content -->
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul
+              class="navbar-nav mx-auto d-flex align-items-center justify-content-center unordered-list"
+            >
+              <li class="nav-item">
+                <a class="nav-link text-light" href="/index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link text-light mx-lg-5 my-3 my-lg-0"
+                  href="/html/explore.html"
+                  >Explore</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" href="#">About</a>
+              </li>
+            </ul>
+            <div
+              class="d-flex align-items-center justify-content-center my-4 my-lg-0"
+            >
+              <a class="btn align-items-center text-light" href="#">Sign Up</a>
+              <p class="text-light mb-0 me-3">or</p>
+              <a class="btn btn-secondary text-primary px-4" href="#">Log In</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!----------Main---------->
+    <main>
+      <div class="container-fluid limited-width">
+        <div class="row">
+          <div class="col-md-3 col-lg-2 mt-5 pt-3 pb-5">
+            <!-- Aside -->
+            <aside
+              class="container-fluid d-flex justify-content-md-start flex-column align-items-center align-items-md-start"
+            >
+              <h3 class="fs-4 mb-2">Filter</h3>
+              <form
+                id="filter"
+                class="gap-3 row d-flex justify-content-center text-start"
+              >
+                <!-- filter Auction Status -->
+                <fieldset
+                  class="col-12 gap-3 row d-flex justify-content-center"
+                  aria-labelledby="statusLegend"
+                >
+                  <legend
+                    class="fs-5 text-center text-md-start mt-4"
+                    id="statusLegend"
+                  >
+                    Auction Status
+                  </legend>
+                  <div class="col-12 gap-3 row p-0">
+                    <!--All Actions-->
+                    <div
+                      class="d-flex justify-content-center justify-content-md-start gap-2"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="allAuctions"
+                          name="filter"
+                          value="All"
+                        />
+                      </div>
+                      <label class="form-check-label" for="allAuctions"
+                        >All Auctions</label
+                      >
+                    </div>
+                    <!--Active Auctions-->
+                    <div
+                      class="d-flex justify-content-center justify-content-md-start gap-2 flex-row flex-lg-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="activeAuctions"
+                          name="filter"
+                          value="Active"
+                        />
+                      </div>
+                      <label class="form-check-label" for="activeAuctions"
+                        >Active Auctions</label
+                      >
+                    </div>
+                  </div>
+                </fieldset>
+                <!-- Filter Categories -->
+                <fieldset
+                  class="col-12 gap-3 row d-flex justify-content-center"
+                  aria-labelledby="categoryLegend"
+                >
+                  <legend
+                    class="fs-5 text-center text-md-start mt-4"
+                    id="categoryLegend"
+                  >
+                    Categories
+                  </legend>
+                  <div
+                    class="col-12 gap-3 row d-flex justify-content-center p-0"
+                  >
+                    <!--Art-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="art"
+                          name="filter"
+                          value="Art"
+                        />
+                      </div>
+                      <label class="form-check-label" for="art">Art</label>
+                    </div>
+                    <!--Antiques-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="antiques"
+                          name="filter"
+                          value="Antiques"
+                        />
+                      </div>
+                      <label class="form-check-label" for="antiques"
+                        >Antiques</label
+                      >
+                    </div>
+                    <!--Vehicles-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="vehicles"
+                          name="filter"
+                          value="Vehicles"
+                        />
+                      </div>
+                      <label for="vehicles">Vehicles</label>
+                    </div>
+                    <!--Fashion-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="fashion"
+                          name="filter"
+                          value="Fashion"
+                        />
+                      </div>
+                      <label for="fashion">Fashion</label>
+                    </div>
+                    <!--Jewelry-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="jewelry"
+                          name="filter"
+                          value="Jewelry"
+                        />
+                      </div>
+                      <label for="jewelry">Jewelry</label>
+                    </div>
+                    <!--Furniture-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="furniture"
+                          name="filter"
+                          value="Furniture"
+                        />
+                      </div>
+                      <label for="furniture">Furniture</label>
+                    </div>
+
+                    <!--Electronics-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="electronics"
+                          name="filter"
+                          value="Electronics"
+                        />
+                      </div>
+                      <label for="electronics">Electronics</label>
+                    </div>
+                    <!--Books-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="books"
+                          name="filter"
+                          value="Books"
+                        />
+                      </div>
+                      <label for="books">Books</label>
+                    </div>
+                    <!--Collectibles-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="collectibles"
+                          name="filter"
+                          value="Collectibles"
+                        />
+                      </div>
+                      <label for="collectibles">Collectibles</label>
+                    </div>
+                    <!--Watches-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="watches"
+                          name="filter"
+                          value="Watches"
+                        />
+                      </div>
+                      <label for="watches">Watches</label>
+                    </div>
+                    <!--Toys-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="toys"
+                          name="filter"
+                          value="Toys"
+                        />
+                      </div>
+                      <label for="toys">Toys</label>
+                    </div>
+                    <!--Instruments-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="instruments"
+                          name="filter"
+                          value="Instruments"
+                        />
+                      </div>
+                      <label for="instruments">Instruments</label>
+                    </div>
+                    <!--Memorabilia-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="memorabilia"
+                          name="filter"
+                          value="Memorabilia"
+                        />
+                      </div>
+                      <label for="memorabilia">Memorabilia</label>
+                    </div>
+                    <!--Coins-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="coins"
+                          name="filter"
+                          value="Coins"
+                        />
+                      </div>
+                      <label for="coins">Coins</label>
+                    </div>
+                    <!--Stamps-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="stamps"
+                          name="filter"
+                          value="Stamps"
+                        />
+                      </div>
+                      <label for="stamps">Stamps</label>
+                    </div>
+                    <!--Decor-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="decor"
+                          name="filter"
+                          value="Decor"
+                        />
+                      </div>
+                      <label for="decor">Decor</label>
+                    </div>
+                    <!--Gadgets-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="gadgets"
+                          name="filter"
+                          value="Gadgets"
+                        />
+                      </div>
+                      <label for="gadgets">Gadgets</label>
+                    </div>
+                    <!--Sports-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="sports"
+                          name="filter"
+                          value="Sports"
+                        />
+                      </div>
+                      <label for="sports">Sports</label>
+                    </div>
+                    <!--Caramics-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="caramics"
+                          name="filter"
+                          value="Caramics"
+                        />
+                      </div>
+                      <label for="caramics">Caramics</label>
+                    </div>
+                    <!--Textiles-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="textiles"
+                          name="filter"
+                          value="Textiles"
+                        />
+                      </div>
+                      <label for="textiles">Textiles</label>
+                    </div>
+                    <!--Photography-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="photography"
+                          name="filter"
+                          value="Photography"
+                        />
+                      </div>
+                      <label for="photography">Photography</label>
+                    </div>
+                    <!--Gardening-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="gardening"
+                          name="filter"
+                          value="Gardening"
+                        />
+                      </div>
+                      <label for="gardening">Gardening</label>
+                    </div>
+                    <!--Tools-->
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center justify-content-center justify-content-md-start flex-row-reverse flex-md-row"
+                    >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="tools"
+                          name="filter"
+                          value="Tools"
+                        />
+                      </div>
+                      <label for="tools">Tools</label>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </aside>
+          </div>
+          <div
+            class="col-md-9 col-lg-10 border-start border-2 d-flex align-items-center flex-column mt-3 mt-md-0"
+          >
+            <!-- Section 1 heading - h1, search and sort-by -->
+            <section
+              class="container-fluid mb-5 gap-2 gap-md-0 d-flex flex-column-reverse flex-md-column mt-3 mt-sm-4 mt-lg-0"
+            >
+              <h1
+                class="fs-2 d-flex justify-content-center mb-md-5 mt-3 mt-md-5 pt-md-3 pb-md-3"
+              >
+                Explore Biddzy
+              </h1>
+              <!--Error message-->
+              <p class="explore-error text-center text-danger"></p>
+              <div
+                class="mb-3 mb-md-0 mx-3 flex-column flex-md-row d-flex justify-content-between"
+              >
+                <!--Sort by-->
+                <div
+                  class="d-flex order-2 order-md-1 justify-content-center gap-2 mt-5 mt-md-0"
+                >
+                  <label
+                    for="sortBy"
+                    class="m-0 align-self-center border rounded py-2 px-3"
+                    >Sort by:</label
+                  >
+                  <div class="d-line align-self-center">
+                    <select
+                      class="text-center border rounded py-2 px-3 sort-by-hight"
+                      id="sortBy"
+                    >
+                      <option value="desc">Newest</option>
+                      <option value="asc">Oldest</option>
+                      <option value="alpha-asc">Title (A-Z)</option>
+                      <option value="alpha-desc">Title (Z-A)</option>
+                    </select>
+                  </div>
+                </div>
+                <!--Search posts or profiles-->
+                <form
+                  id="searchForm"
+                  class="d-flex col-12 col-md-6 gap-4 gap-lg-2 order-1 order-md-2 align-self-center align-self-md-start flex-column flex-md-row"
+                  action="#"
+                >
+                  <div class="input-group">
+                    <input
+                      id="searchInput"
+                      class="border border-2 rounded p-2 form-control flex-grow-1"
+                      type="text"
+                      placeholder="Search for posts or profiles..."
+                      aria-label="search for all posts and all profiles"
+                    />
+                    <button
+                      id="searchButton"
+                      class="btn btn-primary"
+                      type="submit"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+            <!--Section 2 all Auctions-->
+            <section>
+              <div
+                id="allPosts"
+                class="row justify-content-center mx-3 mx-md-3"
+              >
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBid">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTime">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >Bid Now</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBid">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTime">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >Bid Now</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBid">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTime">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >Bid Now</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test4.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBid">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTime">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >Bid Now</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test3.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBid">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTime">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >Bid Now</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test2.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBid">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTime">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >Bid Now</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <a
+                href="#"
+                class="text-center justify-content-center d-flex text-dark"
+              >
+                <p class="explore-message fw-bolder"></p
+              ></a>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!----------Footer---------->
+    <footer class="bg-primary text-light pb-2 pt-5">
+      <div class="container-fluid limited-width px-sm-5">
+        <div class="row text-center text-lg-start">
+          <!-- Quick Links -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Quick Links</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none">Home</a>
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none">Explore</a>
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none">About</a>
+              </li>
+            </ul>
+          </div>
+          <!-- Privacy -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Privacy</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy Statement</a
+                >
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy in Biddzy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy Settings</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Get Help -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Get Help</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Customer Service</a
+                >
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none"
+                  >Safe Trading on Biddzy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Terms of Use</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Social -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Social</p>
+            <div>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-facebook text-light fa-2x"></i
+              ></a>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-pinterest text-light fa-2x"></i
+              ></a>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-whatsapp text-light fa-2x"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <!-- Copyright text -->
+        <div class="text-center mt-5">
+          <small class="text-light fw-light">
+            © 2024 Biddzy. All rights reserved.
+          </small>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

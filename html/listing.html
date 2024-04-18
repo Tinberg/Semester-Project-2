@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon-32x32.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Dive into the details of our unique auction listing. Explore high-quality images, comprehensive descriptions, and a full bid history. Start bidding today and secure your exclusive treasure at Biddzy Auction House."
+    />
+    <title>
+      Explore Auction Details: Discover Unique Finds & Place Your Bids at Biddzy
+      Auction House
+    </title>
+    <!--Js scripts-->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/pages/listing.js"></script>
+    <!--Fontawsome script-->
+    <script
+      src="https://kit.fontawesome.com/0933736d52.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!----------Header---------->
+    <header>
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-primary bg-nav-footer fixed-top"
+        aria-label="Main navigation"
+      >
+        <div class="container-fluid p-3 px-4 px-sm-5">
+          <!-- Brand/logo -->
+          <a class="navbar-brand text-light" href="#">Biddzy</a>
+          <button
+            class="navbar-toggler text-light"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <!-- Navbar content -->
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul
+              class="navbar-nav mx-auto d-flex align-items-center justify-content-center unordered-list"
+            >
+              <li class="nav-item">
+                <a class="nav-link text-light" href="/index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link text-light mx-lg-5 my-3 my-lg-0"
+                  href="/html/explore.html"
+                  >Explore</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" href="#">About</a>
+              </li>
+            </ul>
+            <div
+              class="d-flex align-items-center justify-content-center my-4 my-lg-0"
+            >
+              <a class="btn align-items-center text-light" href="#">Sign Up</a>
+              <p class="text-light mb-0 me-3">or</p>
+              <a class="btn btn-secondary text-primary px-4" href="#">Log In</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!----------Main---------->
+    <main>
+      <!--Section 1 listing product-->
+      <section class="bg-gray-custom">
+        <div class="container-fluid limited-width py-5">
+          <div class="row">
+            <div
+              class="col-lg-5 col-12 d-flex flex-column justify-content-center"
+            >
+              <!--auction img API-->
+              <img
+                src="/images/test4.jpg"
+                id="listingImg"
+                class="img-fluid rounded-4"
+              />
+              <div
+                class="col-12 d-flex mt-4 mb-5 mb-lg-0 justify-content-center align-items-center"
+              >
+                <button class="btn btn-icon" aria-label="Previous image">
+                  <i class="fa-solid fa-circle-arrow-left fa-2x"></i>
+                </button>
+                <p id="numberImg" class="mx-3 m-0">Image 1 of 3</p>
+                <button class="btn btn-icon" aria-label="Next image">
+                  <i class="fa-solid fa-circle-arrow-right fa-2x"></i>
+                </button>
+              </div>
+            </div>
+            <div
+              class="col-lg-6 col-12 d-flex align-items-start flex-column ms-auto"
+            >
+              <!-- Title API -->
+              <h1 id="listingTitle" class="fs-3 mb-3">Bouclé chair</h1>
+              <p class="fs-5">Description:</p>
+              <!--Description API-->
+              <p id="listingDescription">
+                The sun dipped below the horizon, casting a warm golden glow
+                across the tranquil desert landscape of Morocco. As dusk
+                settled, the vibrant colors of the bustling markets began to
+                fade into the evening shadows. Nestled within the maze-like
+                streets of Marrakech, the scent of exoti.
+              </p>
+              <p class="fs-5">
+                Ends in:
+                <!--ends in API--><span id="listing-endsIn"
+                  >120d, 01h 30m 40s</span
+                >
+              </p>
+              <p class="fs-5">
+                Highest Bid:
+                <!--hightest bid API--><span id="listing-bids">$ 65.00</span>
+              </p>
+              <form class="col-12 col-md-8">
+                <div class="input-group mb-3">
+                  <span class="input-group-text text-primary">$</span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Enter your bid amount"
+                    aria-label="Bid amount"
+                    min="1"
+                  />
+                  <button class="btn btn-secondary" type="submit" id="bidBtn">
+                    Make an Offer
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!--Section 2 Seller and History-->
+      <section class="mt-mb-75">
+        <div class="container-fluid limited-width">
+          <div class="row">
+            <div
+              class="col-lg-5 col-12 d-flex flex-column justify-content-center"
+            >
+              <h2 class="fs-5 fw-bolder mb-4">Seller:</h2>
+              <div class="d-flex">
+                <!--SellerImg API-->
+                <img
+                  id="sellerImg"
+                  class="rounded-circle-bottom img-fluid w-25"
+                  src="/images/profileImg-test.jpg"
+                />
+                <div class="d-flex flex-column justify-content-center m-auto">
+                  <!--SellerName API-->
+                  <p id="seller">Julius553</p>
+                  <!--Selleremail API-->
+                  <p id="sellerEmail" class="text-decoration-underline">
+                    Julus33@hotmail.com
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-lg-6 col-12 d-flex align-items-start flex-column ms-auto"
+            >
+              <h2 class="fs-5 fw-bolder mb-4 mt-5 mt-lg-0">Bid History:</h2>
+              <!--Bid history-->
+              <ul class="list-unstyled col-12" id="bidHistory">
+                <li class="d-flex border-bottom border-primary py-2">
+                  <div
+                    class="bidName col-4 text-start"
+                    aria-label="Bidder Name"
+                  >
+                    Tinbger03
+                  </div>
+                  <div
+                    class="bidTime col-4 text-center"
+                    aria-label="Time of Bid"
+                  >
+                    2 minutes ago
+                  </div>
+                  <div class="bidAmount col-4 text-end" aria-label="Bid Amount">
+                    $500
+                  </div>
+                </li>
+                <li class="d-flex border-bottom border-primary py-2">
+                  <div
+                    class="bidName col-4 text-start"
+                    aria-label="Bidder Name"
+                  >
+                    Jonas
+                  </div>
+                  <div
+                    class="bidTime col-4 text-center"
+                    aria-label="Time of Bid"
+                  >
+                    2 hours ago
+                  </div>
+                  <div class="bidAmount col-4 text-end" aria-label="Bid Amount">
+                    $900
+                  </div>
+                </li>
+                <li class="d-flex border-bottom border-primary py-2">
+                  <div
+                    class="bidName col-4 text-start"
+                    aria-label="Bidder Name"
+                  >
+                    Jonas
+                  </div>
+                  <div
+                    class="bidTime col-4 text-center"
+                    aria-label="Time of Bid"
+                  >
+                    2 hours ago
+                  </div>
+                  <div class="bidAmount col-4 text-end" aria-label="Bid Amount">
+                    $900
+                  </div>
+                </li>
+                <li class="d-flex border-bottom border-primary py-2">
+                  <div
+                    class="bidName col-4 text-start"
+                    aria-label="Bidder Name"
+                  >
+                    Tinbger03
+                  </div>
+                  <div
+                    class="bidTime col-4 text-center"
+                    aria-label="Time of Bid"
+                  >
+                    2 minutes ago
+                  </div>
+                  <div class="bidAmount col-4 text-end" aria-label="Bid Amount">
+                    $500
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!----------Footer---------->
+    <footer class="bg-primary text-light pb-2 pt-5">
+      <div class="container-fluid limited-width px-sm-5">
+        <div class="row text-center text-lg-start">
+          <!-- Quick Links -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Quick Links</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none">Home</a>
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none">Explore</a>
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none">About</a>
+              </li>
+            </ul>
+          </div>
+          <!-- Privacy -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Privacy</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy Statement</a
+                >
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy in Biddzy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy Settings</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Get Help -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Get Help</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Customer Service</a
+                >
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none"
+                  >Safe Trading on Biddzy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Terms of Use</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Social -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Social</p>
+            <div>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-facebook text-light fa-2x"></i
+              ></a>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-pinterest text-light fa-2x"></i
+              ></a>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-whatsapp text-light fa-2x"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <!-- Copyright text -->
+        <div class="text-center mt-5">
+          <small class="text-light fw-light">
+            © 2024 Biddzy. All rights reserved.
+          </small>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -8,36 +8,518 @@
       name="description"
       content="Step into Biddzy Auction House and embark on a journey of discovery. Bid on and sell unique, rare, and exquisite items in a dynamic online community. Dive into an auction experience where every find is a treasure waiting to be claimed."
     />
-    <script type="module" src="/js/main.js"></script>
-    <script type="module" src="/js/pages/index.js"></script>
     <title>
       Biddzy Auction House: Discover Unique Finds & Exclusive Treasures
     </title>
+    <!--Js scripts-->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/pages/index.js"></script>
+    <!--Fontawsome script-->
+    <script
+      src="https://kit.fontawesome.com/0933736d52.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
+    <!----------Header---------->
+    <header>
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-primary bg-nav-footer fixed-top"
+        aria-label="Main navigation"
+      >
+        <div class="container-fluid p-3 px-4 px-sm-5">
           <!-- Brand/logo -->
-          <a class="navbar-brand" href="#">Biddzy</a>
-          
-          <!-- Toggler/collapsible Button -->
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+          <a class="navbar-brand text-light" href="#">Biddzy</a>
+          <button
+            class="navbar-toggler text-light"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
+          >
+            <span class="navbar-toggler-icon"></span>
           </button>
-          
           <!-- Navbar content -->
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div class="navbar-nav mx-auto">
-                  <a class="nav-link active" href="#">Home</a>
-                  <a class="nav-link" href="#">Explore</a>
-                  <a class="nav-link" href="#">About</a>
-              </div>
-              <div class="d-flex">
-                  <a class="btn btn-outline-primary me-2" href="#">Sign Up</a>
-                  <a class="btn btn-primary" href="#">Log In</a>
-              </div>
+            <ul
+              class="navbar-nav mx-auto d-flex align-items-center justify-content-center unordered-list"
+            >
+              <li class="nav-item">
+                <a class="nav-link text-light" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link text-light mx-lg-5 my-3 my-lg-0"
+                  href="/html/explore.html"
+                  >Explore</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" href="#">About</a>
+              </li>
+            </ul>
+            <div
+              class="d-flex align-items-center justify-content-center my-4 my-lg-0"
+            >
+              <a class="btn align-items-center text-light" href="#">Sign Up</a>
+              <p class="text-light mb-0 me-3">or</p>
+              <a class="btn btn-secondary text-primary px-4" href="#">Log In</a>
+            </div>
           </div>
+        </div>
+      </nav>
+    </header>
+    <!----------Main---------->
+    <main>
+      <!-----Section 1 Hero----->
+      <section class="bg-gray-custom">
+        <div class="container-fluid limited-width pb-5 px-sm-5">
+          <div class="row align-items-xl-center">
+            <div class="col-md-7">
+              <div class="col-lg-9">
+                <h1 class="mt-5 mb-3">
+                  <span class="d-block">SEARCH THROUGH</span>
+                  <span class="transparent-stroke">THOUSANDS</span>
+                  <span class="">OF AUCTIONS</span>
+                </h1>
+                <p>
+                  Explore a wide range of auctions, with thousands of options
+                  available for you to browse and find what you're looking for.
+                </p>
+                <form
+                  class="my-4 my-xl-5 input-group"
+                  id="searchForm"
+                  action="#"
+                >
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Start Searching..."
+                    aria-label="Start Searching"
+                  />
+                  <button
+                    class="btn btn-secondary px-sm-4 text-primary"
+                    type="submit"
+                    id="searchButton"
+                  >
+                    Search
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <img
+                src="/images/heroImage.jpg"
+                alt="Living room with vibrant green plants, an orange chair, a mirror, and decorative items."
+                class="img-fluid rounded-circle-bottom"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-----Section 2 Last chance----->
+      <section class="mt-mb-75">
+        <div class="container-fluid limited-width pb-5 px-sm-5">
+          <div class="row mb-3">
+            <div class="d-flex justify-content-between mb-3">
+              <div>
+                <p class="text-secondary mb-2">Ending Soon</p>
+                <h2>Last Chance</h2>
+              </div>
+              <div class="d-flex align-items-end mb-2 fw-light">
+                <a href="#" class="underline">View More</a>
+              </div>
+            </div>
+          </div>
+          <!-- Cards Container -->
+          <div class="row">
+            <!-- Card 1 -->
+            <div class="col-md-4 mb-4">
+              <div class="card text-primary">
+                <div class="card-img-top-container position-relative w-100">
+                  <img
+                    src="images/test4.jpg"
+                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                    alt="Item Image 1"
+                  />
+                </div>
+                <div class="card-body bg-gray-custom">
+                  <p class="card-title fs-5">Bouclé chair</p>
+                  <p class="card-text">
+                    Current Bid: <span class="currentBidLast">$100</span>
+                  </p>
+                  <p class="card-text fw-light">
+                    Ends in: <span class="endTimeLast">45m</span>
+                  </p>
+                  <a href="#" class="btn btn-success mt-auto w-100 text-primary"
+                    >Bid Now</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-md-4 mb-4">
+              <div class="card text-primary">
+                <div class="card-img-top-container position-relative w-100">
+                  <img
+                    src="images/test2.jpg"
+                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                    alt="Item Image 1"
+                  />
+                </div>
+                <div class="card-body bg-gray-custom">
+                  <p class="card-title fs-5">Item Title 2</p>
+                  <p class="card-text">
+                    Current Bid: <span class="currentBidLast">$200</span>
+                  </p>
+                  <p class="card-text fw-light">
+                    Ends in: <span class="endTimeLast">1h 45m</span>
+                  </p>
+                  <a href="#" class="btn btn-success mt-auto w-100 text-primary"
+                    >Bid Now</a
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="col-md-4 mb-4">
+              <div class="card text-primary">
+                <div class="card-img-top-container position-relative w-100">
+                  <img
+                    src="images/test1.jpg"
+                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                    alt="Item Image 1"
+                  />
+                </div>
+                <div class="card-body bg-gray-custom">
+                  <p class="card-title fs-5">Item Title 3</p>
+                  <p class="card-text">
+                    Current Bid: <span class="currentBidLast">$300</span>
+                  </p>
+                  <p class="card-text fw-light">
+                    Ends in <span class="endTimeLast">6h 45m</span>
+                  </p>
+                  <a href="#" class="btn btn-warning mt-auto w-100 text-primary"
+                    >Bid Now</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-----Section 3 Popular Categories----->
+      <section class="bg-gray-s3 pt-5 pb-5 mt-mb-75">
+        <div class="container-fluid limited-width px-sm-5">
+          <div class="d-flex justify-content-between mb-5">
+            <div>
+              <p class="text-secondary mb-2">Check Out Our Most</p>
+              <h2>Popular Categories</h2>
+            </div>
+            <div class="d-flex align-items-end mb-2 fw-light">
+              <a href="#" class="underline">View More</a>
+            </div>
+          </div>
+          <div class="row g-4 justify-content-center">
+            <!--Furniture-->
+            <div class="col-md-4 text-center">
+              <img
+                src="/images/furniture.jpg"
+                alt="Modern living room with a comfortable sofa, a cozy sofa chair, lush green plants, and a tidy, well-organized space."
+                class="img-fluid s3-image mb-3 w-95"
+              />
+              <p class="fs-4">Furniture</p>
+              <a href="#" class="btn btn-outline-primary mt-3">Discover</a>
+            </div>
+            <!--Toys-->
+            <div class="col-md-4 text-center py-4 py-md-0">
+              <img
+                src="images/toys.jpg"
+                alt="Child's bedroom with a painting, a delightful dollhouse, a drawing board/blackboard for creative activities, a fluffy brown chair, and a cuddly teddy bear"
+                class="img-fluid s3-image mb-3 w-95"
+              />
+              <p class="fs-4">Toys</p>
+              <a href="#" class="btn btn-outline-primary mt-3">Discover</a>
+            </div>
+            <!--Electronics-->
+            <div class="col-md-4 text-center">
+              <img
+                src="images/electronics.jpg"
+                alt="A hand wearing an Apple Watch extends over a MacBook, alongside a smartphone, glasses, pencils, and a plant, showcasing a modern electronic workspace setup."
+                class="img-fluid s3-image mb-3 w-95"
+              />
+              <p class="fs-4">Electronics</p>
+              <a href="#" class="btn btn-outline-primary mt-3">Discover</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-----Section 4 New Arrivals----->
+      <section class="mt-mb-75">
+        <div class="container-fluid limited-width pb-5 px-sm-5">
+          <div class="row mb-3">
+            <div class="d-flex justify-content-between mb-3">
+              <div>
+                <p class="text-secondary mb-2">Latest Selections</p>
+                <h2>New Arrivals</h2>
+              </div>
+              <div class="d-flex align-items-end mb-2 fw-light">
+                <a href="#" class="underline">View More</a>
+              </div>
+            </div>
+          </div>
+          <!-- Cards Container -->
+          <div class="row">
+            <!-- Card 1 -->
+            <div class="col-md-4 mb-4">
+              <div class="card text-primary">
+                <div class="card-img-top-container position-relative w-100">
+                  <img
+                    src="images/test4.jpg"
+                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                    alt="Item Image 1"
+                  />
+                </div>
+                <div class="card-body bg-gray-custom">
+                  <p class="card-title fs-5">Bouclé chair</p>
+                  <p class="card-text">
+                    Current Bid: <span class="currentBidNew">$100</span>
+                  </p>
+                  <p class="card-text fw-light">
+                    Ends in: <span class="endTimeNew">45m</span>
+                  </p>
+                  <a href="#" class="btn btn-success mt-auto w-100 text-primary"
+                    >Bid Now</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-md-4 mb-4">
+              <div class="card text-primary">
+                <div class="card-img-top-container position-relative w-100">
+                  <img
+                    src="images/test2.jpg"
+                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                    alt="Item Image 1"
+                  />
+                </div>
+                <div class="card-body bg-gray-custom">
+                  <p class="card-title fs-5">Item Title 2</p>
+                  <p class="card-text">
+                    Current Bid: <span class="currentBidNew">$200</span>
+                  </p>
+                  <p class="card-text fw-light">
+                    Ends in: <span class="endTimeNew">1h 45m</span>
+                  </p>
+                  <a href="#" class="btn btn-success mt-auto w-100 text-primary"
+                    >Bid Now</a
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="col-md-4 mb-4">
+              <div class="card text-primary">
+                <div class="card-img-top-container position-relative w-100">
+                  <img
+                    src="images/test1.jpg"
+                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                    alt="Item Image 1"
+                  />
+                </div>
+                <div class="card-body bg-gray-custom">
+                  <p class="card-title fs-5">Item Title 3</p>
+                  <p class="card-text">
+                    Current Bid: <span class="currentBidNew">$300</span>
+                  </p>
+                  <p class="card-text fw-light">
+                    Ends in <span class="endTimeNew">6h 45m</span>
+                  </p>
+                  <a href="#" class="btn btn-warning mt-auto w-100 text-primary"
+                    >Bid Now</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-----Section 5 INFO----->
+      <section class="bg-gray-custom py-5">
+        <div class="container-fluid limited-width my-5">
+          <div class="row">
+            <!-- Support -->
+            <div class="col-lg-4">
+              <div class="card p-3 text-center text-primary">
+                <img
+                  src="/images/support.jpg"
+                  class="s5-img card-img-top mx-auto d-block"
+                  alt="Line art of a person wearing a headset, symbolizing round-the-clock support availability"
+                />
+
+                <div class="card-body">
+                  <p class="card-title fs-4">24/7 Support</p>
+                  <p class="card-text">Need help? We're always here for you.</p>
+                </div>
+              </div>
+            </div>
+            <!-- SignInBonus -->
+            <div class="col-lg-4">
+              <div class="card p-3 text-center my-lg-0 my-4 text-primary">
+                <img
+                  src="/images/bonus.jpg"
+                  class="s5-img card-img-top mx-auto d-block"
+                  alt="Line art of a wallet, representing a sign-up bonus offer."
+                />
+
+                <div class="card-body">
+                  <p class="card-title fs-4">Sign Up Bonus</p>
+                  <p class="card-text">
+                    Join now for 1,000 free bidding credits.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- Bid&Sell -->
+            <div class="col-lg-4">
+              <div class="card p-3 text-center h-100 text-primary">
+                <img
+                  src="/images/bid&sell.jpg"
+                  class="s5-img card-img-top mx-auto d-block"
+                  alt="Line art of a gavel, symbolizing the action to bid and sell"
+                />
+                <div class="card-body">
+                  <p class="fs-4">Bid & Sell</p>
+                  <p class="card-text">Discover quality in every auction.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-----Section 6 Newsletter----->
+      <section class="newsletterBG">
+        <div class="container-fluid limited-width text-center p-3">
+          <h2 class="text-light pt-5">
+            SIGN UP FOR OUR
+            <span class="d-block text-light mt-2">NEWSLETTER</span>
+          </h2>
+          <p class="text-light my-5">
+            Stay informed with the latest updates, exclusive offers, and insider
+            tips delivered straight to your inbox.
+            <span class="text-light d-block mt-1"
+              >Join our community today and never miss out!</span
+            >
+          </p>
+          <form class="pb-5">
+            <div class="row justify-content-center">
+              <div class="col-sm-8 col-md-6 col-lg-5">
+                <div class="input-group mb-3">
+                  <input
+                    type="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    aria-label="Email address"
+                  />
+                  <button class="btn btn-secondary text-primary" type="submit">
+                    Subscribe
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+    <!----------Footer---------->
+    <footer class="bg-primary text-light pb-2 pt-5">
+      <div class="container-fluid limited-width px-sm-5">
+        <div class="row text-center text-lg-start">
+          <!-- Quick Links -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Quick Links</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none">Home</a>
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none">Explore</a>
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none">About</a>
+              </li>
+            </ul>
+          </div>
+          <!-- Privacy -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Privacy</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy Statement</a
+                >
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy in Biddzy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy Settings</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Get Help -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Get Help</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Customer Service</a
+                >
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none"
+                  >Safe Trading on Biddzy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Terms of Use</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Social -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Social</p>
+            <div>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-facebook text-light fa-2x"></i
+              ></a>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-pinterest text-light fa-2x"></i
+              ></a>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-whatsapp text-light fa-2x"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <!-- Copyright text -->
+        <div class="text-center mt-5">
+          <small class="text-light fw-light">
+            © 2024 Biddzy. All rights reserved.
+          </small>
+        </div>
       </div>
-  </nav>
+    </footer>
   </body>
 </html>

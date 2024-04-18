@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon-32x32.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="View profiles, explore auction listings, and see bidding activity at Biddzy Auction House. Discover other collectors and traders."
+    />
+    <title>
+      User Profile: Explore Listings & View Bids at Biddzy Auction House
+    </title>
+    <!--Js scripts-->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/pages/profile.js"></script>
+    <!--Fontawsome script-->
+    <script
+      src="https://kit.fontawesome.com/0933736d52.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!----------Header---------->
+    <header>
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-primary bg-nav-footer fixed-top"
+        aria-label="Main navigation"
+      >
+        <div class="container-fluid p-3 px-4 px-sm-5">
+          <!-- Brand/logo -->
+          <a class="navbar-brand text-light" href="#">Biddzy</a>
+          <button
+            class="navbar-toggler text-light"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <!-- Navbar content -->
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul
+              class="navbar-nav mx-auto d-flex align-items-center justify-content-center unordered-list"
+            >
+              <li class="nav-item">
+                <a class="nav-link text-light" href="/index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link text-light mx-lg-5 my-3 my-lg-0"
+                  href="/html/explore.html"
+                  >Explore</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" href="#">About</a>
+              </li>
+            </ul>
+            <div
+              class="d-flex align-items-center justify-content-center my-4 my-lg-0"
+            >
+              <a class="btn align-items-center text-light" href="#">Sign Up</a>
+              <p class="text-light mb-0 me-3">or</p>
+              <a class="btn btn-secondary text-primary px-4" href="#">Log In</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!----------Main---------->
+    <main>
+      <!--Section 1 Profile info-->
+      <section class="position-relative">
+        <div>
+          <!--Banner img API-->
+          <img
+            src="/images/bannerImg-test.jpg"
+            class="bannerImg img-fluid bannerImg w-100"
+            alt="Personal profile banner"
+          />
+        </div>
+        <div
+          class="profileImg-container container-fluid limited-width position-absolute d-flex justify-content-center"
+        >
+          <!--Profile img API-->
+          <img
+            src="/images/profileImg-test.jpg"
+            class="profileImg img-fluid rounded-circle-bottom"
+            alt="Personal profile image"
+          />
+        </div>
+        <div
+          class="container-fluid limited-width d-flex flex-column align-items-center mt-mb-75"
+        >
+          <!--Username API-->
+          <h1 id="userName" class="fs-2">Tinberg007</h1>
+          <!--UserEmail API-->
+          <p id="userEmail">mathias.tinberg@stud.noroff.no</p>
+          <div class="col-12 col-md-8 mx-auto">
+            <!--UserBio API-->
+            <p id="userBio" class="mt-4 mb-5">
+              Experienced collector with a passion for fine art and rare
+              artifacts. Known for authenticity and quality. Active participant
+              in auctions, offering meticulously vetted pieces. Explore their
+              curated collection for treasures with a story to tell.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!--Section 2 Personal activity-->
+      <section >
+        <div class="container-fluid limited-width my-5">
+          <!-- Nav tabs -->
+          <ul
+            class="nav nav-tabs d-flex justify-content-around flex-nowrap"
+            id="profileTabs"
+            role="tablist"
+          >
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link active"
+                id="listing-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#listing"
+                type="button"
+                role="tab"
+                aria-controls="listing"
+                aria-selected="true"
+              >
+                Auction Listings
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="bidding-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#bidding"
+                type="button"
+                role="tab"
+                aria-controls="bidding"
+                aria-selected="false"
+              >
+                Bidding Activity
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="won-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#won"
+                type="button"
+                role="tab"
+                aria-controls="won"
+                aria-selected="false"
+              >
+                Auctions Won
+              </button>
+            </li>
+          </ul>
+
+          <!-- Tab content -->
+          <div class="tab-content" id="tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="listing"
+              role="tabpanel"
+              aria-labelledby="listing-tab"
+            >
+              <!-- Content for Auction Listings -->
+              <div
+                id="containerListings"
+                class="row justify-content-center mx-3 mx-md-3 mt-5"
+              >
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidListings">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTimeListings">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidListings">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTimeListings">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidListings">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTimeListings">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test4.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidListings">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTimeListings">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test3.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidListings">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTimeListings">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test2.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidListings">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Ends in: <span class="endTimeListings">45m</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="bidding"
+              role="tabpanel"
+              aria-labelledby="bidding-tab"
+            >
+              <!-- Content for Bidding Activity -->
+              <div
+                id="containerBidding"
+                class="row justify-content-center mx-3 mx-md-3 mt-5"
+              >
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        24 days ago
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBidBidding">$100</span>
+                      </p>
+                      <p class="card-text">
+                        Your Bid: <span class="yourBidding">$120</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        24 days ago
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBidBidding">$100</span>
+                      </p>
+                      <p class="card-text">
+                        Your Bid: <span class="yourBidding">$120</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        24 days ago
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBidBidding">$100</span>
+                      </p>
+                      <p class="card-text">
+                        Your Bid: <span class="yourBidding">$120</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test4.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        24 days ago
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBidBidding">$100</span>
+                      </p>
+                      <p class="card-text">
+                        Your Bid: <span class="yourBidding">$120</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test3.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        24 days ago
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBidBidding">$100</span>
+                      </p>
+                      <p class="card-text">
+                        Your Bid: <span class="yourBidding">$120</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test2.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        24 days ago
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid: <span class="currentBidBidding">$100</span>
+                      </p>
+                      <p class="card-text">
+                        Your Bid: <span class="yourBidding">$120</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="won"
+              role="tabpanel"
+              aria-labelledby="won-tab"
+            >
+              <!-- Content for Auctions Won -->
+              <div
+                id="containerWon"
+                class="row justify-content-center mx-3 mx-md-3 mt-5"
+              >
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        <i class="fa-solid fa-crown fa-2x"></i>
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidWon">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Auction <span class="endTimeWon">Ended</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        <i class="fa-solid fa-crown fa-2x"></i>
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidWon">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Auction <span class="endTimeWon">Ended</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test1.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        <i class="fa-solid fa-crown fa-2x"></i>
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidWon">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Auction <span class="endTimeWon">Ended</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test4.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        <i class="fa-solid fa-crown fa-2x"></i>
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidWon">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Auction <span class="endTimeWon">Ended</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test3.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        <i class="fa-solid fa-crown fa-2x"></i>
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidWon">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Auction <span class="endTimeWon">Ended</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 mb-4">
+                  <div class="card text-primary">
+                    <div class="card-img-top-container position-relative w-100">
+                      <img
+                        src="/images/test2.jpg"
+                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
+                        alt="Item Image 1"
+                      />
+                      <div
+                        class="wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3"
+                      >
+                        <i class="fa-solid fa-crown fa-2x"></i>
+                      </div>
+                    </div>
+                    <div class="card-body bg-gray-custom">
+                      <p class="card-title fs-5">Bouclé chair</p>
+                      <p class="card-text">
+                        Current Bid:
+                        <span class="currentBidWon">$100</span>
+                      </p>
+                      <p class="card-text fw-light">
+                        Auction <span class="endTimeWon">Ended</span>
+                      </p>
+                      <a
+                        href="#"
+                        class="btn btn-success mt-auto w-100 text-primary"
+                        >To Auction</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!----------Footer---------->
+    <footer class="bg-primary text-light pb-2 pt-5">
+      <div class="container-fluid limited-width px-sm-5">
+        <div class="row text-center text-lg-start">
+          <!-- Quick Links -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Quick Links</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none">Home</a>
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none">Explore</a>
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none">About</a>
+              </li>
+            </ul>
+          </div>
+          <!-- Privacy -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Privacy</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy Statement</a
+                >
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy in Biddzy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Privacy Settings</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Get Help -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Get Help</p>
+            <ul class="list-unstyled fw-light">
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Customer Service</a
+                >
+              </li>
+              <li class="my-1">
+                <a href="#" class="text-light text-decoration-none"
+                  >Safe Trading on Biddzy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-light text-decoration-none"
+                  >Terms of Use</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Social -->
+          <div class="col-lg text-light">
+            <p class="fw-bold text-light mt-3 mt-lg-0">Social</p>
+            <div>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-facebook text-light fa-2x"></i
+              ></a>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-pinterest text-light fa-2x"></i
+              ></a>
+              <a href="#" class="me-4"
+                ><i class="fa-brands fa-whatsapp text-light fa-2x"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <!-- Copyright text -->
+        <div class="text-center mt-5">
+          <small class="text-light fw-light">
+            © 2024 Biddzy. All rights reserved.
+          </small>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

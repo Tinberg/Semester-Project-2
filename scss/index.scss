@@ -1,0 +1,46 @@
+//---------- Section 1 Hero ----------//
+//transparent h1 spanText
+.transparent-stroke {
+  color: transparent;
+  -webkit-text-stroke: 1.6px #476367;
+}
+//underline for section 2 and 3(viewMore)
+.underline {
+  text-decoration: underline;
+}
+
+//---------- Section 3 Popular Categories ----------//
+.bg-gray-s3 {
+  background: linear-gradient(
+    to bottom,
+    #f5f5f5 70%,
+    rgba(255, 255, 255, 0) 50%
+  );
+}
+.s3-image {
+  border-radius: 215px;
+}
+.w-95 {
+  width: 95%;
+}
+
+//---------- Section 5 INFO----------//
+.s5-img {
+  max-width: 75px;
+  max-height: 62.16px;
+  object-fit: contain;
+}
+
+//---------- Section 6 NewsLetter----------//
+.newsletterBG {
+  background-image: url(/images/newsletterBG.jpg);
+}
+
+//---------- Section 6 MQ -----------//
+//--background image section 6 look better on lg screens and under.
+@media (max-width: 992px) {
+  .newsletterBG {
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}

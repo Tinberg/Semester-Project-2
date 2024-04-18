@@ -1,0 +1,33 @@
+//---------- Section 1 Heading ----------//
+.sort-by-hight {
+  min-height: 44px;
+}
+//---------- Section 2  all Auctions ----------//
+// .card {
+//   background-color: #f0f0f0;
+// }
+
+// .card-body img {
+//   height: 45px;
+//   width: 45px;
+// }
+
+//--Overlay styles for auctions text on hover
+.overlay-content {
+  background: rgba(0, 0, 0, 0.5);
+  transition: all 0.5s ease;
+  opacity: 0;
+}
+.card-container:hover .overlay-content {
+  opacity: 1;
+  display: flex;
+}
+
+//-- styles for search 
+.search-image {
+  width: 50px;
+  height: 50px;
+}
+.search-item:hover {
+  background-color: #f5f5f5;
+}
