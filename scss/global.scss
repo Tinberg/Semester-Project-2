@@ -24,7 +24,7 @@ html {
   font-size: 16px;
 }
 body {
-  margin-top: 88px;
+  margin-top: 95px;
 }
 html,
 body {
@@ -59,17 +59,29 @@ a:hover {
 }
 //Additional style for Bootstrap card
 .card-img-top-container {
-    padding-top: 80%;
-  }
+  padding-top: 80%;
+}
 
 //---------- Header & Footer----------//
 //--Header
+nav {
+  min-height: 96px;
+}
+//-- Make the Dropdown center of the changing navbar content
+.navbar .dropdown-menu {
+  left: 60%; 
+  transform: translateX(-60%);
+}
 //--To make ul element to center of the navbar
 .unordered-list {
-  padding-left: 150px;
+  padding-left: 75px;
 }
 .navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+.navProfile {
+  width: 48px;
+  height: 48px;
 }
 //--Footer
 footer {
@@ -77,9 +89,15 @@ footer {
 }
 
 //---------- Header MQ----------//
-//--To make ul element to center of the navbar on lg screens and smaller
+//--To make ul element to center of the navbar on lg screens and smaller and navbar to have less hight
 @media (max-width: 992px) {
   .unordered-list {
     padding-left: 0px;
+  }
+  nav {
+    min-height: 88px;
+  }
+  body {
+    margin-top: 88px;
   }
 }

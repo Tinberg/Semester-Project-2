@@ -1,0 +1,21 @@
+//---------- MAIN ----------//
+.img-container {
+  background-image: url(/images/regLogBG.jpg);
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+
+  .custom-card {
+    max-width: 40rem;
+    background-color: rgba(49, 79, 83, 0.7);
+    //For Safari
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+.small-text {
+    font-size: .9rem;
+}
+
