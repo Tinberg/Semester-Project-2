@@ -18,8 +18,7 @@ import { addInfiniteScroll } from "../modules/utility.js";
 //-- Trim the text for overlay text title and body text for post --> utility.js --//
 import { trimText } from "../modules/utility.js";
 
-//-- format date as relative time or DD/MM/YYYY
-import { formatRelativeTime } from "../modules/utility.js";
+
 
 //Global state for user Bio text, profile, and pagination
 let initialBioText = "";
@@ -27,9 +26,8 @@ let globalUserProfile = null;
 let globalFilter = {
   page: 1,
   limit: 6,
-  
-  bidsFetched: false,  
-  winsFetched: false  
+  bidsFetched: false,
+  winsFetched: false,
 };
 
 //---------- DOM ----------//
@@ -48,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "/html/login.html";
   }
 });
-// for loading wins and bids. 
+// for loading wins and bids.
 var biddingTab = document.getElementById("bidding-tab");
 var wonTab = document.getElementById("won-tab");
 
@@ -109,28 +107,27 @@ function displayListings(listings) {
   console.log("Displaying Listings:", listings);
   const container = document.getElementById("containerListings");
   container.innerHTML = "";
+
   listings.forEach((listing) => {
+    const hasMedia = listing.media && listing.media.length > 0;
+    const imageUrl = hasMedia ? listing.media[0].url : '/images/no-img-listing.jpg';
+    const imageAlt = hasMedia ? listing.media[0].alt : 'Listing Image'; 
+
     const html = `
-        <div class="col-lg-4 col-sm-6 mb-4">
-          <div class="card text-primary">
-            <div class="card-img-top-container position-relative w-100">
-              <img src="${listing.media[0].url}" alt="${
-      listing.media[0].alt
-    }" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
-            </div>
-            <div class="card-body bg-gray-custom">
-              <p class="card-title fs-5">${listing.title}</p>
-              <p class="card-text">Current Bid: <span class="currentBidListings">${
-                listing._count.bids
-              }</span></p>
-              <p class="card-text fw-light">Ends in: <span class="endTimeListings">${new Date(
-                listing.endsAt
-              ).toLocaleString()}</span></p>
-              <a href="#" class="btn btn-success mt-auto w-100 text-primary">To Auction</a>
-            </div>
+      <div class="col-lg-4 col-sm-6 mb-4">
+        <div class="card text-primary">
+          <div class="card-img-top-container position-relative w-100">
+            <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
+          </div>
+          <div class="card-body bg-gray-custom">
+            <p class="card-title fs-5 text-truncate">${listing.title}</p>
+            <p class="card-text">Current Bid: <span class="currentBidListings">${listing._count.bids || 'No bids yet'}</span></p>
+            <p class="card-text fw-light">Ends in: <span class="endTimeListings">${new Date(listing.endsAt).toLocaleString()}</span></p>
+            <a href="#" class="btn btn-success mt-auto w-100 text-primary">To Auction</a>
           </div>
         </div>
-      `;
+      </div>
+    `;
     container.innerHTML += html;
   });
 }
@@ -153,7 +150,7 @@ function displayBids(bids) {
               </div>
             </div>
             <div class="card-body bg-gray-custom">
-              <p class="card-title fs-5">${bid.bidder.name}</p>
+              <p class="card-title fs-5 text-truncate">${bid.bidder.name}</p>
               <p class="card-text">Current Bid: <span class="currentBidBidding">${
                 bid.amount
               }</span></p>
@@ -183,7 +180,7 @@ function displayWins(wins) {
               </div>
             </div>
             <div class="card-body bg-gray-custom">
-              <p class="card-title fs-5">${win.title}</p>
+              <p class="card-title fs-5 text-truncate">${win.title}</p>
               <p class="card-text">Final Bid: <span class="currentBidWon">${
                 win._count.bids
               }</span></p>
@@ -198,5 +195,3 @@ function displayWins(wins) {
     container.innerHTML += html;
   });
 }
-
-

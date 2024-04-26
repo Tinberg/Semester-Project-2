@@ -18,6 +18,8 @@ export { fetchListingsByProfile }; //-------------------------------------------
 export { fetchbidsByProfile }; //--------------------------------------------------------- Line: 104
 //-- For fetching all wins by a profile --> my-profile.js and profile.js
 export { fetchWinsByProfile }; //--------------------------------------------------------- Line: 104
+//-- For fetch create Listing --> Navbar.js
+export { createListing }; //--------------------------------------------------------------------- Line: 192
 
 //---------- Utility ----------//
 //-- This is the Base URL --//
@@ -144,6 +146,28 @@ async function fetchWinsByProfile(userName) {
   if (!response.ok) {
     throw new Error("Failed to fetch profile information");
   }
+  const result = await response.json();
+  return result.data;
+}
+/**
+ * Creates a new auction listing.
+ * @param {Object} listingData
+ * @returns {Promise}
+ */
+async function createListing(listingData) {
+  const response = await fetch(`${API_BASE_URL}/auction/listings`, {
+    method: "POST",
+    headers: getHeaders(true),
+    body: JSON.stringify(listingData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      `Failed to create listing: ${errorData.message || "Unknown error"}`
+    );
+  }
+
   const result = await response.json();
   return result.data;
 }
