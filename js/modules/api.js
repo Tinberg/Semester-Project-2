@@ -175,16 +175,39 @@ async function createListing(listingData) {
   return result.data;
 }
 /**
- * Fetch all auction listings.
- * @returns {Promise}
+ * Fetch all auction listings optionally filtered by a category with sorting and pagination.
+ * @param {string} categoryTag - The category to filter by.
+ * @param {string} sortOption - The field to sort by.
+ * @param {string} sortOrder - The order of sorting ('asc' or 'desc').
+ * @param {number} page - The page number in pagination.
+ * @param {number} limit - The number of listings per page.
+ * @returns {Promise} - The promise returning fetched data or throwing an error.
  */
-async function fetchAllListings() {
-  const response = await fetch(`${API_BASE_URL}/auction/listings`, {
-      headers: getHeaders()
-  });
-  if (!response.ok) {
-      throw new Error("Failed to fetch listings");
+async function fetchAllListings(
+  categoryTag = "", 
+  sortOption = "created",
+  sortOrder = "desc",
+  page = 1, 
+  limit = 20,
+  active = null
+) {
+  let url = `${API_BASE_URL}/auction/listings?page=${page}&limit=${limit}`;
+
+  if (categoryTag) {
+    url += `&_tag=${encodeURIComponent(categoryTag)}`;
   }
+  if (sortOption) {
+    url += `&sort=${sortOption}&sortOrder=${sortOrder}`;
+  }
+  if (active !== null) {
+    url += `&_active=${active}`;
+  }
+
+  const response = await fetch(url, { headers: getHeaders() });
+  if (!response.ok) {
+    throw new Error("Failed to fetch listings");
+  }
+
   const result = await response.json();
   return result.data;
 }

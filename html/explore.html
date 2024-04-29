@@ -261,8 +261,9 @@
                           class="form-check-input"
                           type="radio"
                           id="allAuctions"
-                          name="filter"
+                          name="auctionStatus"
                           value="All"
+                          checked
                         />
                       </div>
                       <label class="form-check-label" for="allAuctions"
@@ -278,7 +279,7 @@
                           class="form-check-input"
                           type="radio"
                           id="activeAuctions"
-                          name="filter"
+                          name="auctionStatus"
                           value="Active"
                         />
                       </div>
@@ -615,7 +616,7 @@
                     </div>
                     <!--Tools-->
                     <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center justify-content-center justify-content-md-start flex-row-reverse flex-md-row"
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
                     >
                       <div>
                         <input
@@ -627,6 +628,22 @@
                         />
                       </div>
                       <label for="tools">Tools</label>
+                    </div>
+                    <!--No Filter-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="noFilter"
+                          name="filter"
+                          value="All"
+                          checked
+                        />
+                      </div>
+                      <label class="form-check-label" for="noFilter"
+                        >No Filter</label
+                      >
                     </div>
                   </div>
                 </fieldset>
