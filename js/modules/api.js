@@ -20,6 +20,9 @@ export { fetchbidsByProfile }; //-----------------------------------------------
 export { fetchWinsByProfile }; //--------------------------------------------------------- Line: 104
 //-- For fetch create Listing --> Navbar.js
 export { createListing }; //--------------------------------------------------------------------- Line: 192
+//-- For fetch all listings --> explore.js
+export { fetchAllListings }; //--------------------------------------------------------------------- Line: 192
+
 
 //---------- Utility ----------//
 //-- This is the Base URL --//
@@ -100,9 +103,9 @@ async function fetchUserProfile(userName) {
  * @param {string} userName
  * @returns {Promise}
  */
-async function fetchListingsByProfile(userName) {
+async function fetchListingsByProfile(userName, page = 1, limit = 6) {
   const response = await fetch(
-    `${API_BASE_URL}/auction/profiles/${userName}/listings`,
+    `${API_BASE_URL}/auction/profiles/${userName}/listings?limit=${limit}&page=${page}`,
     {
       headers: getHeaders(),
     }
@@ -118,9 +121,9 @@ async function fetchListingsByProfile(userName) {
  * @param {string} userName
  * @returns {Promise}
  */
-async function fetchbidsByProfile(userName) {
+async function fetchbidsByProfile(userName, page = 1, limit = 6) {
   const response = await fetch(
-    `${API_BASE_URL}/auction/profiles/${userName}/bids`,
+    `${API_BASE_URL}/auction/profiles/${userName}/bids?limit=${limit}&page=${page}`,
     {
       headers: getHeaders(),
     }
@@ -136,9 +139,9 @@ async function fetchbidsByProfile(userName) {
  * @param {string} userName
  * @returns {Promise}
  */
-async function fetchWinsByProfile(userName) {
+async function fetchWinsByProfile(userName, page = 1, limit = 6) {
   const response = await fetch(
-    `${API_BASE_URL}/auction/profiles/${userName}/wins`,
+    `${API_BASE_URL}/auction/profiles/${userName}/wins?limit=${limit}&page=${page}`,
     {
       headers: getHeaders(),
     }
@@ -168,6 +171,20 @@ async function createListing(listingData) {
     );
   }
 
+  const result = await response.json();
+  return result.data;
+}
+/**
+ * Fetch all auction listings.
+ * @returns {Promise}
+ */
+async function fetchAllListings() {
+  const response = await fetch(`${API_BASE_URL}/auction/listings`, {
+      headers: getHeaders()
+  });
+  if (!response.ok) {
+      throw new Error("Failed to fetch listings");
+  }
   const result = await response.json();
   return result.data;
 }

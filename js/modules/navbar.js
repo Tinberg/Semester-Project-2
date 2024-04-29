@@ -4,8 +4,7 @@ import { getToken } from "./auth.js";
 //-- Api for logged in user --> api.js
 import { fetchUserProfile } from "./api.js";
 //-- Create new listing  --> api.js
-import { createListing} from "./api.js";
-
+import { createListing } from "./api.js";
 
 //--------------------   Export For Navbar  -------------------- //
 //-- Initializes the navbar dynamically based on user authentication status
@@ -95,73 +94,80 @@ function showLoadingIndicator() {
 
 // Function to handle the form submission for new listings
 function setupNewListingForm() {
-    const form = document.getElementById('newListingForm');
-    if (!form) return;
+  const form = document.getElementById("newListingForm");
+  if (!form) return;
 
-    form.addEventListener('submit', async function (event) {
-        event.preventDefault();
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-        const title = document.getElementById('listingTitle').value;
-        const description = document.getElementById('listingDescription').value;
-        const imageUrl = document.getElementById('listingImage').value;
-        const imageAlt = document.getElementById('altText').value;
-        const endsAt = document.getElementById('endsAt').value;
-        const category = document.getElementById('categorySelect').value;
-        const errorFeedback = document.getElementById('listingErrorFeedback');
+    const title = document.getElementById("listingTitle").value;
+    const description = document.getElementById("listingDescription").value;
+    const imageUrl = document.getElementById("listingImage").value;
+    const imageAlt = document.getElementById("altText").value;
+    const endsAt = document.getElementById("endsAt").value;
+    const category = document.getElementById("categorySelect").value;
+    const errorFeedback = document.getElementById("listingErrorFeedback");
 
-        const tags = category !== "Choose a category" ? [category] : [];
+    const tags = category !== "Choose a category" ? [category] : [];
 
-        const listingData = {
-            title,
-            description,
-            tags,
-            media: imageUrl ? [{ url: imageUrl, alt: imageAlt }] : [],
-            endsAt: new Date(endsAt).toISOString()
-        };
+    const listingData = {
+      title,
+      description,
+      tags,
+      media: imageUrl ? [{ url: imageUrl, alt: imageAlt }] : [],
+      endsAt: new Date(endsAt).toISOString(),
+    };
 
-        try {
-            const result = await createListing(listingData);
-            console.log('Listing created:', result);
-            form.reset();
-            updateFeedbacks(); 
-            window.location.href = "my-profile.html"; 
-        } catch (error) {
-            console.error('Failed to create listing:', error);
-            errorFeedback.textContent = "Failed to create listing: " + error.message;
-            errorFeedback.style.display = "block";
-        }
-    });
+    try {
+      const result = await createListing(listingData);
+      console.log("Listing created:", result);
+      form.reset();
+      updateFeedbacks();
+      window.location.href = "my-profile.html";
+    } catch (error) {
+      console.error("Failed to create listing:", error);
+      errorFeedback.textContent =
+        "Failed to create Listing. Include a title and ensure it, along with description, are under 280 characters. If adding an image, descriptions should be under 120 characters and URLs must start with 'http://' or 'https://'. Adjust and retry.";
+      errorFeedback.style.display = "block";
+    }
+  });
 }
 
 // Function to update feedback for inputs dynamically
 function updateFeedbacks() {
-    updateTitleFeedback();
-    updateDescriptionFeedback();
-    updateAltTextFeedback();
+  updateTitleFeedback();
+  updateDescriptionFeedback();
+  updateAltTextFeedback();
 }
 
 function updateTitleFeedback() {
-    const title = document.getElementById('listingTitle').value;
-    const feedback = document.getElementById('titleFeedback');
-    feedback.textContent = `${title.length}/280 characters`;
-    feedback.classList.toggle('text-danger', title.length > 280);
+  const title = document.getElementById("listingTitle").value;
+  const feedback = document.getElementById("titleFeedback");
+  feedback.textContent = `${title.length}/280 characters`;
+  feedback.classList.toggle("text-danger", title.length > 280);
 }
 
 function updateDescriptionFeedback() {
-    const description = document.getElementById('listingDescription').value;
-    const feedback = document.getElementById('descriptionFeedback');
-    feedback.textContent = `${description.length}/280 characters`;
-    feedback.classList.toggle('text-danger', description.length > 280);
+  const description = document.getElementById("listingDescription").value;
+  const feedback = document.getElementById("descriptionFeedback");
+  feedback.textContent = `${description.length}/280 characters`;
+  feedback.classList.toggle("text-danger", description.length > 280);
 }
 
 function updateAltTextFeedback() {
-    const altText = document.getElementById('altText').value;
-    const feedback = document.getElementById('altTextFeedback');
-    feedback.textContent = `${altText.length}/120 characters`;
-    feedback.classList.toggle('text-danger', altText.length > 120);
+  const altText = document.getElementById("altText").value;
+  const feedback = document.getElementById("altTextFeedback");
+  feedback.textContent = `${altText.length}/120 characters`;
+  feedback.classList.toggle("text-danger", altText.length > 120);
 }
 
 // Event listeners for live feedback
-document.getElementById('listingTitle').addEventListener('input', updateTitleFeedback);
-document.getElementById('listingDescription').addEventListener('input', updateDescriptionFeedback);
-document.getElementById('altText').addEventListener('input', updateAltTextFeedback);
+document
+  .getElementById("listingTitle")
+  .addEventListener("input", updateTitleFeedback);
+document
+  .getElementById("listingDescription")
+  .addEventListener("input", updateDescriptionFeedback);
+document
+  .getElementById("altText")
+  .addEventListener("input", updateAltTextFeedback);
