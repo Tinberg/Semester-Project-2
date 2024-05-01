@@ -1,6 +1,8 @@
 //-------------------- Import Styles from global and bootstrap JS --------------------//
 import "../scss/global.scss";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
+window.bootstrap = bootstrap;  
+
 
 // ------------------ Import Navbar Initialization Function ------------------//
 //-- Initializes the navbar dynamically based on user authentication status

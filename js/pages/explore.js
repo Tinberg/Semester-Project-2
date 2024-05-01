@@ -5,37 +5,60 @@ import "../../scss/explore.scss";
 
 //-- Api for fetch All Listings --> api.js
 import { fetchAllListings } from "../modules/api.js";
+//-- Api for fetch Profile Search --> api.js
+import { fetchProfilesSearch } from "../modules/api.js";
+//-- Api for  fetch Listing Search --> api.js
+import { fetchListingsSearch } from "../modules/api.js";
 //-- for time until end on auctions--> utility.js
 import { timeUntil } from "../modules/utility.js";
 //-- for infinite scroll--> utility.js
 import { addInfiniteScroll } from "../modules/utility.js";
 
-//Global state for user Category sortby, and pagination
+//---------- Global state for user category, sorting, pagination, and loading state ----------//
 let globalFilter = {
-    categoryTag: "", 
-    sortOption: "created",
-    sortOrder: "desc",
-    page: 1, 
-    limit: 20,
-    allListingsFetched: false,
-    active: null
-  };
-  
+  categoryTag: "",
+  sortOption: "created",
+  sortOrder: "desc",
+  page: 1,
+  limit: 20,
+  allListingsFetched: false,
+  active: null,
+  isLoading: false,
+  infiniteScrollInitialized: false,
+};
 
-document.addEventListener("DOMContentLoaded", displayListings);
+//---------- Event listeners and initial setup ----------//
+document.addEventListener("DOMContentLoaded", function () {
+  // Call functions related to display listings
+  displayListings();
+  setupInfiniteScroll();
 
-async function displayListings() {
-    try {
-      const listings = await fetchAllListings(
-        globalFilter.categoryTag,
-        globalFilter.sortOption,
-        globalFilter.sortOrder,
-        globalFilter.page,
-        globalFilter.limit,
-        globalFilter.active
-      );
-    const listingsContainer = document.getElementById("allListings");
-    listingsContainer.textContent = "";
+  // Call functions related to search functionality
+
+});
+
+//-- Display listings and handle pagination
+async function displayListings(append = false) {
+  const listingsContainer = document.getElementById("allListings");
+  const exploreMessage = document.querySelector(".explore-message");
+  const exploreError = document.querySelector(".explore-error");
+
+  if (globalFilter.isLoading) return;
+  globalFilter.isLoading = true;
+
+  try {
+    const listings = await fetchAllListings(
+      globalFilter.categoryTag,
+      globalFilter.sortOption,
+      globalFilter.sortOrder,
+      globalFilter.page,
+      globalFilter.limit,
+      globalFilter.active
+    );
+
+    if (!append) {
+      listingsContainer.textContent = "";
+    }
     console.log(listings);
     listings.forEach((listing) => {
       const colDiv = document.createElement("div");
@@ -92,49 +115,150 @@ async function displayListings() {
       colDiv.appendChild(cardDiv);
       listingsContainer.appendChild(colDiv);
     });
+    if (listings.length < globalFilter.limit) {
+      globalFilter.allListingsFetched = true;
+      exploreMessage.textContent = "No more listings. Back to Top";
+    } else {
+      globalFilter.page++;
+    }
   } catch (error) {
     console.error("Error loading listings:", error);
+    exploreError.textContent =
+      "Failed to load listings. Please check your network settings and try refreshing the page.";
+  } finally {
+    globalFilter.isLoading = false;
   }
 }
 
-document.getElementById('sortBy').addEventListener('change', function() {
-    const sortValue = this.value;
-    switch(sortValue) {
-      case 'desc':
-        globalFilter.sortOption = 'created';
-        globalFilter.sortOrder = 'desc';
-        break;
-      case 'asc':
-        globalFilter.sortOption = 'created';
-        globalFilter.sortOrder = 'asc';
-        break;
-      case 'alpha-asc':
-        globalFilter.sortOption = 'title';
-        globalFilter.sortOrder = 'asc';
-        break;
-      case 'alpha-desc':
-        globalFilter.sortOption = 'title';
-        globalFilter.sortOrder = 'desc';
-        break;
-    }
-    displayListings();
-  });
+//---------- Utility function for sorting and filtering ----------//
+function resetAndFetchListings() {
+  globalFilter.page = 1;
+  globalFilter.allListingsFetched = false;
+  displayListings();
+  resetInfiniteScroll();
+  setupInfiniteScroll();
+}
 
-
-document.querySelectorAll('input[name="filter"]').forEach(input => {
-  input.addEventListener('change', function() {
-    if (this.value === "All") {
-      globalFilter.categoryTag = ""; // Set category tag to empty string for no filter
-    } else {
-      globalFilter.categoryTag = this.value;
-    }
-    globalFilter.page = 1; 
-    displayListings();
-  });
+//---------- Sort by ----------//
+document.getElementById("sortBy").addEventListener("change", function () {
+  const sortValue = this.value;
+  switch (sortValue) {
+    case "desc":
+      globalFilter.sortOption = "created";
+      globalFilter.sortOrder = "desc";
+      break;
+    case "asc":
+      globalFilter.sortOption = "created";
+      globalFilter.sortOrder = "asc";
+      break;
+    case "alpha-asc":
+      globalFilter.sortOption = "title";
+      globalFilter.sortOrder = "asc";
+      break;
+    case "alpha-desc":
+      globalFilter.sortOption = "title";
+      globalFilter.sortOrder = "desc";
+      break;
+  }
+  resetAndFetchListings();
 });
-document.querySelectorAll('input[name="auctionStatus"]').forEach(input => {
-    input.addEventListener('change', function() {
-        globalFilter.active = this.value === "Active";
-        displayListings();
+
+//---------- Filter ----------//
+document
+  .querySelectorAll('input[name="filter"], input[name="auctionStatus"]')
+  .forEach((input) => {
+    input.addEventListener("change", () => {
+      const category = document.querySelector(
+        'input[name="filter"]:checked'
+      ).value;
+      const active = document.querySelector(
+        'input[name="auctionStatus"]:checked'
+      ).value;
+      globalFilter.categoryTag = category === "All" ? "" : category;
+      globalFilter.active = active === "Active";
+      resetAndFetchListings();
     });
+  });
+
+//---------- Infinite scroll setup ----------//
+function setupInfiniteScroll() {
+  if (!globalFilter.infiniteScrollInitialized) {
+    addInfiniteScroll(async () => {
+      if (!globalFilter.allListingsFetched && !globalFilter.isLoading) {
+        await displayListings(true);
+      }
+    });
+    globalFilter.infiniteScrollInitialized = true;
+  } else {
+    console.log("Infinite Scroll is already initialized.");
+  }
+}
+
+//---------- Reset infinite scroll setup ----------//
+function resetInfiniteScroll() {
+  globalFilter.infiniteScrollInitialized = false;
+}
+
+//---------- SearchBar ----------//
+
+document.addEventListener('DOMContentLoaded', () => {
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+    const profilesContainer = document.getElementById('profiles');
+    const listingsContainer = document.getElementById('listings');
+    const searchResultsModal = new bootstrap.Modal(document.getElementById('searchResultsModal'));
+
+    searchForm.addEventListener('submit', async (event) => {
+        console.log("Form submitted");
+        event.preventDefault();
+        const query = searchInput.value.trim();
+        console.log("Search query:", query);
+        if (query) {
+            await searchProfiles(query);
+            await searchListings(query);
+            searchResultsModal.show(); 
+        }
+    });
+
+    async function searchProfiles(query) {
+        console.log("Searching profiles for:", query);
+        try {
+            const response = await fetchProfilesSearch(query);
+            console.log("Profiles found:", response);
+            profilesContainer.innerHTML = '';
+            response.data.forEach(profile => {
+                const profileDiv = document.createElement('div');
+                profileDiv.className = 'profile-result';
+                profileDiv.innerHTML = `
+                    <p>Name: ${profile.name}</p>
+                    <p>Location: ${profile.location}</p>
+                `;
+                profilesContainer.appendChild(profileDiv);
+            });
+        } catch (error) {
+            console.error("Error fetching profiles:", error);
+            profilesContainer.innerHTML = `<p>Error fetching profiles: ${error.message}</p>`;
+        }
+    }
+
+    async function searchListings(query) {
+        console.log("Searching listings for:", query);
+        try {
+            const response = await fetchListingsSearch(query);
+            console.log("Listings found:", response);
+            listingsContainer.innerHTML = '';
+            response.data.forEach(listing => {
+                const listingDiv = document.createElement('div');
+                listingDiv.className = 'listing-result';
+                listingDiv.innerHTML = `
+                    <p>Title: ${listing.title}</p>
+                    <p>Price: $${listing.price}</p>
+                `;
+                listingsContainer.appendChild(listingDiv);
+            });
+        } catch (error) {
+            console.error("Error fetching listings:", error);
+            listingsContainer.innerHTML = `<p>Error fetching listings: ${error.message}</p>`;
+        }
+    }
 });

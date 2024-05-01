@@ -178,6 +178,92 @@
         </div>
       </div>
     </div>
+    <!-- Search Results Modal -->
+    <div
+      class="modal fade"
+      id="searchResultsModal"
+      tabindex="-1"
+      aria-labelledby="searchResultsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title fs-5 fw-bold" id="searchResultsModalLabel">
+              Search Results
+            </p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Navigation tabs for switching between profiles and listings -->
+            <ul class="nav nav-tabs" id="searchTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="profiles-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profiles"
+                  type="button"
+                  role="tab"
+                  aria-controls="profiles"
+                  aria-selected="true"
+                >
+                  Profiles
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="listings-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#listings"
+                  type="button"
+                  role="tab"
+                  aria-controls="listings"
+                  aria-selected="false"
+                >
+                  Listings
+                </button>
+              </li>
+            </ul>
+
+            <!-- Tab content areas for profiles and listings results -->
+            <div class="tab-content" id="searchTabsContent">
+              <div
+                class="tab-pane fade show active mt-3"
+                id="profiles"
+                role="tabpanel"
+                aria-labelledby="profiles-tab"
+              >
+                <!-- Dynamic content for profiles results will be inserted here via JavaScript -->
+              </div>
+              <div
+                class="tab-pane fade mt-3"
+                id="listings"
+                role="tabpanel"
+                aria-labelledby="listings-tab"
+              >
+                <!-- Dynamic content for listings results will be inserted here via JavaScript -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!----------Header---------->
     <header>
       <nav
@@ -235,7 +321,7 @@
             <aside
               class="container-fluid d-flex justify-content-md-start flex-column align-items-center align-items-md-start"
             >
-              <h3 class="fs-4 mb-2">Filter</h3>
+              <h2 class="fs-4 mb-2">Filter</h2>
               <form
                 id="filter"
                 class="gap-3 row d-flex justify-content-center text-start"
@@ -303,10 +389,24 @@
                   <div
                     class="col-12 gap-3 row d-flex justify-content-center p-0"
                   >
-                    <!--Art-->
+                    <!--No Filter-->
                     <div
                       class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
                     >
+                      <div>
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          id="noFilter"
+                          name="filter"
+                          value="All"
+                          checked
+                        />
+                      </div>
+                      <label class="form-check-label" for="noFilter">All</label>
+                    </div>
+                    <!--Art-->
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -319,7 +419,9 @@
                       <label class="form-check-label" for="art">Art</label>
                     </div>
                     <!--Antiques-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -334,9 +436,7 @@
                       >
                     </div>
                     <!--Vehicles-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -349,7 +449,9 @@
                       <label for="vehicles">Vehicles</label>
                     </div>
                     <!--Fashion-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -362,9 +464,7 @@
                       <label for="fashion">Fashion</label>
                     </div>
                     <!--Jewelry-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -377,7 +477,9 @@
                       <label for="jewelry">Jewelry</label>
                     </div>
                     <!--Furniture-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -391,9 +493,7 @@
                     </div>
 
                     <!--Electronics-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -406,7 +506,9 @@
                       <label for="electronics">Electronics</label>
                     </div>
                     <!--Books-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -419,9 +521,7 @@
                       <label for="books">Books</label>
                     </div>
                     <!--Collectibles-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -434,7 +534,9 @@
                       <label for="collectibles">Collectibles</label>
                     </div>
                     <!--Watches-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -447,9 +549,7 @@
                       <label for="watches">Watches</label>
                     </div>
                     <!--Toys-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -462,7 +562,9 @@
                       <label for="toys">Toys</label>
                     </div>
                     <!--Instruments-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -475,9 +577,7 @@
                       <label for="instruments">Instruments</label>
                     </div>
                     <!--Memorabilia-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -490,7 +590,9 @@
                       <label for="memorabilia">Memorabilia</label>
                     </div>
                     <!--Coins-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -503,9 +605,7 @@
                       <label for="coins">Coins</label>
                     </div>
                     <!--Stamps-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -518,7 +618,9 @@
                       <label for="stamps">Stamps</label>
                     </div>
                     <!--Decor-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -531,9 +633,7 @@
                       <label for="decor">Decor</label>
                     </div>
                     <!--Gadgets-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -546,7 +646,9 @@
                       <label for="gadgets">Gadgets</label>
                     </div>
                     <!--Sports-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -559,9 +661,7 @@
                       <label for="sports">Sports</label>
                     </div>
                     <!--Caramics-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -574,7 +674,9 @@
                       <label for="ceramics">Caramics</label>
                     </div>
                     <!--Textiles-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -587,9 +689,7 @@
                       <label for="textiles">Textiles</label>
                     </div>
                     <!--Photography-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -602,7 +702,9 @@
                       <label for="photography">Photography</label>
                     </div>
                     <!--Gardening-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
+                    <div
+                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
+                    >
                       <div>
                         <input
                           class="form-check-input"
@@ -615,9 +717,7 @@
                       <label for="gardening">Gardening</label>
                     </div>
                     <!--Tools-->
-                    <div
-                      class="col-4 col-md-12 d-flex gap-2 align-items-center flex-row-reverse flex-md-row"
-                    >
+                    <div class="col-4 col-md-12 d-flex gap-2">
                       <div>
                         <input
                           class="form-check-input"
@@ -628,22 +728,6 @@
                         />
                       </div>
                       <label for="tools">Tools</label>
-                    </div>
-                    <!--No Filter-->
-                    <div class="col-4 col-md-12 d-flex gap-2">
-                      <div>
-                        <input
-                          class="form-check-input"
-                          type="radio"
-                          id="noFilter"
-                          name="filter"
-                          value="All"
-                          checked
-                        />
-                      </div>
-                      <label class="form-check-label" for="noFilter"
-                        >No Filter</label
-                      >
                     </div>
                   </div>
                 </fieldset>
@@ -662,8 +746,8 @@
               >
                 Explore Biddzy
               </h1>
-              <!--Error message-->
-              <p class="explore-error text-center text-danger"></p>
+              <!--Error error message-->
+              <p class="explore-error text-center text-danger mb-5"></p>
               <div
                 class="mb-3 mb-md-0 mx-3 flex-column flex-md-row d-flex justify-content-between"
               >
@@ -714,167 +798,16 @@
               </div>
             </section>
             <!--Section 2 all Auctions-->
-            <section class="container-fluid">
+            <section class="container-fluid p-0">
               <div
                 id="allListings"
                 class="row justify-content-center mx-3 mx-md-3"
-              >
-                <div class="col-lg-4 col-sm-6 mb-4">
-                  <div class="card text-primary">
-                    <div class="card-img-top-container position-relative w-100">
-                      <img
-                        src="/images/test1.jpg"
-                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                        alt="Item Image 1"
-                      />
-                    </div>
-                    <div class="card-body bg-gray-custom">
-                      <p class="card-title fs-5">Bouclé chair</p>
-                      <p class="card-text">
-                        Current Bid: <span class="currentBid">$100</span>
-                      </p>
-                      <p class="card-text fw-light">
-                        Ends in: <span class="endTime">45m</span>
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-success mt-auto w-100 text-primary"
-                        >Bid Now</a
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 mb-4">
-                  <div class="card text-primary">
-                    <div class="card-img-top-container position-relative w-100">
-                      <img
-                        src="/images/test1.jpg"
-                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                        alt="Item Image 1"
-                      />
-                    </div>
-                    <div class="card-body bg-gray-custom">
-                      <p class="card-title fs-5">Bouclé chair</p>
-                      <p class="card-text">
-                        Current Bid: <span class="currentBid">$100</span>
-                      </p>
-                      <p class="card-text fw-light">
-                        Ends in: <span class="endTime">45m</span>
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-success mt-auto w-100 text-primary"
-                        >Bid Now</a
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 mb-4">
-                  <div class="card text-primary">
-                    <div class="card-img-top-container position-relative w-100">
-                      <img
-                        src="/images/test1.jpg"
-                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                        alt="Item Image 1"
-                      />
-                    </div>
-                    <div class="card-body bg-gray-custom">
-                      <p class="card-title fs-5">Bouclé chair</p>
-                      <p class="card-text">
-                        Current Bid: <span class="currentBid">$100</span>
-                      </p>
-                      <p class="card-text fw-light">
-                        Ends in: <span class="endTime">45m</span>
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-success mt-auto w-100 text-primary"
-                        >Bid Now</a
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 mb-4">
-                  <div class="card text-primary">
-                    <div class="card-img-top-container position-relative w-100">
-                      <img
-                        src="/images/test4.jpg"
-                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                        alt="Item Image 1"
-                      />
-                    </div>
-                    <div class="card-body bg-gray-custom">
-                      <p class="card-title fs-5">Bouclé chair</p>
-                      <p class="card-text">
-                        Current Bid: <span class="currentBid">$100</span>
-                      </p>
-                      <p class="card-text fw-light">
-                        Ends in: <span class="endTime">45m</span>
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-success mt-auto w-100 text-primary"
-                        >Bid Now</a
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 mb-4">
-                  <div class="card text-primary">
-                    <div class="card-img-top-container position-relative w-100">
-                      <img
-                        src="/images/test3.jpg"
-                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                        alt="Item Image 1"
-                      />
-                    </div>
-                    <div class="card-body bg-gray-custom">
-                      <p class="card-title fs-5">Bouclé chair</p>
-                      <p class="card-text">
-                        Current Bid: <span class="currentBid">$100</span>
-                      </p>
-                      <p class="card-text fw-light">
-                        Ends in: <span class="endTime">45m</span>
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-success mt-auto w-100 text-primary"
-                        >Bid Now</a
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 mb-4">
-                  <div class="card text-primary">
-                    <div class="card-img-top-container position-relative w-100">
-                      <img
-                        src="/images/test2.jpg"
-                        class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                        alt="Item Image 1"
-                      />
-                    </div>
-                    <div class="card-body bg-gray-custom">
-                      <p class="card-title fs-5">Bouclé chair</p>
-                      <p class="card-text">
-                        Current Bid: <span class="currentBid">$100</span>
-                      </p>
-                      <p class="card-text fw-light">
-                        Ends in: <span class="endTime">45m</span>
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-success mt-auto w-100 text-primary"
-                        >Bid Now</a
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ></div>
               <a
                 href="#"
                 class="text-center justify-content-center d-flex text-dark"
               >
-                <p class="explore-message fw-bolder"></p
+                <p class="explore-message fw-bolder mx-5"></p
               ></a>
             </section>
           </div>

@@ -22,7 +22,10 @@ export { fetchWinsByProfile }; //-----------------------------------------------
 export { createListing }; //--------------------------------------------------------------------- Line: 192
 //-- For fetch all listings --> explore.js
 export { fetchAllListings }; //--------------------------------------------------------------------- Line: 192
-
+//-- For Search profiles --> explore.js and index.js
+export { fetchProfilesSearch }; //--------------------------------------------------------------------- Line: 192
+//-- For Search listings --> explore.js and index.js
+export { fetchListingsSearch }; //--------------------------------------------------------------------- Line: 192
 
 //---------- Utility ----------//
 //-- This is the Base URL --//
@@ -176,18 +179,19 @@ async function createListing(listingData) {
 }
 /**
  * Fetch all auction listings optionally filtered by a category with sorting and pagination.
- * @param {string} categoryTag - The category to filter by.
- * @param {string} sortOption - The field to sort by.
- * @param {string} sortOrder - The order of sorting ('asc' or 'desc').
- * @param {number} page - The page number in pagination.
- * @param {number} limit - The number of listings per page.
- * @returns {Promise} - The promise returning fetched data or throwing an error.
+ * @param {string} categoryTag
+ * @param {string} sortOption
+ * @param {string} sortOrder
+ * @param {number} page
+ * @param {number} limit
+ * @param {boolean} active
+ * @returns {Promise}
  */
 async function fetchAllListings(
-  categoryTag = "", 
+  categoryTag = "",
   sortOption = "created",
   sortOrder = "desc",
-  page = 1, 
+  page = 1,
   limit = 20,
   active = null
 ) {
@@ -202,12 +206,42 @@ async function fetchAllListings(
   if (active !== null) {
     url += `&_active=${active}`;
   }
-
   const response = await fetch(url, { headers: getHeaders() });
   if (!response.ok) {
     throw new Error("Failed to fetch listings");
   }
-
   const result = await response.json();
   return result.data;
+}
+/**
+ *
+ * @param {string} query
+ * @returns
+ */
+// Function to search for profiles
+async function fetchProfilesSearch(query) {
+  const url = `${API_BASE_URL}/auction/profiles/search?q=${encodeURIComponent(
+    query
+  )}`;
+  const response = await fetch(url, { headers: getHeaders() });
+  if (!response.ok) {
+    throw new Error("Failed to fetch profiles");
+  }
+  return response.json();
+}
+/**
+ *
+ * @param {string} query
+ * @returns
+ */
+// Function to search for listings
+async function fetchListingsSearch(query) {
+  const url = `${API_BASE_URL}/auction/listings/search?q=${encodeURIComponent(
+    query
+  )}`;
+  const response = await fetch(url, { headers: getHeaders() });
+  if (!response.ok) {
+    throw new Error("Failed to fetch listings");
+  }
+  return response.json();
 }

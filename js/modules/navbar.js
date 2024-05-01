@@ -60,7 +60,7 @@ function updateNavbarForLoggedInUser(profileData) {
   const navRightSection = document.getElementById("navRightSection");
   navRightSection.innerHTML = `
         <div class="d-flex align-items-center dropdown">
-          <a href="#" class="dropdown-toggle text-light d-flex" id="navbarDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a href="#" class="dropdown-toggle text-light d-flex text-decoration-none" id="navbarDropDown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <div class="me-3">
               <p class="text-light m-0">${profileData.name}</p>
               <p class="text-light m-0">$${profileData.credits}</p>
