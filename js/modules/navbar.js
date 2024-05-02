@@ -71,7 +71,7 @@ function updateNavbarForLoggedInUser(profileData) {
           </a>
           <ul class="dropdown-menu mt-3 p-2" aria-labelledby="navbarDropDown">
             <li><a class="dropdown-item p-3" href="/html/my-profile.html"><i class="fas fa-user-circle"></i> Go to Profile</a></li>
-            <li><a class="dropdown-item p-3"  aria-current="page"data-bs-toggle="modal"data-bs-target="#newListingModal"><i class="fas fa-plus-circle"></i> Create New Listings</a></li>
+            <li><a class="dropdown-item p-3" role="button"  aria-current="page"data-bs-toggle="modal"data-bs-target="#newListingModal"><i class="fas fa-plus-circle"></i> Create New Listings</a></li>
             <li><a class="dropdown-item p-3" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
           </ul>
         </div>
