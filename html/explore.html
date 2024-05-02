@@ -781,7 +781,7 @@
                   <div class="input-group">
                     <input
                       id="searchInput"
-                      class="border border-2 rounded p-2 form-control flex-grow-1"
+                      class="border border-2 p-2 form-control flex-grow-1"
                       type="text"
                       placeholder="Search for listings or profiles..."
                       aria-label="search for all listings and all profiles"
@@ -799,6 +799,12 @@
             </section>
             <!--Section 2 all Auctions-->
             <section class="container-fluid p-0">
+              <!-- Loader here -->
+              <div id="loader" class="text-center pb-5" style="display: none">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
               <div
                 id="allListings"
                 class="row justify-content-center mx-3 mx-md-3"
@@ -807,7 +813,7 @@
                 href="#"
                 class="text-center justify-content-center d-flex text-dark"
               >
-                <p class="explore-message fw-bolder mx-5"></p
+                <p class="explore-message fw-bolder mx-5 "></p
               ></a>
             </section>
           </div>

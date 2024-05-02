@@ -1,6 +1,19 @@
 //---------- Section 1 Heading ----------//
+//-- Search input min hight
 .sort-by-hight {
   min-height: 44px;
+}
+//-- styles for search Modal
+.search-image {
+  width: 50px;
+  height: 50px;
+}
+.search-item:hover {
+  background-color: #f5f5f5;
+}
+.searchImg {
+  width: 50px;
+  height: 50px;
 }
 //---------- Section 2  all Auctions ----------//
 // .card {
@@ -23,11 +36,3 @@
   display: flex;
 }
 
-//-- styles for search 
-.search-image {
-  width: 50px;
-  height: 50px;
-}
-.search-item:hover {
-  background-color: #f5f5f5;
-}

@@ -1,4 +1,4 @@
-- Make modules for navbar, and import to main.js(script on every html)
--cards styles to global!!!
 
-- make searchbar on explore like everyone else closer to input. 
+- cards styles to global!!!
+
+- explore.js = loader on infinitescroll and comments. and hover overlay for listings in utility and my-profile 
