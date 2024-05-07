@@ -22,5 +22,6 @@ function getToken() {
 
 function clearToken() {
   localStorage.removeItem("accessToken");
+  localStorage.removeItem("userName");
 }
 

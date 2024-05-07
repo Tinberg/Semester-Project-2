@@ -114,14 +114,14 @@ async function fetchUserProfile(userName) {
  */
 async function fetchListingsByProfile(userName, page = 1, limit = 6) {
   const response = await fetch(
-    `${API_BASE_URL}/auction/profiles/${userName}/listings?limit=${limit}&page=${page}&_bids=true&_seller=true`,
+    `${API_BASE_URL}/auction/profiles/${userName}/listings?limit=${limit}&page=${page}`,
     {
       headers: getHeaders(),
     }
   );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch profile information");
+    throw new Error("Failed to fetch profile listings");
   }
 
   const result = await response.json();
@@ -141,7 +141,7 @@ async function fetchbidsByProfile(userName, page = 1, limit = 6) {
     }
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch profile information");
+    throw new Error("Failed to fetch profile bids");
   }
   const result = await response.json();
   return result.data;
@@ -159,7 +159,7 @@ async function fetchWinsByProfile(userName, page = 1, limit = 6) {
     }
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch profile information");
+    throw new Error("Failed to fetch profile wins");
   }
   const result = await response.json();
   return result.data;

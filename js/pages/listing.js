@@ -87,6 +87,7 @@ function displayListingDetails(listing) {
     endsInDisplay.textContent = "Auction Ended"; 
     endsInDisplay.classList.add("text-danger", "fs-5");
     endsInDisplay.classList.remove("text-normal");
+    bidButton.disabled = true;
   } else {
     endsInDisplay.classList.remove("text-danger");
     endsInDisplay.classList.add("text-normal");

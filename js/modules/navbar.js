@@ -1,6 +1,8 @@
 //--------------------   Import For Navbar -------------------- //
 //-- Get token for authentication requests
 import { getToken } from "./auth.js";
+//-- ClearToken to logout (localstorage remove userName and accesToken)
+import { clearToken } from "./auth.js";
 //-- Api for logged in user --> api.js
 import { fetchUserProfile } from "./api.js";
 //-- Create new listing  --> api.js
@@ -19,7 +21,6 @@ async function initUserNavbar() {
   const jwtToken = getToken();
 
   if (!userName || !jwtToken) {
-    console.error("Authentication data missing");
     setNavContent(navbarForNotLoggedInUser());
     return;
   }
@@ -72,10 +73,17 @@ function updateNavbarForLoggedInUser(profileData) {
           <ul class="dropdown-menu mt-3 p-2" aria-labelledby="navbarDropDown">
             <li><a class="dropdown-item p-3" href="/html/my-profile.html"><i class="fas fa-user-circle"></i> Go to Profile</a></li>
             <li><a class="dropdown-item p-3" role="button"  aria-current="page"data-bs-toggle="modal"data-bs-target="#newListingModal"><i class="fas fa-plus-circle"></i> Create New Listings</a></li>
-            <li><a class="dropdown-item p-3" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+            <li><a class="dropdown-item p-3" href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
           </ul>
         </div>
       `;
+  //-- to select logout and init logout function
+  document
+    .getElementById("logoutButton")
+    .addEventListener("click", function (event) {
+      event.preventDefault();
+      logout();
+    });
 }
 
 //--Loading indicator in the navbar while user data is being fetched.
@@ -108,7 +116,7 @@ function setupNewListingForm() {
     const endsAt = document.getElementById("endsAt").value;
     const category = document.getElementById("categorySelect").value;
     const errorFeedback = document.getElementById("listingErrorFeedback");
-    
+
     //-- Listing data
     const tags = category !== "Choose a category" ? [category] : [];
 
@@ -173,3 +181,13 @@ document
 document
   .getElementById("altText")
   .addEventListener("input", updateAltTextFeedback);
+
+//--------------------  Logout Function --------------------//
+function logout() {
+  if (confirm("Are you sure you want to log out?")) {
+    clearToken(); 
+    window.location.href = '/index.html'; 
+  } else {
+    console.log("Logout canceled.");
+  }
+} 

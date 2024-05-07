@@ -180,7 +180,7 @@ function createCardBody(listing) {
   const highestBidAmount = getHighestBidAmount(listing);
   const highestBidP = document.createElement("p");
   highestBidP.classList.add("card-text");
-  highestBidP.innerHTML = `Highest Bid: <span class="highestBid">$${highestBidAmount.toFixed(
+  highestBidP.innerHTML = `Current Bid: <span class="highestBid">$${highestBidAmount.toFixed(
     2
   )}</span>`;
   cardBodyDiv.appendChild(highestBidP);
@@ -390,7 +390,7 @@ function initializeSearch() {
           const bidSmall = document.createElement("small");
           bidSmall.className = "text-muted m-0";
           const highestBidAmount = getHighestBidAmount(listing);
-          bidSmall.textContent = `Highest bid: $${highestBidAmount.toFixed(2)}`;
+          bidSmall.textContent = `Current bid: $${highestBidAmount.toFixed(2)}`;
 
           textDiv.appendChild(titleParagraph);
           textDiv.appendChild(bidSmall);

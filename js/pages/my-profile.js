@@ -109,29 +109,64 @@ function displayListings(listings, append = false) {
       timeLeft === "Auction ended" ? "btn-warning" : "btn-success";
 
     const highestBid = getHighestBidAmount(listing);
+    const userName = localStorage.getItem("userName");
 
-    const html = `
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <div class="card text-primary">
-          <div class="card-img-top-container position-relative w-100">
-            <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
-          </div>
-          <div class="card-body bg-gray-custom">
-            <p class="card-title fs-5 text-truncate">${listing.title}</p>
-            <p class="card-text">Current Bid: <span class="currentBidListings">$ $ ${highestBid.toFixed(
-              2
-            )}
-              
-            </span></p>
-            <p class="card-text fw-light">${endTimeDisplay}</p>
-            <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
-          </div>
-        </div>
+    // Create a column for the card
+    const colDiv = document.createElement("div");
+    colDiv.className = "col-lg-4 col-sm-6 mb-4 card-container";
+    colDiv.style.cursor = "pointer";
+
+    // Create the card and direct to listing on click
+    const cardDiv = document.createElement("div");
+    cardDiv.className = "card text-primary";
+    cardDiv.onclick = function () {
+      window.location.href = `listing.html?id=${listing.id}`;
+    };
+
+    // Image container
+    const imgContainerDiv = document.createElement("div");
+    imgContainerDiv.className =
+      "card-img-top-container position-relative w-100";
+
+    // Image element
+    const img = document.createElement("img");
+    img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
+    img.src = imageUrl;
+    img.alt = imageAlt;
+
+    // Overlay content
+    const overlayDiv = document.createElement("div");
+    overlayDiv.className =
+      "overlay-content position-absolute top-0 start-0 end-0 bottom-0 w-100 h-100 d-flex justify-content-center align-items-center p-2";
+    overlayDiv.innerHTML = `
+      <div class="text-center text-break">
+        <p class="text-light">${trimText(listing.description, 100)}</p>
+        <p class="text-light fw-bold  mb-0">Sold by:</p>
+        <p class="text-light text-truncate">${userName}</p>
       </div>
     `;
-    container.innerHTML += html;
+
+    // Card body
+    const cardBodyDiv = document.createElement("div");
+    cardBodyDiv.className = "card-body bg-gray-custom";
+    cardBodyDiv.innerHTML = `
+      <p class="card-title fs-5 text-truncate">${listing.title}</p>
+      <p class="card-text">Current Bid: <span class="currentBidListings">$${highestBid.toFixed(
+        2
+      )}</span></p>
+      <p class="card-text fw-light">${endTimeDisplay}</p>
+      <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
+    `;
+
+    imgContainerDiv.appendChild(img);
+    imgContainerDiv.appendChild(overlayDiv);
+    cardDiv.appendChild(imgContainerDiv);
+    cardDiv.appendChild(cardBodyDiv);
+    colDiv.appendChild(cardDiv);
+    container.appendChild(colDiv);
   });
 }
+
 //---------- Show Bids by profile  ----------//
 function displayBids(bids, append = false) {
   console.log("Displaying bids:", bids);
@@ -148,53 +183,91 @@ function displayBids(bids, append = false) {
     }
 
     const bidTimeSince = timeSince(new Date(bid.created));
-    const imageUrl = "/images/no-img-listing.jpg";
-    const imageAlt = "Listing Image";
-    //-- No api endpoint for _listing for Media, could this be smt Noroff could add to the api?
-    if (bid.listing.media && bid.listing.media.length > 0) {
-      imageUrl = bid.listing.media[0].url;
-      imageAlt = bid.listing.media[0].alt;
-    } else {
-      console.log("No media available for this listing:", bid.listing);
-    }
+    const imageUrl =
+      bid.listing.media && bid.listing.media.length > 0
+        ? bid.listing.media[0].url
+        : "/images/no-img-listing.jpg";
+    const imageAlt =
+      bid.listing.media && bid.listing.media.length > 0
+        ? bid.listing.media[0].alt
+        : "Listing Image";
+    const listingDescription =
+      bid.listing.description || "No description available";
 
-    // Calculate time until auction ends
     const timeLeft = timeUntil(bid.listing.endsAt);
     const endTimeDisplay =
       timeLeft === "Auction ended" ? timeLeft : `Ends in: ${timeLeft}`;
     const buttonClass =
       timeLeft === "Auction ended" ? "btn-warning" : "btn-success";
 
-    const html = `
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <div class="card text-primary">
-          <div class="card-img-top-container position-relative w-100">
-            <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
-            <div class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3">
-              Bid placed: ${bidTimeSince}
-            </div>
-          </div>
-          <div class="card-body bg-gray-custom">
-            <p class="card-title fs-5 text-truncate">${bid.listing.title}</p>
-            <p class="card-text">Your Bid: <span class="currentBidBidding">$${bid.amount.toFixed(
-              2
-            )}</span></p>
-            <p class="card-text">${endTimeDisplay}</p>
-            <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
-          </div>
-        </div>
-      </div>
-    `;
-    container.insertAdjacentHTML("beforeend", html);
+    // Create a column for the card
+    const colDiv = document.createElement("div");
+    colDiv.className = "col-lg-4 col-sm-6 mb-4 card-container";
+    colDiv.style.cursor = "pointer";
+
+    // Create the card and redirect on click
+    const cardDiv = document.createElement("div");
+    cardDiv.className = "card text-primary";
+    cardDiv.onclick = function () {
+      window.location.href = `listing.html?id=${bid.listing.id}`;
+    };
+
+    // Image container
+    const imgContainerDiv = document.createElement("div");
+    imgContainerDiv.className =
+      "card-img-top-container position-relative w-100";
+
+    // Image element
+    const img = document.createElement("img");
+    img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
+    img.src = imageUrl;
+    img.alt = imageAlt;
+
+    // Bid date overlay
+    const bidDateOverlay = document.createElement("div");
+    bidDateOverlay.className =
+      "bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3";
+    bidDateOverlay.textContent = `Bid placed: ${bidTimeSince}`;
+
+    // Hover overlay
+    const hoverOverlay = document.createElement("div");
+    hoverOverlay.className =
+      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center";
+    hoverOverlay.innerHTML = `<div>
+          <p class="text-white">${trimText(listingDescription, 100)}</p>
+      </div>`;
+
+    imgContainerDiv.appendChild(img);
+    imgContainerDiv.appendChild(bidDateOverlay);
+    imgContainerDiv.appendChild(hoverOverlay);
+
+    // Card body
+    const cardBodyDiv = document.createElement("div");
+    cardBodyDiv.className = "card-body bg-gray-custom";
+    cardBodyDiv.innerHTML = `
+          <p class="card-title fs-5 text-truncate">${bid.listing.title}</p>
+          <p class="card-text">Your Bid: <span class="currentBidBidding">$${bid.amount.toFixed(
+            2
+          )}</span></p>
+          <p class="card-text">${endTimeDisplay}</p>
+          <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
+      `;
+
+    cardDiv.appendChild(imgContainerDiv);
+    cardDiv.appendChild(cardBodyDiv);
+    colDiv.appendChild(cardDiv);
+    container.appendChild(colDiv);
   });
 }
 
 //---------- Show wins by profile  ----------//
-function displayWins(wins) {
-  console.log("Displaying wins with bids check:", wins.map(win => ({ title: win.title, bids: win.bids })));
-
+function displayWins(wins, append = false) {
+  console.log("Displaying wins:", wins);
   const container = document.getElementById("containerWon");
-  container.innerHTML = "";
+
+  if (!append) {
+    container.innerHTML = "";
+  }
 
   wins.forEach((win) => {
     const imageUrl =
@@ -205,34 +278,66 @@ function displayWins(wins) {
       win.media && win.media.length > 0
         ? win.media[0].alt
         : "No image available";
-    const description = win.description || "No description provided.";
-    const timeLeft = timeUntil(win.endsAt);
-    const endTimeDisplay =
-      timeLeft === "Auction ended"
-        ? "Auction Ended"
-        : `Auction Ended: ${timeLeft}`;
-    const buttonClass = "btn-warning"; 
+    const listingDescription = win.description || "No description available";
+    const timeSinceEnd = timeSince(new Date(win.endsAt));
+    const buttonClass = "btn-warning";
 
-    const html = `
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <div class="card text-primary">
-          <div class="card-img-top-container position-relative w-100">
-            <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
-            <div class="wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3">
-              <i class="fa-solid fa-crown fa-2x"></i>
-            </div>
-          </div>
-          <div class="card-body bg-gray-custom">
-            <p class="card-title fs-5 text-truncate">${win.title}</p>
-            <p class="card-text">${description}</p>
-            <p class="card-text">Bid won: <span class="currentBidWon">${win._count.bids}</span></p>
-            <p class="card-text fw-light">${endTimeDisplay}</p>
-            <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
-          </div>
-        </div>
-      </div>
+    // Create a column for the card
+    const colDiv = document.createElement("div");
+    colDiv.className = "col-lg-4 col-sm-6 mb-4 card-container";
+    colDiv.style.cursor = "pointer";
+
+    // Create the card and redirect
+    const cardDiv = document.createElement("div");
+    cardDiv.className = "card text-primary";
+    cardDiv.onclick = function () {
+      window.location.href = `listing.html?id=${win.id}`;
+    };
+
+    // Image container
+    const imgContainerDiv = document.createElement("div");
+    imgContainerDiv.className =
+      "card-img-top-container position-relative w-100";
+
+    // Image element
+    const img = document.createElement("img");
+    img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
+    img.src = imageUrl;
+    img.alt = imageAlt;
+
+    // Crown icon overlay
+    const wonIconDiv = document.createElement("div");
+    wonIconDiv.className =
+      "wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3";
+    wonIconDiv.innerHTML = '<i class="fa-solid fa-crown fa-2x"></i>';
+
+    // Description overlay
+    const descriptionOverlay = document.createElement("div");
+    descriptionOverlay.className =
+      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center";
+    descriptionOverlay.style.display = "none";
+    descriptionOverlay.innerHTML = `<div class="text-white text-center">${trimText(
+      listingDescription,
+      100
+    )}</div>`;
+
+    // Card body
+    const cardBodyDiv = document.createElement("div");
+    cardBodyDiv.className = "card-body bg-gray-custom";
+    cardBodyDiv.innerHTML = `
+        <p class="card-title fs-5 text-truncate">${win.title}</p>
+        <p class="card-text">Bids Received: <span class="currentBidWon">${win._count.bids}</span></p>
+        <p class="card-text">Auction ended: ${timeSinceEnd}</p>
+        <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
     `;
-    container.insertAdjacentHTML("beforeend", html);
+
+    imgContainerDiv.appendChild(img);
+    imgContainerDiv.appendChild(wonIconDiv);
+    imgContainerDiv.appendChild(descriptionOverlay);
+    cardDiv.appendChild(imgContainerDiv);
+    cardDiv.appendChild(cardBodyDiv);
+    colDiv.appendChild(cardDiv);
+    container.appendChild(colDiv);
   });
 }
 
