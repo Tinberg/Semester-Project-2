@@ -26,6 +26,10 @@ export { fetchAllListings }; //-------------------------------------------------
 export { fetchProfilesSearch }; //--------------------------------------------------------------------- Line: 192
 //-- For Search listings --> explore.js and index.js
 export { fetchListingsSearch }; //--------------------------------------------------------------------- Line: 192
+//-- For specific listing --> listing.js
+export { fetchListingById }; //--------------------------------------------------------------------- Line: 192
+//-- For bid on listing --> listing.js
+export { sendBid }; //--------------------------------------------------------------------- Line: 192
 
 //---------- Utility ----------//
 //-- This is the Base URL --//
@@ -102,23 +106,28 @@ async function fetchUserProfile(userName) {
   return result.data;
 }
 /**
- * fetch all listings by profile
+ * fetch all listings by profile including bids,seller and pagination
  * @param {string} userName
+ * @param {number} page
+ * @param {number} limit
  * @returns {Promise}
  */
 async function fetchListingsByProfile(userName, page = 1, limit = 6) {
   const response = await fetch(
-    `${API_BASE_URL}/auction/profiles/${userName}/listings?limit=${limit}&page=${page}`,
+    `${API_BASE_URL}/auction/profiles/${userName}/listings?limit=${limit}&page=${page}&_bids=true&_seller=true`,
     {
       headers: getHeaders(),
     }
   );
+
   if (!response.ok) {
     throw new Error("Failed to fetch profile information");
   }
+
   const result = await response.json();
   return result.data;
 }
+
 /**
  * fetch all bids by profile
  * @param {string} userName
@@ -126,7 +135,7 @@ async function fetchListingsByProfile(userName, page = 1, limit = 6) {
  */
 async function fetchbidsByProfile(userName, page = 1, limit = 6) {
   const response = await fetch(
-    `${API_BASE_URL}/auction/profiles/${userName}/bids?limit=${limit}&page=${page}`,
+    `${API_BASE_URL}/auction/profiles/${userName}/bids?limit=${limit}&page=${page}&_listings=true`,
     {
       headers: getHeaders(),
     }
@@ -169,9 +178,7 @@ async function createListing(listingData) {
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(
-      `Failed to create listing: ${errorData.message || "Unknown error"}`
-    );
+    throw new Error(`Failed to create listing`);
   }
 
   const result = await response.json();
@@ -195,7 +202,7 @@ async function fetchAllListings(
   limit = 20,
   active = null
 ) {
-  let url = `${API_BASE_URL}/auction/listings?page=${page}&limit=${limit}`;
+  let url = `${API_BASE_URL}/auction/listings?_seller=true&_bids=true&page=${page}&limit=${limit}`;
 
   if (categoryTag) {
     url += `&_tag=${encodeURIComponent(categoryTag)}`;
@@ -206,6 +213,7 @@ async function fetchAllListings(
   if (active !== null) {
     url += `&_active=${active}`;
   }
+
   const response = await fetch(url, { headers: getHeaders() });
   if (!response.ok) {
     throw new Error("Failed to fetch listings");
@@ -220,28 +228,80 @@ async function fetchAllListings(
  */
 // Function to search for profiles
 async function fetchProfilesSearch(query) {
-  const url = `${API_BASE_URL}/auction/profiles/search?q=${encodeURIComponent(
-    query
-  )}`;
-  const response = await fetch(url, { headers: getHeaders() });
+  const response = await fetch(
+    `${API_BASE_URL}/auction/profiles/search?q=${encodeURIComponent(query)}`,
+    {
+      headers: getHeaders(),
+    }
+  );
+
   if (!response.ok) {
     throw new Error("Failed to fetch profiles");
   }
+
   return response.json();
 }
 /**
- *
+ * Function to search for listings including bids and seller information.
  * @param {string} query
- * @returns
+ * @returns {Promise}
  */
-// Function to search for listings
 async function fetchListingsSearch(query) {
-  const url = `${API_BASE_URL}/auction/listings/search?q=${encodeURIComponent(
-    query
-  )}`;
-  const response = await fetch(url, { headers: getHeaders() });
+  const response = await fetch(
+    `${API_BASE_URL}/auction/listings/search?q=${encodeURIComponent(
+      query
+    )}&_bids=true&_seller=true`,
+    {
+      headers: getHeaders(),
+    }
+  );
+
   if (!response.ok) {
     throw new Error("Failed to fetch listings");
   }
+
   return response.json();
+}
+
+/**
+ * Fetches a single auction listing by its ID with optional seller and bids information.
+ * @param {string} listingId
+ * @returns {Promise}
+ */
+async function fetchListingById(listingId) {
+  const response = await fetch(
+    `${API_BASE_URL}/auction/listings/${listingId}?_seller=true&_bids=true`,
+    { headers: getHeaders() }
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to fetch listing`);
+  }
+  const result = await response.json();
+  return result.data;
+}
+
+/**
+ * Send a bid for a specific listing.
+ * @param {string} listingId
+ * @param {number} bidAmount
+ * @returns {Promise}
+ */
+async function sendBid(listingId, bidAmount) {
+  const response = await fetch(
+    `${API_BASE_URL}/auction/listings/${listingId}/bids`,
+    {
+      method: "POST",
+      headers: getHeaders(true),
+      body: JSON.stringify({
+        amount: bidAmount,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to submit bid");
+  }
+
+  const result = await response.json();
+  return result.data;
 }

@@ -34,7 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
         storeToken(result.accessToken);
         // Store the username to localstorage
         localStorage.setItem("userName", result.name);
-        window.location.href = `/html/my-profile.html`;
+        // Check for redirect query parameter if the user clicked log in on a specific listing, else redirect to my-profile
+        const params = new URLSearchParams(window.location.search);
+        const redirectId = params.get("redirect");
+        const redirectPath = redirectId
+          ? `/html/listing.html?id=${redirectId}`
+          : "/html/my-profile.html";
+        window.location.href = redirectPath;
       } catch (error) {
         console.error(error.message);
         errorLogin.classList.remove("text-secondary");

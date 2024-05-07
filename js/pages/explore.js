@@ -15,6 +15,8 @@ import { timeUntil } from "../modules/utility.js";
 import { trimText } from "../modules/utility.js";
 //-- for infinite scroll--> utility.js
 import { addInfiniteScroll } from "../modules/utility.js";
+//-- for map out the highest bid amount--> utility.js
+import { getHighestBidAmount } from "../modules/utility.js";
 
 //---------- Global state for user category, sorting, pagination, and loading state ----------//
 let globalFilter = {
@@ -31,10 +33,24 @@ let globalFilter = {
 
 //---------- Event listeners and initial setup ----------//
 document.addEventListener("DOMContentLoaded", function () {
-  // Call functions related to display listings
+  //-- Call functions related to display listings
   displayListings();
   setupInfiniteScroll();
   initializeSearch();
+  //-- Reset filters and sortBy on page reload
+  window.addEventListener("pageshow", function () {
+    //-- Reset the "Sort by" dropdown to 'Newest'
+    const sortBySelect = document.getElementById("sortBy");
+    sortBySelect.value = "desc";
+
+    //-- Reset the "All Auctions" radio button
+    const allAuctionsRadio = document.getElementById("allAuctions");
+    allAuctionsRadio.checked = true;
+
+    //-- Reset the "All Categories" radio button
+    const noFilterRadio = document.getElementById("noFilter");
+    noFilterRadio.checked = true;
+  });
 });
 
 //---------- Display listings and handle pagination ----------//
@@ -66,10 +82,22 @@ async function displayListings(append = false) {
     console.log(listings);
     listings.forEach((listing) => {
       const colDiv = document.createElement("div");
+      colDiv.style.cursor = "pointer";
       colDiv.className = "col-lg-4 col-sm-6 mb-4 card-container";
 
       const cardDiv = document.createElement("div");
       cardDiv.className = "card text-primary";
+      cardDiv.setAttribute("role", "link");
+      cardDiv.setAttribute("tabindex", "0");
+      cardDiv.setAttribute(
+        "aria-label",
+        `View auction details for ${listing.title}`
+      );
+
+      //-- Click event on Card to take the user to listing.html with the right auction
+      cardDiv.addEventListener("click", () => {
+        window.location.href = `listing.html?id=${listing.id}`;
+      });
 
       //-- Image container with hover overlay
       const imgContainerDiv = createImageOverlay(listing);
@@ -98,11 +126,12 @@ async function displayListings(append = false) {
     globalFilter.isLoading = false;
   }
 }
-//-- Image OverLay
+
+//---------- Image and Image Overlay ----------//
 function createImageOverlay(listing) {
   const imgContainerDiv = document.createElement("div");
   imgContainerDiv.className = "card-img-top-container position-relative w-100";
-
+  //--
   const img = document.createElement("img");
   img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
   img.src =
@@ -115,17 +144,20 @@ function createImageOverlay(listing) {
       : "Listing Image";
   imgContainerDiv.appendChild(img);
 
-  //-- Overlay div only visible on hover
+  //---------- Overlay div only visible on hover ----------//
   const overlayDiv = document.createElement("div");
   overlayDiv.className =
     "overlay-content position-absolute top-0 start-0 end-0 bottom-0 w-100 h-100 d-flex justify-content-center align-items-center p-2";
-  // Truncate the description to fit layout
+  //-- Truncate the description to fit layout
   const trimmedDescription = trimText(listing.description, 100);
-
+  //-- SellerName
+  const sellerName = listing.seller ? listing.seller.name : "Unknown Seller";
+  //-- Structure
   overlayDiv.innerHTML = `
-      <div class="text-center">
+      <div class="text-center text-break">
         <p class="text-light">${trimmedDescription}</p>
-        <p class="text-light fw-bold">Read more</p>
+        <p class="text-light fw-bold  mb-0">Sold by:</p>
+        <p class="text-light text-truncate">${sellerName}</p>
       </div>
     `;
 
@@ -133,25 +165,48 @@ function createImageOverlay(listing) {
 
   return imgContainerDiv;
 }
-//-- Card Body
+//---------- Card Body ----------//
 function createCardBody(listing) {
   const cardBodyDiv = document.createElement("div");
-  cardBodyDiv.className = "card-body bg-gray-custom";
+  cardBodyDiv.classList.add("card-body", "bg-gray-custom");
 
+  // Title
   const titleP = document.createElement("p");
-  titleP.className = "card-title fs-5 text-truncate";
+  titleP.classList.add("card-title", "fs-5", "text-truncate");
   titleP.textContent = listing.title;
   cardBodyDiv.appendChild(titleP);
 
-  const currentBidP = document.createElement("p");
-  currentBidP.className = "card-text";
-  currentBidP.innerHTML = `Current Bid: <span class="currentBid">$${listing._count.bids}</span>`;
-  cardBodyDiv.appendChild(currentBidP);
+  // Highest Bid
+  const highestBidAmount = getHighestBidAmount(listing);
+  const highestBidP = document.createElement("p");
+  highestBidP.classList.add("card-text");
+  highestBidP.innerHTML = `Highest Bid: <span class="highestBid">$${highestBidAmount.toFixed(
+    2
+  )}</span>`;
+  cardBodyDiv.appendChild(highestBidP);
 
+  // End Time
   const endTimeP = document.createElement("p");
-  endTimeP.className = "card-text fw-light";
-  endTimeP.textContent = `Ends in: ${timeUntil(listing.endsAt)}`;
+  endTimeP.classList.add("card-text", "fw-light");
+  const auctionIsActive = new Date(listing.endsAt) > new Date();
+
+  if (auctionIsActive) {
+    endTimeP.textContent = `Ends in: ${timeUntil(listing.endsAt)}`;
+  } else {
+    endTimeP.textContent = "Auction ended";
+  }
+
   cardBodyDiv.appendChild(endTimeP);
+
+  // Visual "View Auction/Auction Ended" btn. success if active and warning if ended.
+  const viewAuctionVisual = document.createElement("div");
+  viewAuctionVisual.className = `btn ${
+    auctionIsActive ? "btn-success" : "btn-warning"
+  } mt-2 w-100 text-primary`;
+  viewAuctionVisual.textContent = auctionIsActive
+    ? "View Auction"
+    : "Auction Ended";
+  cardBodyDiv.appendChild(viewAuctionVisual);
 
   return cardBodyDiv;
 }
@@ -245,7 +300,7 @@ function initializeSearch() {
       searchResultsModal.show();
     }
   });
-  //-- Search Profiles
+  //---------- Search Profiles ----------//
   async function searchProfiles(query) {
     try {
       const response = await fetchProfilesSearch(query);
@@ -264,12 +319,13 @@ function initializeSearch() {
           const listItem = document.createElement("li");
           listItem.className =
             "list-group-item profile-result d-flex align-items-center search-item";
-
+          listItem.style.cursor = "pointer";
+          //-- Profile Img
           const img = document.createElement("img");
           img.src = profile.avatar.url;
           img.alt = profile.avatar.alt || "Profile Image";
           img.className = "rounded-circle-bottom searchImg me-3";
-
+          //-- Profile Name
           const nameParagraph = document.createElement("p");
           nameParagraph.className = "m-0";
           nameParagraph.textContent = profile.name;
@@ -288,7 +344,7 @@ function initializeSearch() {
       profilesContainer.classList.add("text-danger");
     }
   }
-  //-- Search Listings
+  //---------- Search Listings ----------//
   async function searchListings(query) {
     try {
       const response = await fetchListingsSearch(query);
@@ -306,8 +362,13 @@ function initializeSearch() {
         response.data.forEach((listing) => {
           const listItem = document.createElement("li");
           listItem.className =
-            "list-group-item listing-result d-flex align-items-center";
-
+            "list-group-item listing-result d-flex align-items-center search-item";
+          listItem.style.cursor = "pointer";
+          //-- Go to listing.html with the right id
+          listItem.addEventListener("click", () => {
+            window.location.href = `listing.html?id=${listing.id}`;
+          });
+          //-- Listing img
           const img = document.createElement("img");
           img.src =
             listing.media && listing.media.length > 0
@@ -318,17 +379,18 @@ function initializeSearch() {
               ? listing.media[0].alt
               : "Listing Image";
           img.className = "rounded me-3 searchImg";
-
+          //- container for text
           const textDiv = document.createElement("div");
           textDiv.className = "text-truncate";
-
+          //-- Title
           const titleParagraph = document.createElement("p");
           titleParagraph.className = "m-0";
           titleParagraph.textContent = listing.title;
-
+          //-- Highest Bid
           const bidSmall = document.createElement("small");
           bidSmall.className = "text-muted m-0";
-          bidSmall.textContent = `Current bid: $${listing._count.bids}`;
+          const highestBidAmount = getHighestBidAmount(listing);
+          bidSmall.textContent = `Highest bid: $${highestBidAmount.toFixed(2)}`;
 
           textDiv.appendChild(titleParagraph);
           textDiv.appendChild(bidSmall);

@@ -54,9 +54,9 @@ a:hover {
 }
 //circle image bottom (HeroImg and ProfileImg)
 .rounded-circle-bottom {
-  border-bottom-left-radius: 50%;
-  border-bottom-right-radius: 50%;
+  border-radius: 0 0 50% 50%;
 }
+
 //Additional style for Bootstrap card
 .card-img-top-container {
   padding-top: 80%;
@@ -69,7 +69,7 @@ nav {
 }
 //-- Make the Dropdown center of the changing navbar content
 .navbar .dropdown-menu {
-  left: 60%; 
+  left: 60%;
   transform: translateX(-60%);
 }
 //--To make ul element to center of the navbar
@@ -85,9 +85,9 @@ nav {
 }
 //----- New Listing Modal
 .img-icon {
-    width: 200px;
-    height: 200px;
-  }
+  width: 200px;
+  height: 200px;
+}
 //--Footer
 footer {
   font-size: 0.9rem;

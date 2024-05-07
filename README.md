@@ -1,5 +1,6 @@
 
-- cards styles to global!!!
+- my-profile, make loader for each tab (listing, bid activity and auctions won)
+- make hover like explore on eall tabs
 
-- explore.js = loader on infinitescroll and comments. and hover overlay for listings in utility and my-profile 
-- Make profile navbar hover color right on listing and check semantically correct in html in navbar.js 
+make btn in listing.html disabled if its the users listing
+make listing won in profile right

@@ -11,14 +11,18 @@ import { fetchListingsByProfile } from "../modules/api.js";
 import { fetchbidsByProfile } from "../modules/api.js";
 //-- Api for fetch all wins by a profile --> api.js
 import { fetchWinsByProfile } from "../modules/api.js";
-//-- for time until end on auctions--> utility.js
+//-- For time until end on auctions--> utility.js
 import { timeUntil } from "../modules/utility.js";
+//-- For displaying time since a bid was made--> utility.js
+import { timeSince } from "../modules/utility.js";
 //-- Infinite scroll, triggering a callback when the user reaches the bottom of the page--> utility.js
 import { addInfiniteScroll } from "../modules/utility.js";
 //-- For removing error message and element after a duration --> utility.js
 import { clearElementAfterDuration } from "../modules/utility.js";
 //-- Trim the text for overlay text title and body text for post --> utility.js --//
 import { trimText } from "../modules/utility.js";
+//-- For map out highest bid on listing --> utility.js --//
+import { getHighestBidAmount } from "../modules/utility.js";
 
 //Global state for user Bio text, profile, and pagination
 let initialBioText = "";
@@ -86,6 +90,7 @@ function displayUserProfile(profile) {
 function displayListings(listings, append = false) {
   console.log("Displaying Listings:", listings);
   const container = document.getElementById("containerListings");
+
   if (!append) {
     container.innerHTML = "";
   }
@@ -100,6 +105,10 @@ function displayListings(listings, append = false) {
 
     const endTimeDisplay =
       timeLeft === "Auction ended" ? timeLeft : `Ends in: ${timeLeft}`;
+    const buttonClass =
+      timeLeft === "Auction ended" ? "btn-warning" : "btn-success";
+
+    const highestBid = getHighestBidAmount(listing);
 
     const html = `
       <div class="col-lg-4 col-sm-6 mb-4">
@@ -109,11 +118,13 @@ function displayListings(listings, append = false) {
           </div>
           <div class="card-body bg-gray-custom">
             <p class="card-title fs-5 text-truncate">${listing.title}</p>
-            <p class="card-text">Current Bid: <span class="currentBidListings">${
-              listing._count.bids || "No bids yet"
-            }</span></p>
+            <p class="card-text">Current Bid: <span class="currentBidListings">$ $ ${highestBid.toFixed(
+              2
+            )}
+              
+            </span></p>
             <p class="card-text fw-light">${endTimeDisplay}</p>
-            <a href="#" class="btn btn-success mt-auto w-100 text-primary">To Auction</a>
+            <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
           </div>
         </div>
       </div>
@@ -121,117 +132,107 @@ function displayListings(listings, append = false) {
     container.innerHTML += html;
   });
 }
-
-//---------- show bids by profile ----------//
-// function displayBids(bids) {
-//   console.log("Displaying bids:", bids);
-//   const container = document.getElementById("containerBidding");
-//   container.innerHTML = "";
-//   bids.forEach((bid) => {
-//     const html = `
-//         <div class="col-lg-4 col-sm-6 mb-4">
-//           <div class="card text-primary">
-//             <div class="card-img-top-container position-relative w-100">
-//               <img src="${bid.bidder.avatar.url}" alt="${
-//       bid.bidder.avatar.alt
-//     }" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
-//               <div class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3">
-//                 ${new Date(bid.created).toLocaleDateString()}
-//               </div>
-//             </div>
-//             <div class="card-body bg-gray-custom">
-//               <p class="card-title fs-5 text-truncate">${bid.bidder.name}</p>
-//               <p class="card-text">Current Bid: <span class="currentBidBidding">${
-//                 bid.amount
-//               }</span></p>
-//               <a href="#" class="btn btn-success mt-auto w-100 text-primary">To Auction</a>
-//             </div>
-//           </div>
-//         </div>
-//       `;
-//     container.innerHTML += html;
-//   });
-// }
-function displayBids(bids) {
+//---------- Show Bids by profile  ----------//
+function displayBids(bids, append = false) {
   console.log("Displaying bids:", bids);
   const container = document.getElementById("containerBidding");
-  container.innerHTML = "";
+
+  if (!append) {
+    container.innerHTML = "";
+  }
 
   bids.forEach((bid) => {
-    // Use timeSince function to calculate how long ago the bid was placed
-    const bidTimeSince = timeSince(new Date(bid.created));
-    const listingTitle = bid._listing ? bid._listing.title : "No title available";
-    
-    const html = `
-        <div class="col-lg-4 col-sm-6 mb-4">
-          <div class="card text-primary">
-            <div class="card-img-top-container position-relative w-100">
-              <img src="${bid.bidder.avatar.url}" alt="${bid.bidder.avatar.alt}" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
-              <div class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3">
-                Bid placed: ${bidTimeSince}
-              </div>
-            </div>
-            <div class="card-body bg-gray-custom">
-              <p class="card-title fs-5 text-truncate">${listingTitle}</p>
-              <p class="card-text">Current Bid: <span class="currentBidBidding">$${bid.amount}</span></p>
-              <a href="#" class="btn btn-success mt-auto w-100 text-primary">To Auction</a>
-            </div>
-          </div>
-        </div>
-      `;
-    container.innerHTML += html;
-  });
-}
-//--move to utility for use on bid history on specific listing
-// Time since function to display time in a human-readable format since the bid was placed
-function timeSince(date) {
-  const now = new Date();
-  const secondsPast = (now.getTime() - date.getTime()) / 1000;
-  if (secondsPast < 60) { // less than a minute
-    return `${parseInt(secondsPast)}s ago`;
-  }
-  if (secondsPast < 3600) { // less than an hour
-    return `${parseInt(secondsPast / 60)}m ago`;
-  }
-  if (secondsPast <= 86400) { // less than a day
-    return `${parseInt(secondsPast / 3600)}h ago`;
-  }
-  if (secondsPast > 86400) { // more than a day
-    day = date.getDate();
-    month = date.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
-    year = date.getFullYear() == now.getFullYear() ? "" : " " + date.getFullYear();
-    return `${day} ${month}${year}`;
-  }
-}
+    if (!bid.listing) {
+      console.error("No listing data available for this bid:", bid);
+      return;
+    }
 
-//---------- Show wins by profile  ----------//
-function displayWins(wins) {
-  console.log("Displaying wins:", wins);
-  const container = document.getElementById("containerWon");
-  container.innerHTML = "";
-  wins.forEach((win) => {
-    const timeLeft = timeUntil(win.endsAt);
+    const bidTimeSince = timeSince(new Date(bid.created));
+    const imageUrl = "/images/no-img-listing.jpg";
+    const imageAlt = "Listing Image";
+    //-- No api endpoint for _listing for Media, could this be smt Noroff could add to the api?
+    if (bid.listing.media && bid.listing.media.length > 0) {
+      imageUrl = bid.listing.media[0].url;
+      imageAlt = bid.listing.media[0].alt;
+    } else {
+      console.log("No media available for this listing:", bid.listing);
+    }
+
+    // Calculate time until auction ends
+    const timeLeft = timeUntil(bid.listing.endsAt);
     const endTimeDisplay =
-      timeLeft === "Auction ended" ? timeLeft : `Auction Ended: ${timeLeft}`;
+      timeLeft === "Auction ended" ? timeLeft : `Ends in: ${timeLeft}`;
+    const buttonClass =
+      timeLeft === "Auction ended" ? "btn-warning" : "btn-success";
+
     const html = `
       <div class="col-lg-4 col-sm-6 mb-4">
         <div class="card text-primary">
           <div class="card-img-top-container position-relative w-100">
-            <img src="${win.media[0].url}" alt="${win.media[0].alt}" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
+            <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
+            <div class="bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3">
+              Bid placed: ${bidTimeSince}
+            </div>
+          </div>
+          <div class="card-body bg-gray-custom">
+            <p class="card-title fs-5 text-truncate">${bid.listing.title}</p>
+            <p class="card-text">Your Bid: <span class="currentBidBidding">$${bid.amount.toFixed(
+              2
+            )}</span></p>
+            <p class="card-text">${endTimeDisplay}</p>
+            <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML("beforeend", html);
+  });
+}
+
+//---------- Show wins by profile  ----------//
+function displayWins(wins) {
+  console.log("Displaying wins with bids check:", wins.map(win => ({ title: win.title, bids: win.bids })));
+
+  const container = document.getElementById("containerWon");
+  container.innerHTML = "";
+
+  wins.forEach((win) => {
+    const imageUrl =
+      win.media && win.media.length > 0
+        ? win.media[0].url
+        : "/images/no-img-listing.jpg";
+    const imageAlt =
+      win.media && win.media.length > 0
+        ? win.media[0].alt
+        : "No image available";
+    const description = win.description || "No description provided.";
+    const timeLeft = timeUntil(win.endsAt);
+    const endTimeDisplay =
+      timeLeft === "Auction ended"
+        ? "Auction Ended"
+        : `Auction Ended: ${timeLeft}`;
+    const buttonClass = "btn-warning"; 
+
+    const html = `
+      <div class="col-lg-4 col-sm-6 mb-4">
+        <div class="card text-primary">
+          <div class="card-img-top-container position-relative w-100">
+            <img src="${imageUrl}" alt="${imageAlt}" class="card-img-top position-absolute w-100 h-100 top-0 start-0"/>
             <div class="wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3">
               <i class="fa-solid fa-crown fa-2x"></i>
             </div>
           </div>
           <div class="card-body bg-gray-custom">
             <p class="card-title fs-5 text-truncate">${win.title}</p>
-            <p class="card-text">Final Bid: <span class="currentBidWon">${win._count.bids}</span></p>
+            <p class="card-text">${description}</p>
+            <p class="card-text">Bid won: <span class="currentBidWon">${win._count.bids}</span></p>
             <p class="card-text fw-light">${endTimeDisplay}</p>
-            <a href="#" class="btn btn-success mt-auto w-100 text-primary">View Auction</a>
+            <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
           </div>
         </div>
       </div>
     `;
-    container.innerHTML += html;
+    container.insertAdjacentHTML("beforeend", html);
   });
 }
 
@@ -340,8 +341,8 @@ function setupWinsInfiniteScroll() {
 
 //---------- Event Handlers for Tab Changes ---------//
 // Keep these event listeners for loading initial data on tab show
-var biddingTab = document.getElementById("bidding-tab");
-var wonTab = document.getElementById("won-tab");
+const biddingTab = document.getElementById("bidding-tab");
+const wonTab = document.getElementById("won-tab");
 
 biddingTab.addEventListener("show.bs.tab", async (e) => {
   if (!globalFilter.bidsFetched) {
@@ -382,6 +383,3 @@ function displayError(message) {
   const errorMessageElement = document.querySelector(".user-info-error");
   errorMessageElement.innerText = message;
 }
-
-
-

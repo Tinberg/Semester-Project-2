@@ -231,16 +231,16 @@
     <main>
       <!--Section 1 listing product-->
       <section class="bg-gray-custom">
-        <div class="container-fluid limited-width py-5">
-          <div class="row">
+        <div class="container-fluid limited-width py-5 px-sm-5">
+          <div class="row align-items-center">
             <div
               class="col-lg-5 col-12 d-flex flex-column justify-content-center"
             >
               <!--auction img API-->
               <img
-                src="/images/test4.jpg"
+                src="/images/no-img-listing.jpg"
                 id="listingImg"
-                class="img-fluid rounded-4"
+                class="listing-img img-fluid rounded-4"
               />
               <div
                 class="col-12 d-flex mt-4 mb-5 mb-lg-0 justify-content-center align-items-center"
@@ -258,25 +258,17 @@
               class="col-lg-6 col-12 d-flex align-items-start flex-column ms-auto"
             >
               <!-- Title API -->
-              <h1 id="listingTitle" class="fs-3 mb-3">Bouclé chair</h1>
+              <h1 id="listingTitleDisplay" class="fs-3 mb-3 text-break">Title</h1>
               <p class="fs-5">Description:</p>
               <!--Description API-->
-              <p id="listingDescription">
-                The sun dipped below the horizon, casting a warm golden glow
-                across the tranquil desert landscape of Morocco. As dusk
-                settled, the vibrant colors of the bustling markets began to
-                fade into the evening shadows. Nestled within the maze-like
-                streets of Marrakech, the scent of exoti.
-              </p>
+              <p id="listingDescriptionDisplay">Listing Description</p>
               <p class="fs-5">
                 Ends in:
-                <!--ends in API--><span id="listing-endsIn"
-                  >120d, 01h 30m 40s</span
-                >
+                <!--ends in API--><span id="listing-endsIn"></span>
               </p>
               <p class="fs-5">
                 Highest Bid:
-                <!--hightest bid API--><span id="listing-bids">$ 65.00</span>
+                <!--hightest bid API--><span id="listing-bids"></span>
               </p>
               <form class="col-12 col-md-8">
                 <div class="input-group mb-3">
@@ -293,31 +285,37 @@
                   </button>
                 </div>
               </form>
+              <p id="idErrorMessage" class="text-danger m-0"></p>
+              <div id="loginMessageContainer"></div>
             </div>
           </div>
         </div>
       </section>
       <!--Section 2 Seller and History-->
       <section class="mt-mb-75">
-        <div class="container-fluid limited-width">
+        <div class="container-fluid limited-width px-sm-5">
           <div class="row">
-            <div
-              class="col-lg-5 col-12 d-flex flex-column justify-content-center"
-            >
-              <h2 class="fs-5 fw-bolder mb-4">Seller:</h2>
-              <div class="d-flex">
-                <!--SellerImg API-->
-                <img
-                  id="sellerImg"
-                  class="rounded-circle-bottom img-fluid w-25"
-                  src="/images/profileImg-test.jpg"
-                />
-                <div class="d-flex flex-column justify-content-center m-auto">
-                  <!--SellerName API-->
-                  <p id="seller">Julius553</p>
-                  <!--Selleremail API-->
-                  <p id="sellerEmail" class="text-decoration-underline">
-                    Julus33@hotmail.com
+            <div class="col-lg-5 col-12">
+              <h2 class="fs-5 fw-bolder mb-4 text-center text-lg-start">
+                Seller:
+              </h2>
+              <div
+                class="d-flex flex-column flex-lg-row align-items-center justify-content-lg-start"
+              >
+                <!-- Seller Image/avatar -->
+                <div class="mb-3 mb-lg-0">
+                  <img
+                    id="sellerImg"
+                    class="seller-img rounded-circle-bottom img-fluid"
+                    src="/images/image.png"
+                    alt="Seller Avatar"
+                  />
+                </div>
+                <!-- SellerName and Email -->
+                <div class="text-center text-lg-start ms-lg-5">
+                  <p class="fw-bold" id="seller">Seller Name</p>
+                  <p class="text-decoration-underline" id="sellerEmail">
+                    Seller Email
                   </p>
                 </div>
               </div>
@@ -325,78 +323,14 @@
             <div
               class="col-lg-6 col-12 d-flex align-items-start flex-column ms-auto"
             >
-              <h2 class="fs-5 fw-bolder mb-4 mt-5 mt-lg-0">Bid History:</h2>
-              <!--Bid history-->
-              <ul class="list-unstyled col-12" id="bidHistory">
-                <li class="d-flex border-bottom border-primary py-2">
-                  <div
-                    class="bidName col-4 text-start"
-                    aria-label="Bidder Name"
-                  >
-                    Tinbger03
-                  </div>
-                  <div
-                    class="bidTime col-4 text-center"
-                    aria-label="Time of Bid"
-                  >
-                    2 minutes ago
-                  </div>
-                  <div class="bidAmount col-4 text-end" aria-label="Bid Amount">
-                    $500
-                  </div>
-                </li>
-                <li class="d-flex border-bottom border-primary py-2">
-                  <div
-                    class="bidName col-4 text-start"
-                    aria-label="Bidder Name"
-                  >
-                    Jonas
-                  </div>
-                  <div
-                    class="bidTime col-4 text-center"
-                    aria-label="Time of Bid"
-                  >
-                    2 hours ago
-                  </div>
-                  <div class="bidAmount col-4 text-end" aria-label="Bid Amount">
-                    $900
-                  </div>
-                </li>
-                <li class="d-flex border-bottom border-primary py-2">
-                  <div
-                    class="bidName col-4 text-start"
-                    aria-label="Bidder Name"
-                  >
-                    Jonas
-                  </div>
-                  <div
-                    class="bidTime col-4 text-center"
-                    aria-label="Time of Bid"
-                  >
-                    2 hours ago
-                  </div>
-                  <div class="bidAmount col-4 text-end" aria-label="Bid Amount">
-                    $900
-                  </div>
-                </li>
-                <li class="d-flex border-bottom border-primary py-2">
-                  <div
-                    class="bidName col-4 text-start"
-                    aria-label="Bidder Name"
-                  >
-                    Tinbger03
-                  </div>
-                  <div
-                    class="bidTime col-4 text-center"
-                    aria-label="Time of Bid"
-                  >
-                    2 minutes ago
-                  </div>
-                  <div class="bidAmount col-4 text-end" aria-label="Bid Amount">
-                    $500
-                  </div>
-                </li>
-              </ul>
+              <h2
+                id="bidHistoryHeader"
+                class="fs-5 fw-bolder mb-4 mt-5 mt-lg-0 w-100 text-center text-lg-start"
+              >
+                Bid History:
+              </h2>
+              <!-- Bid history -->
+              <ul class="list-unstyled col-12" id="bidHistory"></ul>
             </div>
           </div>
         </div>

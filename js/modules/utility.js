@@ -8,7 +8,10 @@ export { trimText }; //---------------------------------------------------------
 export { clearElementAfterDuration }; //-----------------------------------------------------------------------------------------------------> Line: 129
 //-- For displaying time until auction ends --> my-profile.js profile.js index.js explore.js
 export { timeUntil }; //-----------------------------------------------------------------------------------------------------> Line: 129
-
+//-- For displaying how long the bid was bid --> my-profile.js profile.js, listing.js
+export { timeSince }; //-----------------------------------------------------------------------------------------------------> Line: 129
+//-- For map out the highest bid amount --> my-profile.js profile.js, listing.js, explore.js
+export { getHighestBidAmount }; //-----------------------------------------------------------------------------------------------------> Line: 129
 /**
  * Enables infinite scroll, triggering a callback when the user reaches the bottom of the page
  * @param {Function}
@@ -61,8 +64,8 @@ function clearElementAfterDuration(element, duration = 7000) {
 }
 
 /**
- * 
- * @param {string|Date} endTime 
+ * function to set time until expire
+ * @param {string|Date} endTime
  * @returns {string}
  */
 function timeUntil(endTime) {
@@ -89,4 +92,44 @@ function timeUntil(endTime) {
   } else {
     return `${years} year${years === 1 ? "" : "s"}`;
   }
+}
+/**
+ * Function to display time since bid was made
+ * @param {string} timestamp
+ * @returns {string}
+ */
+function timeSince(timestamp) {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const secondsPast = (now.getTime() - date.getTime()) / 1000;
+  if (secondsPast < 60) {
+    return `${parseInt(secondsPast)}s ago`;
+  }
+  if (secondsPast < 3600) {
+    return `${parseInt(secondsPast / 60)}m ago`;
+  }
+  if (secondsPast <= 86400) {
+    return `${parseInt(secondsPast / 3600)}h ago`;
+  }
+  if (secondsPast > 86400) {
+    let day = date.getDate();
+    let month = date
+      .toDateString()
+      .match(/ [a-zA-Z]*/)[0]
+      .replace(" ", "");
+    let year =
+      date.getFullYear() == now.getFullYear() ? "" : ` ${date.getFullYear()}`;
+    return `${day} ${month}${year}`;
+  }
+}
+/**
+ * Function to calculate the highest bid amount
+ * @param {object} listing 
+ * @returns {number}
+ */
+function getHighestBidAmount(listing) {
+  if (!listing.bids || listing.bids.length === 0) {
+    return 0;
+  }
+  return Math.max(...listing.bids.map((bid) => bid.amount));
 }

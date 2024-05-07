@@ -100,6 +100,7 @@ function setupNewListingForm() {
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
+    //--Form data HTML
     const title = document.getElementById("listingTitle").value;
     const description = document.getElementById("listingDescription").value;
     const imageUrl = document.getElementById("listingImage").value;
@@ -107,7 +108,8 @@ function setupNewListingForm() {
     const endsAt = document.getElementById("endsAt").value;
     const category = document.getElementById("categorySelect").value;
     const errorFeedback = document.getElementById("listingErrorFeedback");
-
+    
+    //-- Listing data
     const tags = category !== "Choose a category" ? [category] : [];
 
     const listingData = {
