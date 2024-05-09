@@ -1,12 +1,18 @@
 
-- my-profile, make loader for each tab (listing, bid activity and auctions won)
-- make hover like explore on eall tabs
-
-make btn in listing.html disabled if its the users listing
-make listing won in profile right
+- profile. make the same as my-profile(almost)
 
 
+- listing make seller clickable to get to seller. same with bid history name
+- listing. make user that owns the listing have choice to edit or delete listing. 
+- listing (Fix more images?) 
 
-- explenation for innerHTML on profiles and createElement and appendchild on explore
+- index js
 
-I went with innerHTML for profiles since they're less content-heavy, making it easier to maintain clear code for different layouts. But for the Explore page with lots of listings, I used createElement() and appendChild() to dodge any potential slowdowns from the large content load.
+- about.html page with info that the money is coming back if u dont win and so on(general info)
+
+- explore make profiles on search clickable 
+
+
+gå igjennom js og søk console.log og fjern alle
+gå igjennom alle html og søk style og fjern inline styling
+validator for html og css og wave

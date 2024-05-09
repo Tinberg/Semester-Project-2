@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //---------- Display listing Details ----------//
 function displayListingDetails(listing) {
   const token = getToken(); //--Auth for different layout logged in/Not logged in
+  const loggedInUserName = localStorage.getItem("userName"); //-- To check if its the same as the listing (disable bid btn)
 
   //--Image
   const imageUrl =
@@ -84,7 +85,7 @@ function displayListingDetails(listing) {
   const endsInDisplay = document.getElementById("listing-endsIn").parentNode;
 
   if (auctionEnded) {
-    endsInDisplay.textContent = "Auction Ended"; 
+    endsInDisplay.textContent = "Auction Ended";
     endsInDisplay.classList.add("text-danger", "fs-5");
     endsInDisplay.classList.remove("text-normal");
     bidButton.disabled = true;
@@ -94,21 +95,29 @@ function displayListingDetails(listing) {
     endsInDisplay.innerHTML = "Ends in: <span id='listing-endsIn'></span>";
     startCountdown(listing.endsAt, "listing-endsIn");
   }
+  // Check if the user is the seller
+  if (listing.seller && loggedInUserName === listing.seller.name) {
+    console.log("User is the seller, disabling the bid button.");
+    bidButton.disabled = true;
+  }
 
-  //-- Handle login state for bidding
+  // Handle login state for bidding
   if (!token) {
-    //-- User not logged in, disable the bid button and display login or signup options with a link redirecting back to this listing after authentication.
+    //-- User is not logged in, disable the bid button and show a message.
     bidButton.disabled = true;
     if (loginMessageContainer) {
       const listingId = listing.id;
       loginMessageContainer.innerHTML = `
-        <p>Please <a href="login.html?redirect=${listingId}" class="fw-bold text-secondary">log in</a> or <a href="register.html" class="fw-bold text-secondary">sign up</a> to participate in the auction.</p>
-      `;
+            <p>Please <a href="login.html?redirect=${listingId}" class="fw-bold text-secondary">log in</a> or <a href="register.html" class="fw-bold text-secondary">sign up</a> to participate in the auction.</p>
+        `;
       loginMessageContainer.style.display = "block";
     }
   } else {
-    //-- User logged in, ensure bid button is enabled if auction is still running
-    if (!auctionEnded) {
+    // User logged in (auction not ended or loggedin is not seller display bid btn)
+    if (
+      !auctionEnded &&
+      !(listing.seller && loggedInUserName === listing.seller.name)
+    ) {
       bidButton.disabled = false;
       bidButton.style.display = "block";
     }

@@ -11,6 +11,8 @@ import { fetchListingsByProfile } from "../modules/api.js";
 import { fetchbidsByProfile } from "../modules/api.js";
 //-- Api for fetch all wins by a profile --> api.js
 import { fetchWinsByProfile } from "../modules/api.js";
+//-- For edit profile media --> api.js
+import { updateProfileMedia } from "../modules/api.js";
 //-- For time until end on auctions--> utility.js
 import { timeUntil } from "../modules/utility.js";
 //-- For displaying time since a bid was made--> utility.js
@@ -19,9 +21,9 @@ import { timeSince } from "../modules/utility.js";
 import { addInfiniteScroll } from "../modules/utility.js";
 //-- For removing error message and element after a duration --> utility.js
 import { clearElementAfterDuration } from "../modules/utility.js";
-//-- Trim the text for overlay text title and body text for post --> utility.js --//
+//-- Trim the text for overlay text title and body text for post --> utility.js
 import { trimText } from "../modules/utility.js";
-//-- For map out highest bid on listing --> utility.js --//
+//-- For map out highest bid on listing --> utility.js
 import { getHighestBidAmount } from "../modules/utility.js";
 
 //Global state for user Bio text, profile, and pagination
@@ -39,27 +41,33 @@ let globalFilter = {
   winsFetched: false,
 };
 
-//---------- DOM ----------//
+//---------- DOM: initializes the user interface by fetching the users profile data, displaying it, loading the users listings, and setting up infinite scrolling for bids and wins by profile----------//
 document.addEventListener("DOMContentLoaded", async () => {
   const userName = localStorage.getItem("userName");
+  const loaderInfo = document.getElementById("loaderInfo");
+  loaderInfo.style.display = "block";
   if (userName) {
     try {
       globalUserProfile = await fetchUserProfile(userName);
       displayUserProfile(globalUserProfile);
+      populateProfileForm(globalUserProfile);
       displayListings(await fetchListingsByProfile(userName));
       setupInfiniteScroll();
     } catch (error) {
       console.error("Error fetching user profile:", error);
       displayError(
-        "We were unable to load all your profile information. Some features may not be available.Please try logging in again."
+        "We were unable to load all your profile information. Some features may not be available. Please try logging in again."
       );
+    } finally {
+      loaderInfo.style.display = "none";
+      document.getElementById("loaderTabs").style.display = "none";
     }
   } else {
-    console.log("No username found in localStorage.");
     displayError("No user information found. Please log in.");
+    loaderInfo.style.display = "none";
+    document.getElementById("loaderTabs").style.display = "none";
   }
 });
-
 //---------- Show user Information ----------//
 function displayUserProfile(profile) {
   document.getElementById("userName").textContent = profile.name;
@@ -76,7 +84,7 @@ function displayUserProfile(profile) {
     bannerImg.style.display = "none";
   }
 
-  //profile image
+  //-- profile image
   const profileImg = document.querySelector(".profileImg");
   if (profile.avatar && profile.avatar.url) {
     profileImg.src = profile.avatar.url;
@@ -86,103 +94,131 @@ function displayUserProfile(profile) {
   }
 }
 
-//---------- Show listings by profile ----------//
-function displayListings(listings, append = false) {
-  console.log("Displaying Listings:", listings);
-  const container = document.getElementById("containerListings");
+//---------- Helper Functions for displayListings, displayBids and displayWins ----------//
+//-- Creates an image container
+function createImageContainer(imageUrl, imageAlt, overlays = []) {
+  const imgContainerDiv = document.createElement("div");
+  imgContainerDiv.className = "card-img-top-container position-relative w-100";
 
-  if (!append) {
-    container.innerHTML = "";
-  }
+  const img = document.createElement("img");
+  img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
+  img.src = imageUrl;
+  img.alt = imageAlt;
+  imgContainerDiv.appendChild(img);
+
+  overlays.forEach((overlay) => {
+    imgContainerDiv.appendChild(overlay);
+  });
+
+  return imgContainerDiv;
+}
+//-- Creates a styled overlay div
+function createOverlay(className, innerHTML, display = "flex") {
+  const overlayDiv = document.createElement("div");
+  overlayDiv.className = className;
+  overlayDiv.innerHTML = innerHTML;
+  overlayDiv.style.display = display;
+  return overlayDiv;
+}
+//-- Creates card component containing an image, optional overlays, and card body HTML, and appends it to the specified container
+function createCard(
+  container,
+  imageUrl,
+  imageAlt,
+  overlays,
+  cardBodyHTML,
+  listingId
+) {
+  const colDiv = document.createElement("div");
+  colDiv.className = "col-lg-4 col-sm-6 mb-4 card-container";
+  colDiv.style.cursor = "pointer";
+
+  const cardDiv = document.createElement("div");
+  cardDiv.className = "card text-primary";
+  cardDiv.onclick = () => {
+    window.location.href = `listing.html?id=${listingId}`;
+  };
+
+  const imgContainerDiv = createImageContainer(imageUrl, imageAlt, overlays);
+  const cardBodyDiv = document.createElement("div");
+  cardBodyDiv.className = "card-body bg-gray-custom";
+  cardBodyDiv.innerHTML = cardBodyHTML;
+
+  cardDiv.appendChild(imgContainerDiv);
+  cardDiv.appendChild(cardBodyDiv);
+  colDiv.appendChild(cardDiv);
+  container.appendChild(colDiv);
+}
+
+//---------- Display auction listins in tab ----------//
+function displayListings(listings, append = false) {
+  const container = document.getElementById("containerListings");
+  if (!append) container.innerHTML = "";
 
   listings.forEach((listing) => {
-    const hasMedia = listing.media && listing.media.length > 0;
-    const imageUrl = hasMedia
-      ? listing.media[0].url
-      : "/images/no-img-listing.jpg";
-    const imageAlt = hasMedia ? listing.media[0].alt : "Listing Image";
-    const timeLeft = timeUntil(listing.endsAt);
+    const imageUrl =
+      listing.media && listing.media.length > 0
+        ? listing.media[0].url
+        : "/images/no-img-listing.jpg";
+    const imageAlt =
+      listing.media && listing.media.length > 0
+        ? listing.media[0].alt
+        : "Listing Image";
+
+    const overlayHTML = `
+          <div class="text-center text-break">
+              <p class="text-light">${trimText(listing.description, 100)}</p>
+              <p class="text-light fw-bold mb-0">Sold by:</p>
+              <p class="text-light text-truncate">${localStorage.getItem(
+                "userName"
+              )}</p>
+          </div>
+      `;
+    const descriptionOverlay = createOverlay(
+      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center",
+      overlayHTML,
+      "none"
+    );
 
     const endTimeDisplay =
-      timeLeft === "Auction ended" ? timeLeft : `Ends in: ${timeLeft}`;
+      timeUntil(listing.endsAt) === "Auction ended"
+        ? "Auction ended"
+        : `Ends in: ${timeUntil(listing.endsAt)}`;
     const buttonClass =
-      timeLeft === "Auction ended" ? "btn-warning" : "btn-success";
-
-    const highestBid = getHighestBidAmount(listing);
-    const userName = localStorage.getItem("userName");
-
-    // Create a column for the card
-    const colDiv = document.createElement("div");
-    colDiv.className = "col-lg-4 col-sm-6 mb-4 card-container";
-    colDiv.style.cursor = "pointer";
-
-    // Create the card and direct to listing on click
-    const cardDiv = document.createElement("div");
-    cardDiv.className = "card text-primary";
-    cardDiv.onclick = function () {
-      window.location.href = `listing.html?id=${listing.id}`;
-    };
-
-    // Image container
-    const imgContainerDiv = document.createElement("div");
-    imgContainerDiv.className =
-      "card-img-top-container position-relative w-100";
-
-    // Image element
-    const img = document.createElement("img");
-    img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
-    img.src = imageUrl;
-    img.alt = imageAlt;
-
-    // Overlay content
-    const overlayDiv = document.createElement("div");
-    overlayDiv.className =
-      "overlay-content position-absolute top-0 start-0 end-0 bottom-0 w-100 h-100 d-flex justify-content-center align-items-center p-2";
-    overlayDiv.innerHTML = `
-      <div class="text-center text-break">
-        <p class="text-light">${trimText(listing.description, 100)}</p>
-        <p class="text-light fw-bold  mb-0">Sold by:</p>
-        <p class="text-light text-truncate">${userName}</p>
-      </div>
-    `;
-
-    // Card body
-    const cardBodyDiv = document.createElement("div");
-    cardBodyDiv.className = "card-body bg-gray-custom";
-    cardBodyDiv.innerHTML = `
-      <p class="card-title fs-5 text-truncate">${listing.title}</p>
-      <p class="card-text">Current Bid: <span class="currentBidListings">$${highestBid.toFixed(
-        2
-      )}</span></p>
-      <p class="card-text fw-light">${endTimeDisplay}</p>
-      <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
-    `;
-
-    imgContainerDiv.appendChild(img);
-    imgContainerDiv.appendChild(overlayDiv);
-    cardDiv.appendChild(imgContainerDiv);
-    cardDiv.appendChild(cardBodyDiv);
-    colDiv.appendChild(cardDiv);
-    container.appendChild(colDiv);
+      timeUntil(listing.endsAt) === "Auction ended"
+        ? "btn-warning"
+        : "btn-success";
+    const cardBodyHTML = `
+          <p class="card-title fs-5 text-truncate">${listing.title}</p>
+          <p class="card-text">Current Bid: <span class="currentBidListings">$${getHighestBidAmount(
+            listing
+          ).toFixed(2)}</span></p>
+          <p class="card-text fw-light">${endTimeDisplay}</p>
+          <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
+      `;
+    //-- CreateCard Function and adding DescriptionOverlay
+    createCard(
+      container,
+      imageUrl,
+      imageAlt,
+      [descriptionOverlay],
+      cardBodyHTML,
+      listing.id
+    );
   });
 }
 
-//---------- Show Bids by profile  ----------//
+//---------- Display bidding history in tab ----------//
 function displayBids(bids, append = false) {
-  console.log("Displaying bids:", bids);
   const container = document.getElementById("containerBidding");
-
-  if (!append) {
-    container.innerHTML = "";
-  }
+  if (!append) container.innerHTML = "";
 
   bids.forEach((bid) => {
     if (!bid.listing) {
       console.error("No listing data available for this bid:", bid);
       return;
     }
-
-    const bidTimeSince = timeSince(new Date(bid.created));
+    //-- No listing media in the bidsByProfile, this could be added to the API :) (Maybe Seller as well)
     const imageUrl =
       bid.listing.media && bid.listing.media.length > 0
         ? bid.listing.media[0].url
@@ -191,60 +227,30 @@ function displayBids(bids, append = false) {
       bid.listing.media && bid.listing.media.length > 0
         ? bid.listing.media[0].alt
         : "Listing Image";
-    const listingDescription =
-      bid.listing.description || "No description available";
 
-    const timeLeft = timeUntil(bid.listing.endsAt);
+    const bidTimeSinceOverlay = createOverlay(
+      "bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3",
+      `Bid placed: ${timeSince(new Date(bid.created))}`
+    );
+
+    const descriptionOverlay = createOverlay(
+      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center",
+      `<div class="text-white text-center">${trimText(
+        bid.listing.description || "No description available",
+        100
+      )}</div>`,
+      "none"
+    );
+
     const endTimeDisplay =
-      timeLeft === "Auction ended" ? timeLeft : `Ends in: ${timeLeft}`;
+      timeUntil(bid.listing.endsAt) === "Auction ended"
+        ? "Auction ended"
+        : `Ends in: ${timeUntil(bid.listing.endsAt)}`;
     const buttonClass =
-      timeLeft === "Auction ended" ? "btn-warning" : "btn-success";
-
-    // Create a column for the card
-    const colDiv = document.createElement("div");
-    colDiv.className = "col-lg-4 col-sm-6 mb-4 card-container";
-    colDiv.style.cursor = "pointer";
-
-    // Create the card and redirect on click
-    const cardDiv = document.createElement("div");
-    cardDiv.className = "card text-primary";
-    cardDiv.onclick = function () {
-      window.location.href = `listing.html?id=${bid.listing.id}`;
-    };
-
-    // Image container
-    const imgContainerDiv = document.createElement("div");
-    imgContainerDiv.className =
-      "card-img-top-container position-relative w-100";
-
-    // Image element
-    const img = document.createElement("img");
-    img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
-    img.src = imageUrl;
-    img.alt = imageAlt;
-
-    // Bid date overlay
-    const bidDateOverlay = document.createElement("div");
-    bidDateOverlay.className =
-      "bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3";
-    bidDateOverlay.textContent = `Bid placed: ${bidTimeSince}`;
-
-    // Hover overlay
-    const hoverOverlay = document.createElement("div");
-    hoverOverlay.className =
-      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center";
-    hoverOverlay.innerHTML = `<div>
-          <p class="text-white">${trimText(listingDescription, 100)}</p>
-      </div>`;
-
-    imgContainerDiv.appendChild(img);
-    imgContainerDiv.appendChild(bidDateOverlay);
-    imgContainerDiv.appendChild(hoverOverlay);
-
-    // Card body
-    const cardBodyDiv = document.createElement("div");
-    cardBodyDiv.className = "card-body bg-gray-custom";
-    cardBodyDiv.innerHTML = `
+      timeUntil(bid.listing.endsAt) === "Auction ended"
+        ? "btn-warning"
+        : "btn-success";
+    const cardBodyHTML = `
           <p class="card-title fs-5 text-truncate">${bid.listing.title}</p>
           <p class="card-text">Your Bid: <span class="currentBidBidding">$${bid.amount.toFixed(
             2
@@ -252,22 +258,21 @@ function displayBids(bids, append = false) {
           <p class="card-text">${endTimeDisplay}</p>
           <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
       `;
-
-    cardDiv.appendChild(imgContainerDiv);
-    cardDiv.appendChild(cardBodyDiv);
-    colDiv.appendChild(cardDiv);
-    container.appendChild(colDiv);
+    //-- CreateCard Function and adding DescriptionOverlay and bidTimeSinceOverlay
+    createCard(
+      container,
+      imageUrl,
+      imageAlt,
+      [bidTimeSinceOverlay, descriptionOverlay],
+      cardBodyHTML,
+      bid.listing.id
+    );
   });
 }
-
-//---------- Show wins by profile  ----------//
+//---------- Display Auction won in tab ----------//
 function displayWins(wins, append = false) {
-  console.log("Displaying wins:", wins);
   const container = document.getElementById("containerWon");
-
-  if (!append) {
-    container.innerHTML = "";
-  }
+  if (!append) container.innerHTML = "";
 
   wins.forEach((win) => {
     const imageUrl =
@@ -278,66 +283,37 @@ function displayWins(wins, append = false) {
       win.media && win.media.length > 0
         ? win.media[0].alt
         : "No image available";
-    const listingDescription = win.description || "No description available";
-    const timeSinceEnd = timeSince(new Date(win.endsAt));
-    const buttonClass = "btn-warning";
 
-    // Create a column for the card
-    const colDiv = document.createElement("div");
-    colDiv.className = "col-lg-4 col-sm-6 mb-4 card-container";
-    colDiv.style.cursor = "pointer";
+    const wonIconOverlay = createOverlay(
+      "wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3",
+      '<i class="fa-solid fa-crown fa-2x"></i>'
+    );
 
-    // Create the card and redirect
-    const cardDiv = document.createElement("div");
-    cardDiv.className = "card text-primary";
-    cardDiv.onclick = function () {
-      window.location.href = `listing.html?id=${win.id}`;
-    };
+    const descriptionOverlay = createOverlay(
+      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center",
+      `<div class="text-white text-center">${trimText(
+        win.description || "No description available",
+        100
+      )}</div>`,
+      "none"
+    );
 
-    // Image container
-    const imgContainerDiv = document.createElement("div");
-    imgContainerDiv.className =
-      "card-img-top-container position-relative w-100";
-
-    // Image element
-    const img = document.createElement("img");
-    img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
-    img.src = imageUrl;
-    img.alt = imageAlt;
-
-    // Crown icon overlay
-    const wonIconDiv = document.createElement("div");
-    wonIconDiv.className =
-      "wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3";
-    wonIconDiv.innerHTML = '<i class="fa-solid fa-crown fa-2x"></i>';
-
-    // Description overlay
-    const descriptionOverlay = document.createElement("div");
-    descriptionOverlay.className =
-      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center";
-    descriptionOverlay.style.display = "none";
-    descriptionOverlay.innerHTML = `<div class="text-white text-center">${trimText(
-      listingDescription,
-      100
-    )}</div>`;
-
-    // Card body
-    const cardBodyDiv = document.createElement("div");
-    cardBodyDiv.className = "card-body bg-gray-custom";
-    cardBodyDiv.innerHTML = `
-        <p class="card-title fs-5 text-truncate">${win.title}</p>
-        <p class="card-text">Bids Received: <span class="currentBidWon">${win._count.bids}</span></p>
-        <p class="card-text">Auction ended: ${timeSinceEnd}</p>
-        <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
-    `;
-
-    imgContainerDiv.appendChild(img);
-    imgContainerDiv.appendChild(wonIconDiv);
-    imgContainerDiv.appendChild(descriptionOverlay);
-    cardDiv.appendChild(imgContainerDiv);
-    cardDiv.appendChild(cardBodyDiv);
-    colDiv.appendChild(cardDiv);
-    container.appendChild(colDiv);
+    const timeSinceEnd = `Auction ended: ${timeSince(new Date(win.endsAt))}`;
+    const cardBodyHTML = `
+            <p class="card-title fs-5 text-truncate">${win.title}</p>
+            <p class="card-text">Bids Received: <span class="currentBidWon">${win._count.bids}</span></p>
+            <p class="card-text">${timeSinceEnd}</p>
+            <div class="btn btn-warning mt-auto w-100 text-primary">View Auction</div>
+        `;
+    //-- CreateCard Function and adding DescriptionOverlay and wonIconOverlay
+    createCard(
+      container,
+      imageUrl,
+      imageAlt,
+      [wonIconOverlay, descriptionOverlay],
+      cardBodyHTML,
+      win.id
+    );
   });
 }
 
@@ -445,12 +421,13 @@ function setupWinsInfiniteScroll() {
 }
 
 //---------- Event Handlers for Tab Changes ---------//
-// Keep these event listeners for loading initial data on tab show
 const biddingTab = document.getElementById("bidding-tab");
 const wonTab = document.getElementById("won-tab");
+const tabLoader = document.getElementById("loaderTabs");
 
 biddingTab.addEventListener("show.bs.tab", async (e) => {
   if (!globalFilter.bidsFetched) {
+    tabLoader.style.display = "block";
     try {
       const bids = await fetchbidsByProfile(localStorage.getItem("userName"));
       displayBids(bids);
@@ -462,12 +439,15 @@ biddingTab.addEventListener("show.bs.tab", async (e) => {
         document.querySelector(".user-info-error"),
         7000
       );
+    } finally {
+      tabLoader.style.display = "none";
     }
   }
 });
 
 wonTab.addEventListener("show.bs.tab", async (e) => {
   if (!globalFilter.winsFetched) {
+    tabLoader.style.display = "block";
     try {
       const wins = await fetchWinsByProfile(localStorage.getItem("userName"));
       displayWins(wins);
@@ -479,11 +459,100 @@ wonTab.addEventListener("show.bs.tab", async (e) => {
         document.querySelector(".user-info-error"),
         7000
       );
+    } finally {
+      tabLoader.style.display = "none";
     }
   }
 });
 
-//---------- Error Function ----------//
+//---------- Update Profile Media ----------//
+document
+  .getElementById("editProfileForm")
+  .addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const userName = localStorage.getItem("userName");
+    const errorFeedback = document.getElementById("profileEditError");
+
+    //-- Fetch current form values
+    const bioText = document.getElementById("bioInput").value.trim();
+    const resetBanner = document.getElementById("resetBannerCheckbox").checked;
+    const resetAvatar = document.getElementById("resetAvatarCheckbox").checked;
+    const bannerUrl = resetBanner
+      ? undefined
+      : document.getElementById("bannerImageInput").value || undefined;
+    const avatarUrl = resetAvatar
+      ? undefined
+      : document.getElementById("profileImageInput").value || undefined;
+
+    try {
+      await updateProfileMedia(
+        userName,
+        bannerUrl,
+        avatarUrl,
+        resetBanner,
+        resetAvatar,
+        bioText
+      );
+      window.location.reload();
+      clearProfileFormInputs();
+      bootstrap.Modal.getInstance(
+        document.getElementById("editProfileModal")
+      ).hide();
+    } catch (error) {
+      console.error("Error updating profile media:", error);
+      errorFeedback.textContent =
+        "Failed to update profile media. Please check your inputs and try again.";
+      errorFeedback.style.display = "block";
+    }
+  });
+
+document
+  .getElementById("bioInput")
+  .addEventListener("input", updateBioCharacterCount);
+
+//-- Function to update Bio Character Count --//
+function updateBioCharacterCount() {
+  const bioInput = document.getElementById("bioInput");
+  const bioFeedback = document.getElementById("bio-text");
+  const maxCharacters = 160;
+  const currentLength = bioInput.value.length;
+
+  bioFeedback.textContent = `${currentLength}/${maxCharacters} characters`;
+
+  bioFeedback.classList.toggle("text-danger", currentLength > maxCharacters);
+}
+
+//-- Function to populate the edit profile form with the current info
+function populateProfileForm(userData) {
+  const { avatar, banner, bio } = userData;
+
+  //-- Get form elements
+  const profileImageInput = document.getElementById("profileImageInput");
+  const bannerImageInput = document.getElementById("bannerImageInput");
+  const bioInput = document.getElementById("bioInput");
+  const resetAvatarCheckbox = document.getElementById("resetAvatarCheckbox");
+  const resetBannerCheckbox = document.getElementById("resetBannerCheckbox");
+  //-- Clear the inputs
+  profileImageInput.value = "";
+  bannerImageInput.value = "";
+  //-- Set the bio value
+  bioInput.value = bio || "";
+  //-- Update checkbox state based on API response
+  resetAvatarCheckbox.checked = !avatar?.url;
+  resetBannerCheckbox.checked = !banner?.url;
+
+  updateBioCharacterCount();
+}
+
+function clearProfileFormInputs() {
+  //-- Clear the input fields and reset checkboxes after saving
+  document.getElementById("profileImageInput").value = "";
+  document.getElementById("bannerImageInput").value = "";
+  document.getElementById("resetAvatarCheckbox").checked = false;
+  document.getElementById("resetBannerCheckbox").checked = false;
+}
+
+//---------- Error Message Function ----------//
 function displayError(message) {
   const errorMessageElement = document.querySelector(".user-info-error");
   errorMessageElement.innerText = message;

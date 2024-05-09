@@ -70,9 +70,10 @@ function updateNavbarForLoggedInUser(profileData) {
     profileData.avatar.alt || "Personal Avatar"
   }" class="navProfile rounded-circle">
           </a>
-          <ul class="dropdown-menu mt-3 p-2" aria-labelledby="navbarDropDown">
+          <ul class="dropdown-menu mt-3 p-2 shadow" aria-labelledby="navbarDropDown">
             <li><a class="dropdown-item p-3" href="/html/my-profile.html"><i class="fas fa-user-circle"></i> Go to Profile</a></li>
             <li><a class="dropdown-item p-3" role="button"  aria-current="page"data-bs-toggle="modal"data-bs-target="#newListingModal"><i class="fas fa-plus-circle"></i> Create New Listings</a></li>
+            <li class="dropdown-divider"></li>
             <li><a class="dropdown-item p-3" href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
           </ul>
         </div>
@@ -185,9 +186,9 @@ document
 //--------------------  Logout Function --------------------//
 function logout() {
   if (confirm("Are you sure you want to log out?")) {
-    clearToken(); 
-    window.location.href = '/index.html'; 
+    clearToken();
+    window.location.href = "/index.html";
   } else {
     console.log("Logout canceled.");
   }
-} 
+}

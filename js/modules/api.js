@@ -30,6 +30,8 @@ export { fetchListingsSearch }; //----------------------------------------------
 export { fetchListingById }; //--------------------------------------------------------------------- Line: 192
 //-- For bid on listing --> listing.js
 export { sendBid }; //--------------------------------------------------------------------- Line: 192
+//-- For update profile info --> my-profile.js
+export { updateProfileMedia }; //--------------------------------------------------------------------- Line: 192
 
 //---------- Utility ----------//
 //-- This is the Base URL --//
@@ -304,4 +306,57 @@ async function sendBid(listingId, bidAmount) {
 
   const result = await response.json();
   return result.data;
+}
+/**
+ * Updates the profile media of a user.
+ * @param {string} userName
+ * @param {string} bannerUrl
+ * @param {string} avatarUrl
+ * @param {boolean} isResetBanner
+ * @param {boolean} isResetAvatar
+ * @param {string} bioText
+ * @returns
+ */
+async function updateProfileMedia(
+  userName,
+  bannerUrl,
+  avatarUrl,
+  isResetBanner,
+  isResetAvatar,
+  bioText
+) {
+  const placeholderUrl =
+    "https://images.unsplash.com/photo-1579547945413-497e1b99dac0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&h=500&w=1500";
+  const bodyData = { bio: bioText };
+
+  if (bannerUrl !== undefined || isResetBanner) {
+    bodyData.banner = isResetBanner
+      ? {
+          url: placeholderUrl,
+          alt: "A blurry multi-colored rainbow background",
+        }
+      : { url: bannerUrl, alt: "Personal Banner" };
+  }
+
+  if (avatarUrl !== undefined || isResetAvatar) {
+    bodyData.avatar = isResetAvatar
+      ? {
+          url: placeholderUrl,
+          alt: "A blurry multi-colored rainbow background",
+        }
+      : { url: avatarUrl, alt: "Personal Avatar" };
+  }
+
+  const response = await fetch(`${API_BASE_URL}/auction/profiles/${userName}`, {
+    method: "PUT",
+    headers: getHeaders(),
+    body: JSON.stringify(bodyData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(`Failed to update profile media`);
+  }
+
+  return await response.json();
 }

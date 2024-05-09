@@ -179,6 +179,134 @@
         </div>
       </div>
     </div>
+    <!-- Edit Profile Modal -->
+    <div
+      class="modal modal-lg fade"
+      id="editProfileModal"
+      tabindex="-1"
+      aria-labelledby="editProfileModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title fs-5 fw-bolder" id="editProfileModalLabel">
+              Edit Profile
+            </p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editProfileForm">
+              <!-- Circular Profile Image -->
+              <div
+                class="profile-aspect-ratio-guide mb-3 align-items-center d-flex flex-column rounded"
+              >
+                <label for="profileImageInput" class="my-2 fw-semibold"
+                  >Avatar Image</label
+                >
+                <div
+                  class="aspect-circle d-flex justify-content-center align-items-center rounded-circle"
+                >
+                  <i class="fas fa-image fa-3x"></i>
+                </div>
+                <p class="fw-light my-2">Recommended AR 1:1</p>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="profileImageInput"
+                  name="profileImage"
+                  placeholder="Image URL to a uploaded image"
+                />
+                <!-- Checkbox to reset avatar image -->
+                <div class="form-check mt-1">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="resetAvatarCheckbox"
+                  />
+                  <label
+                    class="form-check-label fw-light"
+                    for="resetAvatarCheckbox"
+                  >
+                    Reset avatar to default
+                  </label>
+                </div>
+              </div>
+              <div class="border my-4"></div>
+              <!-- Square Banner Image-->
+              <div
+                class="banner-aspect-ratio-guide mb-3 align-items-center d-flex flex-column rounded"
+              >
+                <label for="bannerImageInput" class="my-2 fw-semibold"
+                  >Banner Image</label
+                >
+                <div
+                  class="aspect-square d-flex justify-content-center align-items-center rounded"
+                >
+                  <i class="fas fa-image fa-3x"></i>
+                </div>
+
+                <p class="fw-light my-2">Recommended AR 5:1</p>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="bannerImageInput"
+                  name="bannerImage"
+                  placeholder="Image URL to a uploaded image"
+                />
+                <!-- Checkbox to reset banner image -->
+                <div class="form-check mt-1">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="resetBannerCheckbox"
+                  />
+                  <label
+                    class="form-check-label fw-light"
+                    for="resetBannerCheckbox"
+                  >
+                    Reset banner to default
+                  </label>
+                </div>
+              </div>
+              <div class="border my-4"></div>
+              <!-- BIO-->
+              <div class="mb-3 text-center">
+                <label for="bioInput" class="my-2 fw-semibold">Bio</label>
+                <textarea
+                  class="form-control"
+                  id="bioInput"
+                  name="bio"
+                  rows="3"
+                  placeholder="Tell us about yourself"
+                ></textarea>
+                <div id="bio-text" class="form-text">0/280 characters</div>
+              </div>
+              <div class="d-flex justify-content-center mt-3">
+                <button type="submit" class="btn btn-secondary my-2 px-5">
+                  Save Changes
+                </button>
+              </div>
+              <p id="profileEditError" class="text-danger my-2 text-center"></p>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!----------Header---------->
     <header>
       <nav
@@ -231,11 +359,11 @@
     <main>
       <!--Section 1 Profile info-->
       <section class="position-relative">
-        <div>
+        <div class="bannerContainer">
           <!--Banner img API-->
           <img
             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-            class="bannerImg img-fluid bannerImg w-100"
+            class="bannerImg bannerImg w-100"
             alt="Personal profile banner"
           />
         </div>
@@ -245,9 +373,15 @@
           <!--Profile img API-->
           <img
             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-            class="profileImg img-fluid rounded-circle-bottom"
+            class="profileImg rounded-circle-bottom "
             alt="Personal profile image"
           />
+        </div>
+        <!-- Loader -->
+        <div id="loaderInfo" class="text-center pt-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
         </div>
         <div
           class="container-fluid limited-width d-flex flex-column align-items-center mt-mb-75"
@@ -273,6 +407,12 @@
       </section>
       <!--Section 2 Personal activity-->
       <section>
+        <!-- Loader -->
+        <div id="loaderTabs" class="text-center pb-3">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
         <div class="container-fluid limited-width my-5">
           <!-- Nav tabs -->
           <ul
