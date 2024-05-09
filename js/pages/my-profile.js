@@ -155,6 +155,11 @@ function displayListings(listings, append = false) {
   const container = document.getElementById("containerListings");
   if (!append) container.innerHTML = "";
 
+  if (listings.length === 0) {
+    container.innerHTML = "<p class='text-center '>No listings yet.</p>";
+    return;
+  }
+
   listings.forEach((listing) => {
     const imageUrl =
       listing.media && listing.media.length > 0
@@ -212,6 +217,11 @@ function displayListings(listings, append = false) {
 function displayBids(bids, append = false) {
   const container = document.getElementById("containerBidding");
   if (!append) container.innerHTML = "";
+
+  if (bids.length === 0) {
+    container.innerHTML = "<p class='text-center'>No bids yet.</p>";
+    return;
+  }
 
   bids.forEach((bid) => {
     if (!bid.listing) {
@@ -273,6 +283,11 @@ function displayBids(bids, append = false) {
 function displayWins(wins, append = false) {
   const container = document.getElementById("containerWon");
   if (!append) container.innerHTML = "";
+
+  if (wins.length === 0) {
+    container.innerHTML = "<p class='text-center '>No wins yet.</p>";
+    return;
+  }
 
   wins.forEach((win) => {
     const imageUrl =

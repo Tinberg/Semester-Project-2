@@ -12,6 +12,7 @@
 
 - explore make profiles on search clickable 
 
+- img gallery on listing and when create listing
 
 gå igjennom js og søk console.log og fjern alle
 gå igjennom alle html og søk style og fjern inline styling
