@@ -124,7 +124,7 @@ function timeSince(timestamp) {
 }
 /**
  * Function to calculate the highest bid amount
- * @param {object} listing 
+ * @param {object} listing
  * @returns {number}
  */
 function getHighestBidAmount(listing) {

@@ -8,7 +8,11 @@ import { getToken } from "../modules/auth.js";
 import { fetchListingById } from "../modules/api.js";
 //-- Api for bid on listing --> api.js
 import { sendBid } from "../modules/api.js";
-//-- For show time since bid was made --> api.js
+//-- Api for update listing --> api.js
+import { updateListing } from "../modules/api.js";
+//-- Api for delete listing --> api.js
+import { deleteListing } from "../modules/api.js";
+//-- For show time since bid was made --> utility.js
 import { timeSince } from "../modules/utility.js";
 //-- For map out the highest bid amount --> utility.js
 import { getHighestBidAmount } from "../modules/utility.js";
@@ -18,6 +22,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
 //-- Error message element
 const errorMessageElement = document.getElementById("idErrorMessage");
+//-- global getToken for Auth(different layout)
+const token = getToken();
 
 //---------- Check for listing ID from the URL on page load ----------//
 document.addEventListener("DOMContentLoaded", function () {
@@ -42,7 +48,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 //---------- Display listing Details ----------//
 function displayListingDetails(listing) {
-  const token = getToken(); //--Auth for different layout logged in/Not logged in
   const loggedInUserName = localStorage.getItem("userName"); //-- To check if its the same as the listing (disable bid btn)
 
   //--Image
@@ -95,20 +100,19 @@ function displayListingDetails(listing) {
     endsInDisplay.innerHTML = "Ends in: <span id='listing-endsIn'></span>";
     startCountdown(listing.endsAt, "listing-endsIn");
   }
-  // Check if the user is the seller
+  //-- Check if the user is the seller
   if (listing.seller && loggedInUserName === listing.seller.name) {
-    console.log("User is the seller, disabling the bid button.");
     bidButton.disabled = true;
   }
 
-  // Handle login state for bidding
+  //-- Handle login state for bidding
   if (!token) {
     //-- User is not logged in, disable the bid button and show a message.
     bidButton.disabled = true;
     if (loginMessageContainer) {
       const listingId = listing.id;
       loginMessageContainer.innerHTML = `
-            <p>Please <a href="login.html?redirect=${listingId}" class="fw-bold text-secondary">log in</a> or <a href="register.html" class="fw-bold text-secondary">sign up</a> to participate in the auction.</p>
+            <p>Please <a href="login.html?redirect=${listingId}" class="fw-bold text-secondary">log in</a> or <a href="register.html" class="fw-bold text-secondary">sign up</a> to participate in auctions, view sellers, or access bid history profiles.</p>
         `;
       loginMessageContainer.style.display = "block";
     }
@@ -129,20 +133,77 @@ function displaySellerInfo(seller) {
   document.getElementById("sellerImg").src = seller.avatar.url;
   document.getElementById("seller").textContent = seller.name;
   document.getElementById("sellerEmail").textContent = seller.email;
+  // Add event listener to the seller info div only if the user is logged in
+  const sellerInfoDiv = document.getElementById("sellerDiv");
+  if (!token) {
+    sellerInfoDiv.style.cursor = "default";
+  } else {
+    sellerInfoDiv.style.cursor = "pointer";
+    sellerInfoDiv.addEventListener("click", () => {
+      const currentUser = localStorage.getItem("userName");
+      const profileUrl =
+        seller.name === currentUser
+          ? "/html/my-profile.html"
+          : `/html/profile.html?userName=${encodeURIComponent(seller.name)}`;
+      window.location.href = profileUrl;
+    });
+  }
 }
-//---------- Display bid History for listing ----------//
+
+//---------- Helper function for Bid History for listing ----------//
+//-- Creates HTML for a bid item
+function createBidHtml(bid, isAuthenticated) {
+  const bidderNameHtml = isAuthenticated
+    ? `<a href="#" class="text-hover text-decoration-none cursor-pointer">${bid.bidder.name}</a>`
+    : `<span>${bid.bidder.name}</span>`;
+
+  return `
+    <li class="d-flex border-bottom border-primary py-2">
+      <div class="bidName col-4 text-start" aria-label="Bidder Name">${bidderNameHtml}</div>
+      <div class="bidTime col-4 text-center" aria-label="Time of Bid">${timeSince(
+        bid.created
+      )}</div>
+      <div class="bidAmount col-4 text-end" aria-label="Bid Amount">$${bid.amount.toFixed(
+        2
+      )}</div>
+    </li>
+  `;
+}
+//-- Adds event listeners for redirection to profile pages
+function addProfileRedirectionListeners(container, isAuthenticated) {
+  if (isAuthenticated) {
+    container.querySelectorAll("a").forEach((anchor) => {
+      anchor.addEventListener("click", (event) => {
+        event.preventDefault();
+        const bidderName = anchor.textContent;
+        const currentUser = localStorage.getItem("userName");
+        const profileUrl =
+          bidderName === currentUser
+            ? "/html/my-profile.html"
+            : `/html/profile.html?userName=${encodeURIComponent(bidderName)}`;
+        window.location.href = profileUrl;
+      });
+    });
+  }
+}
+
+//---------- Display bid History for listing and showMoreBtn ----------//
+//-- (including anchor tag around userName if Token is in localStorage)
 function displayBidHistory(bids) {
+  console.log("All bids fetched from the API:", bids);
   const bidHistoryElement = document.getElementById("bidHistory");
   const bidHistoryHeader = document.getElementById("bidHistoryHeader");
 
   if (bidHistoryHeader.children.length > 1) {
     bidHistoryHeader.removeChild(bidHistoryHeader.children[1]);
   }
-  //-- This display the total number of bids in ()
+
+  //-- This displays the total number of bids in ()
   const countSpan = document.createElement("span");
   countSpan.className = "fw-normal ms-1";
   countSpan.textContent = `(${bids.length})`;
   bidHistoryHeader.appendChild(countSpan);
+
   //-- If no Bids
   if (bids.length === 0) {
     bidHistoryElement.innerHTML = `<p class="text-lg-start text-center">No bids have been placed on this listing yet.</p>`;
@@ -152,26 +213,14 @@ function displayBidHistory(bids) {
 
     let bidsHtml = bids
       .slice(0, 10)
-      .map(
-        (bid) => `
-      <li class="d-flex border-bottom border-primary py-2">
-        <div class="bidName col-4 text-start" aria-label="Bidder Name">${
-          bid.bidder.name
-        }</div>
-        <div class="bidTime col-4 text-center" aria-label="Time of Bid">${timeSince(
-          bid.created
-        )}</div>
-        <div class="bidAmount col-4 text-end" aria-label="Bid Amount">$${bid.amount.toFixed(
-          2
-        )}</div>
-      </li>
-    `
-      )
+      .map((bid) => createBidHtml(bid, token))
       .join("");
-
     bidHistoryElement.innerHTML = bidsHtml;
 
-    // Append 'Show More' button if there are more than 10 bids.
+    //-- Add event listeners for redirection
+    addProfileRedirectionListeners(bidHistoryElement, token);
+
+    //-- Append 'Show More' button if there are more than 10 bids.
     if (bids.length > 10) {
       const showMoreButton = document.createElement("button");
       showMoreButton.textContent = "Show More";
@@ -184,27 +233,13 @@ function displayBidHistory(bids) {
     }
   }
 }
-//-- Show all bids when the "Show More" button is clicked.
+//-- Show all bids when the "Show More" button is clicked (including anchor tag around userName if Token is in localStorage)
 function showMoreBids(bids, container) {
-  let allBidsHtml = bids
-    .map(
-      (bid) => `
-    <li class="d-flex border-bottom border-primary py-2">
-      <div class="bidName col-4 text-start" aria-label="Bidder Name">${
-        bid.bidder.name
-      }</div>
-      <div class="bidTime col-4 text-center" aria-label="Time of Bid">${timeSince(
-        bid.created
-      )}</div>
-      <div class="bidAmount col-4 text-end" aria-label="Bid Amount">$${bid.amount.toFixed(
-        2
-      )}</div>
-    </li>
-  `
-    )
-    .join("");
-
+  let allBidsHtml = bids.map((bid) => createBidHtml(bid, token)).join("");
   container.innerHTML = allBidsHtml;
+
+  //-- Add event listeners for redirection
+  addProfileRedirectionListeners(container, token);
 }
 
 //---------- Countdown for Auction ending (Unique to listing.js) ----------//
@@ -265,14 +300,14 @@ document
 
       return;
     }
-    // Confirmation dialog to confirm the bid
+    //-- Confirmation dialog to confirm the bid
     const confirmBid = confirm(
       `Are you sure you want to bid $${bidAmountInput.toFixed(2)}?`
     );
     if (!confirmBid) {
       return;
     }
-    // Submit bid
+    //-- Submit bid
     try {
       const bidResponse = await sendBid(listingId, bidAmountInput);
       const formattedBidAmount = bidAmountInput.toFixed(2);
@@ -288,3 +323,5 @@ document
         "Failed to submit bid: Please ensure your bid is a whole number, check your internet connection, and try again.";
     }
   });
+
+  

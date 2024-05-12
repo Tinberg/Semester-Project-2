@@ -32,6 +32,10 @@ export { fetchListingById }; //-------------------------------------------------
 export { sendBid }; //--------------------------------------------------------------------- Line: 192
 //-- For update profile info --> my-profile.js
 export { updateProfileMedia }; //--------------------------------------------------------------------- Line: 192
+//-- For update listing --> listing.js
+export { updateListing };//--------------------------------------------------------------------- Line: 192
+//-- For delete listing --> listing.js
+export { deleteListing };//--------------------------------------------------------------------- Line: 192
 
 //---------- Utility ----------//
 //-- This is the Base URL --//
@@ -116,7 +120,7 @@ async function fetchUserProfile(userName) {
  */
 async function fetchListingsByProfile(userName, page = 1, limit = 6) {
   const response = await fetch(
-    `${API_BASE_URL}/auction/profiles/${userName}/listings?limit=${limit}&page=${page}`,
+    `${API_BASE_URL}/auction/profiles/${userName}/listings?limit=${limit}&page=${page}&_seller=true&_bids=true`,
     {
       headers: getHeaders(),
     }
@@ -155,7 +159,7 @@ async function fetchbidsByProfile(userName, page = 1, limit = 6) {
  */
 async function fetchWinsByProfile(userName, page = 1, limit = 6) {
   const response = await fetch(
-    `${API_BASE_URL}/auction/profiles/${userName}/wins?limit=${limit}&page=${page}`,
+    `${API_BASE_URL}/auction/profiles/${userName}/wins?limit=${limit}&page=${page}&_bids=true&_seller=true`,
     {
       headers: getHeaders(),
     }
@@ -325,6 +329,7 @@ async function updateProfileMedia(
   isResetAvatar,
   bioText
 ) {
+  //-- To reset to default images for avatar and banner
   const placeholderUrl =
     "https://images.unsplash.com/photo-1579547945413-497e1b99dac0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&h=500&w=1500";
   const bodyData = { bio: bioText };
@@ -359,4 +364,32 @@ async function updateProfileMedia(
   }
 
   return await response.json();
+}
+/**
+ *
+ * @param {string} id
+ * @param {object} data
+ * @returns
+ */
+async function updateListing(id, data) {
+  const response = await fetch(`${API_BASE_URL}/auction/listings/${id}`, {
+    method: "PUT",
+    headers: getHeaders(),
+    body: JSON.stringify(data),
+  });
+  return response.json();
+}
+
+/**
+ *
+ * @param {string} id
+ */
+async function deleteListing(id) {
+  const response = await fetch(`${API_BASE_URL}/auction/listings/${id}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete listing");
+  }
 }

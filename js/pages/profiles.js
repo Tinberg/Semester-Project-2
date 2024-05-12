@@ -27,7 +27,6 @@ import { trimText } from "../modules/utility.js";
 import { getHighestBidAmount } from "../modules/utility.js";
 
 //Global state for user Bio text, profile, and pagination
-let initialBioText = "";
 let globalUserProfile = null;
 let globalFilter = {
   listingsPage: 1,
@@ -41,18 +40,25 @@ let globalFilter = {
   winsFetched: false,
 };
 
-//---------- DOM: initializes the user interface by fetching the users profile data, displaying it, loading the users listings, and setting up infinite scrolling for bids and wins by profile----------//
+//---------- Initializes user profile interface: Determines profile type (self or other), fetches and displays profile data and listings, and sets up infinite scroll for bids and wins ----------//
 document.addEventListener("DOMContentLoaded", async () => {
-  const userName = localStorage.getItem("userName");
+  const isMyProfile = window.location.pathname.includes("my-profile");
+  const userName = isMyProfile
+    ? localStorage.getItem("userName")
+    : new URLSearchParams(window.location.search).get("userName");
+
   const loaderInfo = document.getElementById("loaderInfo");
   loaderInfo.style.display = "block";
+
   if (userName) {
     try {
       globalUserProfile = await fetchUserProfile(userName);
       displayUserProfile(globalUserProfile);
-      populateProfileForm(globalUserProfile);
+      if (isMyProfile) {
+        populateProfileForm(globalUserProfile);
+      }
       displayListings(await fetchListingsByProfile(userName));
-      setupInfiniteScroll();
+      setupInfiniteScroll(userName);
     } catch (error) {
       console.error("Error fetching user profile:", error);
       displayError(
@@ -67,19 +73,122 @@ document.addEventListener("DOMContentLoaded", async () => {
     loaderInfo.style.display = "none";
     document.getElementById("loaderTabs").style.display = "none";
   }
+
+  if (isMyProfile) {
+    setupProfileUpdate();
+  }
 });
-//---------- Show user Information ----------//
+
+//---------- Function to setup profile update (only for my-profile) ----------//
+function setupProfileUpdate() {
+  document
+    .getElementById("editProfileForm")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const userName = localStorage.getItem("userName");
+      const errorFeedback = document.getElementById("profileEditError");
+
+      //-- Fetch current form values
+      const bioText = document.getElementById("bioInput").value.trim();
+      const resetBanner = document.getElementById(
+        "resetBannerCheckbox"
+      ).checked;
+      const resetAvatar = document.getElementById(
+        "resetAvatarCheckbox"
+      ).checked;
+      const bannerUrl = resetBanner
+        ? undefined
+        : document.getElementById("bannerImageInput").value || undefined;
+      const avatarUrl = resetAvatar
+        ? undefined
+        : document.getElementById("profileImageInput").value || undefined;
+
+      try {
+        await updateProfileMedia(
+          userName,
+          bannerUrl,
+          avatarUrl,
+          resetBanner,
+          resetAvatar,
+          bioText
+        );
+        window.location.reload();
+        clearProfileFormInputs();
+        bootstrap.Modal.getInstance(
+          document.getElementById("editProfileModal")
+        ).hide();
+      } catch (error) {
+        console.error("Error updating profile media:", error);
+        errorFeedback.textContent =
+          "Failed to update profile media. Please check your inputs and try again.";
+        errorFeedback.style.display = "block";
+      }
+    });
+
+  document
+    .getElementById("bioInput")
+    .addEventListener("input", updateBioCharacterCount);
+}
+
+//-- Function to update Bio Character Count (edit Profile)
+function updateBioCharacterCount() {
+  const bioInput = document.getElementById("bioInput");
+  const bioFeedback = document.getElementById("bio-text");
+  const maxCharacters = 160;
+  const currentLength = bioInput.value.length;
+
+  bioFeedback.textContent = `${currentLength}/${maxCharacters} characters`;
+
+  bioFeedback.classList.toggle("text-danger", currentLength > maxCharacters);
+}
+
+//-- Function to populate the edit profile form with the current info (Edit Profile)
+function populateProfileForm(userData) {
+  const { avatar, banner, bio } = userData;
+
+  //-- Get form elements
+  const profileImageInput = document.getElementById("profileImageInput");
+  const bannerImageInput = document.getElementById("bannerImageInput");
+  const bioInput = document.getElementById("bioInput");
+  const resetAvatarCheckbox = document.getElementById("resetAvatarCheckbox");
+  const resetBannerCheckbox = document.getElementById("resetBannerCheckbox");
+  //-- Clear the inputs
+  profileImageInput.value = "";
+  bannerImageInput.value = "";
+  //-- Set the bio value
+  bioInput.value = bio || "";
+  //-- Update checkbox state based on API response
+  resetAvatarCheckbox.checked = !avatar?.url;
+  resetBannerCheckbox.checked = !banner?.url;
+
+  updateBioCharacterCount();
+}
+
+function clearProfileFormInputs() {
+  //-- Clear the input fields and reset checkboxes after saving (Edit profile)
+  document.getElementById("profileImageInput").value = "";
+  document.getElementById("bannerImageInput").value = "";
+  document.getElementById("resetAvatarCheckbox").checked = false;
+  document.getElementById("resetBannerCheckbox").checked = false;
+}
+
+//---------- Function to display user profile ----------//
 function displayUserProfile(profile) {
   document.getElementById("userName").textContent = profile.name;
   document.getElementById("userEmail").textContent = profile.email;
   document.getElementById("userBio").textContent = profile.bio || "";
 
-  // banner image
+  //-- banner image
   const bannerImg = document.querySelector(".bannerImg");
   if (profile.banner && profile.banner.url) {
     bannerImg.src = profile.banner.url;
     bannerImg.alt = profile.banner.alt || "Personal profile banner";
     bannerImg.style.display = "";
+    bannerImg.setAttribute("role", "img");
+    bannerImg.setAttribute(
+      "aria-label",
+      profile.banner.alt || "Personal profile banner"
+    );
   } else {
     bannerImg.style.display = "none";
   }
@@ -89,13 +198,17 @@ function displayUserProfile(profile) {
   if (profile.avatar && profile.avatar.url) {
     profileImg.src = profile.avatar.url;
     profileImg.alt = profile.avatar.alt || "Personal profile image";
+    profileImg.setAttribute("role", "img");
+    profileImg.setAttribute(
+      "aria-label",
+      profile.avatar.alt || "Personal profile image"
+    );
   } else {
     profileImg.style.display = "none";
   }
 }
 
 //---------- Helper Functions for displayListings, displayBids and displayWins ----------//
-//-- Creates an image container
 function createImageContainer(imageUrl, imageAlt, overlays = []) {
   const imgContainerDiv = document.createElement("div");
   imgContainerDiv.className = "card-img-top-container position-relative w-100";
@@ -104,6 +217,8 @@ function createImageContainer(imageUrl, imageAlt, overlays = []) {
   img.className = "card-img-top position-absolute w-100 h-100 top-0 start-0";
   img.src = imageUrl;
   img.alt = imageAlt;
+  img.setAttribute("role", "img");
+  img.setAttribute("aria-label", imageAlt);
   imgContainerDiv.appendChild(img);
 
   overlays.forEach((overlay) => {
@@ -112,7 +227,7 @@ function createImageContainer(imageUrl, imageAlt, overlays = []) {
 
   return imgContainerDiv;
 }
-//-- Creates a styled overlay div
+//-- Create an overlay div with specific styles and content
 function createOverlay(className, innerHTML, display = "flex") {
   const overlayDiv = document.createElement("div");
   overlayDiv.className = className;
@@ -120,7 +235,7 @@ function createOverlay(className, innerHTML, display = "flex") {
   overlayDiv.style.display = display;
   return overlayDiv;
 }
-//-- Creates card component containing an image, optional overlays, and card body HTML, and appends it to the specified container
+//-- Create a card element 
 function createCard(
   container,
   imageUrl,
@@ -150,7 +265,7 @@ function createCard(
   container.appendChild(colDiv);
 }
 
-//---------- Display auction listins in tab ----------//
+//---------- Display auction listings in tab ----------//
 function displayListings(listings, append = false) {
   const container = document.getElementById("containerListings");
   if (!append) container.innerHTML = "";
@@ -174,9 +289,7 @@ function displayListings(listings, append = false) {
           <div class="text-center text-break">
               <p class="text-light">${trimText(listing.description, 100)}</p>
               <p class="text-light fw-bold mb-0">Sold by:</p>
-              <p class="text-light text-truncate">${localStorage.getItem(
-                "userName"
-              )}</p>
+              <p class="text-light text-truncate">${listing.seller.name}</p>
           </div>
       `;
     const descriptionOverlay = createOverlay(
@@ -242,6 +355,8 @@ function displayBids(bids, append = false) {
       "bidDate position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3",
       `Bid placed: ${timeSince(new Date(bid.created))}`
     );
+    bidTimeSinceOverlay.setAttribute("role", "note");
+    bidTimeSinceOverlay.setAttribute("aria-label", `Bid placed: ${timeSince(new Date(bid.created))}`);
 
     const descriptionOverlay = createOverlay(
       "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center",
@@ -260,14 +375,24 @@ function displayBids(bids, append = false) {
       timeUntil(bid.listing.endsAt) === "Auction ended"
         ? "btn-warning"
         : "btn-success";
+
+    //-- Check if the page is profile.html with a userName in the URL
+    const isProfilePage = window.location.pathname.includes("profile.html");
+    const userNameParam = new URLSearchParams(window.location.search).get(
+      "userName"
+    );
+    const bidLabel =
+      isProfilePage && userNameParam ? `${userNameParam} Bid` : "Your Bid";
+
     const cardBodyHTML = `
-          <p class="card-title fs-5 text-truncate">${bid.listing.title}</p>
-          <p class="card-text">Your Bid: <span class="currentBidBidding">$${bid.amount.toFixed(
-            2
-          )}</span></p>
-          <p class="card-text">${endTimeDisplay}</p>
-          <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
-      `;
+            <p class="card-title fs-5 text-truncate">${bid.listing.title}</p>
+            <p class="card-text text-truncate">${bidLabel}: <span class="currentBidBidding">$${bid.amount.toFixed(
+      2
+    )}</span></p>
+            <p class="card-text">${endTimeDisplay}</p>
+            <div class="btn ${buttonClass} mt-auto w-100 text-primary">View Auction</div>
+        `;
+
     //-- CreateCard Function and adding DescriptionOverlay and bidTimeSinceOverlay
     createCard(
       container,
@@ -279,6 +404,7 @@ function displayBids(bids, append = false) {
     );
   });
 }
+
 //---------- Display Auction won in tab ----------//
 function displayWins(wins, append = false) {
   const container = document.getElementById("containerWon");
@@ -297,7 +423,7 @@ function displayWins(wins, append = false) {
     const imageAlt =
       win.media && win.media.length > 0
         ? win.media[0].alt
-        : "No image available";
+        : "Listing Image";
 
     const wonIconOverlay = createOverlay(
       "wonIcon position-absolute end-0 top-0 bottom-0 text-white text-center d-flex align-items-center justify-content-center p-3",
@@ -305,11 +431,15 @@ function displayWins(wins, append = false) {
     );
 
     const descriptionOverlay = createOverlay(
-      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex align-items-center justify-content-center",
-      `<div class="text-white text-center">${trimText(
-        win.description || "No description available",
-        100
-      )}</div>`,
+      "overlay-content position-absolute w-100 h-100 top-0 start-0 d-flex flex-column align-items-center justify-content-center",
+      `<div class="text-center text-break">
+        <p class="text-light">${trimText(
+          win.description || "No description available",
+          100
+        )}</p>
+        <p class="text-light fw-bold mb-0">Sold by:</p>
+        <p class="text-light text-truncate">${win.seller.name}</p>
+      </div>`,
       "none"
     );
 
@@ -332,14 +462,15 @@ function displayWins(wins, append = false) {
   });
 }
 
-//---------- InfiniteScroll Setup   ----------//
-function setupInfiniteScroll() {
-  setupListingsInfiniteScroll();
-  setupBidsInfiniteScroll();
-  setupWinsInfiniteScroll();
+//---------- InfiniteScroll Setup ----------//
+function setupInfiniteScroll(userName) {
+  setupListingsInfiniteScroll(userName);
+  setupBidsInfiniteScroll(userName);
+  setupWinsInfiniteScroll(userName);
 }
-//-- Listing
-function setupListingsInfiniteScroll() {
+
+//-- Listing Infinite Scroll
+function setupListingsInfiniteScroll(userName) {
   addInfiniteScroll(async () => {
     if (
       !document.getElementById("listing").classList.contains("active") ||
@@ -348,30 +479,30 @@ function setupListingsInfiniteScroll() {
       return;
     }
     globalFilter.listingsPage++;
-    fetchListingsByProfile(
-      localStorage.getItem("userName"),
-      globalFilter.listingsPage,
-      globalFilter.limit
-    )
-      .then((listings) => {
-        if (listings.length > 0) {
-          displayListings(listings, true);
-        } else {
-          globalFilter.listingsHasMore = false;
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to fetch listings:", error);
-        const errorMessageElement = document.getElementById("listing");
-        errorMessageElement.classList.add("text-danger", "text-center", "mt-3");
-        errorMessageElement.textContent =
-          "Failed to load more listings. Please try again later.";
-        clearElementAfterDuration(errorMessageElement, 7000);
-      });
+    try {
+      const listings = await fetchListingsByProfile(
+        userName,
+        globalFilter.listingsPage,
+        globalFilter.limit
+      );
+      if (listings.length > 0) {
+        displayListings(listings, true);
+      } else {
+        globalFilter.listingsHasMore = false;
+      }
+    } catch (error) {
+      console.error("Failed to fetch listings:", error);
+      const errorMessageElement = document.getElementById("listing");
+      errorMessageElement.classList.add("text-danger", "text-center", "mt-3");
+      errorMessageElement.textContent =
+        "Failed to load more listings. Please try again later.";
+      clearElementAfterDuration(errorMessageElement, 7000);
+    }
   });
 }
-//-- Bids
-function setupBidsInfiniteScroll() {
+
+//--Bids Infinite Scroll
+function setupBidsInfiniteScroll(userName) {
   addInfiniteScroll(async () => {
     if (
       !document.getElementById("bidding").classList.contains("active") ||
@@ -380,30 +511,30 @@ function setupBidsInfiniteScroll() {
       return;
     }
     globalFilter.bidsPage++;
-    fetchbidsByProfile(
-      localStorage.getItem("userName"),
-      globalFilter.bidsPage,
-      globalFilter.limit
-    )
-      .then((bids) => {
-        if (bids.length > 0) {
-          displayBids(bids, true);
-        } else {
-          globalFilter.bidsHasMore = false;
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to fetch bids:", error);
-        const errorMessageElement = document.getElementById("bidding");
-        errorMessageElement.classList.add("text-danger", "text-center", "mt-3");
-        errorMessageElement.textContent =
-          "Failed to load more bids. Please try again later.";
-        clearElementAfterDuration(errorMessageElement, 7000);
-      });
+    try {
+      const bids = await fetchbidsByProfile(
+        userName,
+        globalFilter.bidsPage,
+        globalFilter.limit
+      );
+      if (bids.length > 0) {
+        displayBids(bids, true);
+      } else {
+        globalFilter.bidsHasMore = false;
+      }
+    } catch (error) {
+      console.error("Failed to fetch bids:", error);
+      const errorMessageElement = document.getElementById("bidding");
+      errorMessageElement.classList.add("text-danger", "text-center", "mt-3");
+      errorMessageElement.textContent =
+        "Failed to load more bids. Please try again later.";
+      clearElementAfterDuration(errorMessageElement, 7000);
+    }
   });
 }
-//-- Wins
-function setupWinsInfiniteScroll() {
+
+//-- Wins Infinite Scroll
+function setupWinsInfiniteScroll(userName) {
   addInfiniteScroll(async () => {
     if (
       !document.getElementById("won").classList.contains("active") ||
@@ -412,39 +543,44 @@ function setupWinsInfiniteScroll() {
       return;
     }
     globalFilter.winsPage++;
-    fetchWinsByProfile(
-      localStorage.getItem("userName"),
-      globalFilter.winsPage,
-      globalFilter.limit
-    )
-      .then((wins) => {
-        if (wins.length > 0) {
-          displayWins(wins, true);
-        } else {
-          globalFilter.winsHasMore = false;
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to fetch wins:", error);
-        const errorMessageElement = document.getElementById("won");
-        errorMessageElement.classList.add("text-danger", "text-center", "mt-3");
-        errorMessageElement.textContent =
-          "Failed to load more wins. Please try again later.";
-        clearElementAfterDuration(errorMessageElement, 7000);
-      });
+    try {
+      const wins = await fetchWinsByProfile(
+        userName,
+        globalFilter.winsPage,
+        globalFilter.limit
+      );
+      if (wins.length > 0) {
+        displayWins(wins, true);
+      } else {
+        globalFilter.winsHasMore = false;
+      }
+    } catch (error) {
+      console.error("Failed to fetch wins:", error);
+      const errorMessageElement = document.getElementById("won");
+      errorMessageElement.classList.add("text-danger", "text-center", "mt-3");
+      errorMessageElement.textContent =
+        "Failed to load more wins. Please try again later.";
+      clearElementAfterDuration(errorMessageElement, 7000);
+    }
   });
 }
 
-//---------- Event Handlers for Tab Changes ---------//
+//---------- Event Handlers for Tab Changes ----------//
 const biddingTab = document.getElementById("bidding-tab");
 const wonTab = document.getElementById("won-tab");
 const tabLoader = document.getElementById("loaderTabs");
 
+//-- BiddingTab
 biddingTab.addEventListener("show.bs.tab", async (e) => {
+  const isMyProfile = window.location.pathname.includes("my-profile");
+  const userName = isMyProfile
+    ? localStorage.getItem("userName")
+    : new URLSearchParams(window.location.search).get("userName");
+
   if (!globalFilter.bidsFetched) {
     tabLoader.style.display = "block";
     try {
-      const bids = await fetchbidsByProfile(localStorage.getItem("userName"));
+      const bids = await fetchbidsByProfile(userName);
       displayBids(bids);
       globalFilter.bidsFetched = true;
     } catch (error) {
@@ -459,12 +595,17 @@ biddingTab.addEventListener("show.bs.tab", async (e) => {
     }
   }
 });
-
+//--Won Tab
 wonTab.addEventListener("show.bs.tab", async (e) => {
+  const isMyProfile = window.location.pathname.includes("my-profile");
+  const userName = isMyProfile
+    ? localStorage.getItem("userName")
+    : new URLSearchParams(window.location.search).get("userName");
+
   if (!globalFilter.winsFetched) {
     tabLoader.style.display = "block";
     try {
-      const wins = await fetchWinsByProfile(localStorage.getItem("userName"));
+      const wins = await fetchWinsByProfile(userName);
       displayWins(wins);
       globalFilter.winsFetched = true;
     } catch (error) {
@@ -479,93 +620,6 @@ wonTab.addEventListener("show.bs.tab", async (e) => {
     }
   }
 });
-
-//---------- Update Profile Media ----------//
-document
-  .getElementById("editProfileForm")
-  .addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const userName = localStorage.getItem("userName");
-    const errorFeedback = document.getElementById("profileEditError");
-
-    //-- Fetch current form values
-    const bioText = document.getElementById("bioInput").value.trim();
-    const resetBanner = document.getElementById("resetBannerCheckbox").checked;
-    const resetAvatar = document.getElementById("resetAvatarCheckbox").checked;
-    const bannerUrl = resetBanner
-      ? undefined
-      : document.getElementById("bannerImageInput").value || undefined;
-    const avatarUrl = resetAvatar
-      ? undefined
-      : document.getElementById("profileImageInput").value || undefined;
-
-    try {
-      await updateProfileMedia(
-        userName,
-        bannerUrl,
-        avatarUrl,
-        resetBanner,
-        resetAvatar,
-        bioText
-      );
-      window.location.reload();
-      clearProfileFormInputs();
-      bootstrap.Modal.getInstance(
-        document.getElementById("editProfileModal")
-      ).hide();
-    } catch (error) {
-      console.error("Error updating profile media:", error);
-      errorFeedback.textContent =
-        "Failed to update profile media. Please check your inputs and try again.";
-      errorFeedback.style.display = "block";
-    }
-  });
-
-document
-  .getElementById("bioInput")
-  .addEventListener("input", updateBioCharacterCount);
-
-//-- Function to update Bio Character Count --//
-function updateBioCharacterCount() {
-  const bioInput = document.getElementById("bioInput");
-  const bioFeedback = document.getElementById("bio-text");
-  const maxCharacters = 160;
-  const currentLength = bioInput.value.length;
-
-  bioFeedback.textContent = `${currentLength}/${maxCharacters} characters`;
-
-  bioFeedback.classList.toggle("text-danger", currentLength > maxCharacters);
-}
-
-//-- Function to populate the edit profile form with the current info
-function populateProfileForm(userData) {
-  const { avatar, banner, bio } = userData;
-
-  //-- Get form elements
-  const profileImageInput = document.getElementById("profileImageInput");
-  const bannerImageInput = document.getElementById("bannerImageInput");
-  const bioInput = document.getElementById("bioInput");
-  const resetAvatarCheckbox = document.getElementById("resetAvatarCheckbox");
-  const resetBannerCheckbox = document.getElementById("resetBannerCheckbox");
-  //-- Clear the inputs
-  profileImageInput.value = "";
-  bannerImageInput.value = "";
-  //-- Set the bio value
-  bioInput.value = bio || "";
-  //-- Update checkbox state based on API response
-  resetAvatarCheckbox.checked = !avatar?.url;
-  resetBannerCheckbox.checked = !banner?.url;
-
-  updateBioCharacterCount();
-}
-
-function clearProfileFormInputs() {
-  //-- Clear the input fields and reset checkboxes after saving
-  document.getElementById("profileImageInput").value = "";
-  document.getElementById("bannerImageInput").value = "";
-  document.getElementById("resetAvatarCheckbox").checked = false;
-  document.getElementById("resetBannerCheckbox").checked = false;
-}
 
 //---------- Error Message Function ----------//
 function displayError(message) {

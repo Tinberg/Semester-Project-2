@@ -205,50 +205,49 @@
               <li class="nav-item" role="presentation">
                 <button
                   class="nav-link active"
-                  id="profiles-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#profiles"
-                  type="button"
-                  role="tab"
-                  aria-controls="profiles"
-                  aria-selected="true"
-                >
-                  Profiles
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button
-                  class="nav-link"
                   id="listings-tab"
                   data-bs-toggle="tab"
                   data-bs-target="#listings"
                   type="button"
                   role="tab"
                   aria-controls="listings"
-                  aria-selected="false"
+                  aria-selected="true"
                 >
                   Listings
                 </button>
               </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="profiles-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profiles"
+                  type="button"
+                  role="tab"
+                  aria-controls="profiles"
+                  aria-selected="false"
+                >
+                  Profiles
+                </button>
+              </li>
             </ul>
-
             <!-- Tab content areas for profiles and listings results -->
             <div class="tab-content" id="searchTabsContent">
               <div
                 class="tab-pane fade show active mt-3"
-                id="profiles"
-                role="tabpanel"
-                aria-labelledby="profiles-tab"
-              >
-                <!-- Dynamic content for profiles results will be inserted here via JavaScript -->
-              </div>
-              <div
-                class="tab-pane fade mt-3"
                 id="listings"
                 role="tabpanel"
                 aria-labelledby="listings-tab"
               >
-                <!-- Dynamic content for listings results will be inserted here via JavaScript -->
+                <!-- Dynamic content for listings results here js-->
+              </div>
+              <div
+                class="tab-pane fade  mt-3"
+                id="profiles"
+                role="tabpanel"
+                aria-labelledby="profiles-tab"
+              >
+                <!-- Dynamic content for profiles results here js -->
               </div>
             </div>
           </div>
@@ -800,7 +799,7 @@
             <!--Section 2 all Auctions-->
             <section class="container-fluid p-0">
               <!-- Loader -->
-              <div id="loader" class="text-center pb-5" >
+              <div id="loader" class="text-center pb-5">
                 <div class="spinner-border text-primary" role="status">
                   <span class="sr-only">Loading...</span>
                 </div>
@@ -813,7 +812,7 @@
                 href="#"
                 class="text-center justify-content-center d-flex text-dark"
               >
-                <p class="explore-message fw-bolder mx-5 "></p
+                <p class="explore-message fw-bolder mx-5"></p
               ></a>
             </section>
           </div>

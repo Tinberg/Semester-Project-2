@@ -2,7 +2,8 @@
 import "../../scss/explore.scss";
 
 //---------- Import js from modules ----------/
-
+//-- GetToken to --> auth.js
+import { getToken } from "../modules/auth.js";
 //-- Api for fetch All Listings --> api.js
 import { fetchAllListings } from "../modules/api.js";
 //-- Api for fetch Profile Search --> api.js
@@ -290,13 +291,15 @@ function initializeSearch() {
   const searchResultsModal = new bootstrap.Modal(
     document.getElementById("searchResultsModal")
   );
+  //--global getToken for Auth
+  const token = getToken();
 
   searchForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const query = searchInput.value.trim();
     if (query) {
-      await searchProfiles(query);
       await searchListings(query);
+      await searchProfiles(query);
       searchResultsModal.show();
     }
   });
@@ -333,15 +336,51 @@ function initializeSearch() {
           listItem.appendChild(img);
           listItem.appendChild(nameParagraph);
           profileList.appendChild(listItem);
+
+          //-- Add event listener for redirection to profile or my-profile if its the logged in users name
+          listItem.addEventListener("click", () => {
+            const currentUser = localStorage.getItem("userName");
+            const profileUrl =
+              profile.name === currentUser
+                ? "/html/my-profile.html"
+                : `/html/profile.html?userName=${encodeURIComponent(
+                    profile.name
+                  )}`;
+            window.location.href = profileUrl;
+          });
         });
 
         profilesContainer.appendChild(profileList);
       }
     } catch (error) {
+      //-- Display login/register message if user is not logged in or error message
       console.error("Error fetching profiles:", error);
-      profilesContainer.textContent =
-        "We're unable to fetch profiles at the moment. Please try again later.";
-      profilesContainer.classList.add("text-danger");
+      profilesContainer.innerHTML = "";
+
+      if (!token) {
+        profilesContainer.textContent = "Please ";
+
+        const loginLink = document.createElement("a");
+        loginLink.href = "login.html";
+        loginLink.textContent = "log in";
+        loginLink.className = "fw-bold text-secondary";
+
+        const registerLink = document.createElement("a");
+        registerLink.href = "register.html";
+        registerLink.textContent = "Sign up";
+        registerLink.className = "fw-bold text-secondary";
+
+        profilesContainer.appendChild(loginLink);
+        profilesContainer.appendChild(document.createTextNode(" or "));
+        profilesContainer.appendChild(registerLink);
+        profilesContainer.appendChild(
+          document.createTextNode(" to view profiles.")
+        );
+      } else {
+        profilesContainer.textContent =
+          "We're unable to fetch profiles at the moment. Please try again later.";
+        profilesContainer.classList.add("text-danger");
+      }
     }
   }
   //---------- Search Listings ----------//
