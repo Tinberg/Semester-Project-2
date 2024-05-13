@@ -17,6 +17,7 @@ import { timeSince } from "../modules/utility.js";
 //-- For map out the highest bid amount --> utility.js
 import { getHighestBidAmount } from "../modules/utility.js";
 
+
 //----------  URL parameters and listing ID ----------//
 const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
@@ -100,9 +101,9 @@ function displayListingDetails(listing) {
     endsInDisplay.innerHTML = "Ends in: <span id='listing-endsIn'></span>";
     startCountdown(listing.endsAt, "listing-endsIn");
   }
-  //-- Check if the user is the seller
   if (listing.seller && loggedInUserName === listing.seller.name) {
     bidButton.disabled = true;
+    displayEditIcon(listing); // Call to display the edit icon
   }
 
   //-- Handle login state for bidding
@@ -133,7 +134,6 @@ function displaySellerInfo(seller) {
   document.getElementById("sellerImg").src = seller.avatar.url;
   document.getElementById("seller").textContent = seller.name;
   document.getElementById("sellerEmail").textContent = seller.email;
-  // Add event listener to the seller info div only if the user is logged in
   const sellerInfoDiv = document.getElementById("sellerDiv");
   if (!token) {
     sellerInfoDiv.style.cursor = "default";
@@ -169,7 +169,7 @@ function createBidHtml(bid, isAuthenticated) {
     </li>
   `;
 }
-//-- Adds event listeners for redirection to profile pages
+//-- Redirection to profile pages
 function addProfileRedirectionListeners(container, isAuthenticated) {
   if (isAuthenticated) {
     container.querySelectorAll("a").forEach((anchor) => {
@@ -324,4 +324,165 @@ document
     }
   });
 
-  
+//---------- Edit Listing ----------//
+
+//-- Display the edit icon if the user is the seller --//
+function displayEditIcon(listing) {
+  const editIcon = document.createElement("i");
+  editIcon.className =
+    "fa-regular fa-pen-to-square fs-3 text-primary  position-absolute top-0 end-0 pe-2 pt-1 ";
+  editIcon.style.cursor = "pointer";
+  editIcon.title = "Edit Listing";
+  editIcon.setAttribute("data-bs-toggle", "tooltip");
+  editIcon.setAttribute("data-bs-placement", "top");
+  editIcon.setAttribute("title", "Edit Listing");
+
+  //-- Bootstrap tooltip
+  new bootstrap.Tooltip(editIcon);
+
+  editIcon.addEventListener("click", () => {
+    openEditListingModal(listing);
+  });
+
+  const iconContainer = document.querySelector("#iconContainer");
+  iconContainer.appendChild(editIcon);
+}
+//-- Open the Edit Listing Modal and populate with current data
+function openEditListingModal(listing) {
+  const editListingModal = new bootstrap.Modal(
+    document.getElementById("editListingModal")
+  );
+  document.getElementById("editListingImage").value =
+    listing.media[0]?.url || "";
+  document.getElementById("editAltText").value = listing.media[0]?.alt || "";
+  document.getElementById("editListingTitle").value = listing.title || "";
+  document.getElementById("editListingDescription").value =
+    listing.description || "";
+  //-- Category
+  const categorySelect = document.getElementById("editCategorySelect");
+  const currentCategory =
+    listing.tags && listing.tags.length > 0 ? listing.tags[0] : "";
+  categorySelect.value = currentCategory;
+
+  updateEditFeedbacks();
+  editListingModal.show();
+}
+
+//---------- Save changes made in the input for update Listing (API) ----------//
+document
+  .getElementById("saveListingChanges")
+  .addEventListener("click", async () => {
+    const title = document.getElementById("editListingTitle").value;
+    const description = document.getElementById("editListingDescription").value;
+    const category = document.getElementById("editCategorySelect").value;
+    const imageUrl = document.getElementById("editListingImage").value;
+    const altText = document.getElementById("editAltText").value;
+
+    const errorFeedback = document.getElementById("editErrorFeedback");
+    errorFeedback.style.display = "none";
+
+    // Initialize error message accumulator
+    const errorMessageEditListing = "Failed to edit Listing. Include a title and ensure it, along with description, are under 280 characters. If adding an image, descriptions should be under 120 characters and URLs must start with 'http://' or 'https://'. Adjust and retry.";
+    let hasError = false;
+
+    // Validation checks
+    if (!title) {
+      hasError = true;
+    }
+    if (title.length > 280) {
+      hasError = true;
+    }
+    if (description.length > 280) {
+      hasError = true;
+    }
+    if (altText.length > 120) {
+      hasError = true;
+    }
+    if (imageUrl && !/^https?:\/\//.test(imageUrl)) {
+      hasError = true;
+    }
+
+    if (hasError) {
+      errorFeedback.textContent = errorMessageEditListing;
+      errorFeedback.style.display = "block";
+      return;
+    }
+
+    const updatedData = {
+      title,
+      description,
+      tags: [category],
+      media: [
+        {
+          url: imageUrl,
+          alt: altText,
+        },
+      ],
+    };
+
+    try {
+      await updateListing(listingId, updatedData);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating listing:", error);
+      errorFeedback.textContent =
+        "Failed to update the listing. Please check your internet connection and try again later.";
+      errorFeedback.style.display = "block";
+    }
+  });
+//---------- Functions to update feedback for inputs dynamically ---------//
+function updateEditFeedbacks() {
+  updateEditTitleFeedback();
+  updateEditDescriptionFeedback();
+  updateEditAltTextFeedback();
+}
+//-- Update title characterCount
+function updateEditTitleFeedback() {
+  const title = document.getElementById("editListingTitle").value;
+  const feedback = document.getElementById("editTitleFeedback");
+  feedback.textContent = `${title.length}/280 characters`;
+  feedback.classList.toggle("text-danger", title.length > 280);
+}
+//-- update description characterCount
+function updateEditDescriptionFeedback() {
+  const description = document.getElementById("editListingDescription").value;
+  const feedback = document.getElementById("editDescriptionFeedback");
+  feedback.textContent = `${description.length}/280 characters`;
+  feedback.classList.toggle("text-danger", description.length > 280);
+}
+//-- Update alt text characterCount
+function updateEditAltTextFeedback() {
+  const altText = document.getElementById("editAltText").value;
+  const feedback = document.getElementById("editAltTextFeedback");
+  feedback.textContent = `${altText.length}/120 characters`;
+  feedback.classList.toggle("text-danger", altText.length > 120);
+}
+//-- Event listeners for live feedback in edit modal
+document
+  .getElementById("editListingTitle")
+  .addEventListener("input", updateEditTitleFeedback);
+document
+  .getElementById("editListingDescription")
+  .addEventListener("input", updateEditDescriptionFeedback);
+document
+  .getElementById("editAltText")
+  .addEventListener("input", updateEditAltTextFeedback);
+
+//---------- Delete the listing ----------//
+document
+  .getElementById("deleteListingButton")
+  .addEventListener("click", async () => {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this listing?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await deleteListing(listingId);
+      window.location.href = "/html/my-profile.html";
+    } catch (error) {
+      console.error("Error deleting listing:", error);
+      document.getElementById("deleteErrorFeedback").textContent =
+        "Failed to delete the listing. Please try again. If the issue persists, it may be due to a temporary problem. You can refresh the page and attempt to delete the listing again. If the problem continues, please contact support for further assistance.";
+    }
+  });

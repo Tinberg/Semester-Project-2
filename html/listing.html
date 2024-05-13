@@ -158,7 +158,11 @@
                 </select>
               </div>
               <div class="border my-4"></div>
-              <button type="submit" class="btn btn-secondary my-2 px-5">
+              <button
+                type="submit"
+                class="btn btn-secondary my-2 px-5"
+                aria-label="Publish Listing"
+              >
                 Publish
               </button>
               <p
@@ -172,6 +176,7 @@
               type="button"
               class="btn btn-primary"
               data-bs-dismiss="modal"
+              aria-label="Close"
             >
               Close
             </button>
@@ -275,17 +280,6 @@
                   0/280 characters
                 </div>
               </div>
-              <div class="mb-3">
-                <label for="editEndsAt" class="form-label fw-semibold"
-                  >Ends At (Required)</label
-                >
-                <input
-                  type="datetime-local"
-                  id="editEndsAt"
-                  class="form-control mx-auto"
-                  required
-                />
-              </div>
               <div class="border my-4"></div>
               <div class="mb-3">
                 <label for="editCategorySelect" class="form-label fw-semibold"
@@ -324,19 +318,27 @@
                   type="button"
                   class="btn btn-primary mb-3 px-5"
                   id="saveListingChanges"
+                  aria-label="Save Changes"
                 >
                   Save Changes
                 </button>
-                <p id="editErrorFeedback" class="text-danger my-2"></p>
+                <p
+                  id="editErrorFeedback"
+                  class="text-danger mb-3 text-lg-center text-start"
+                ></p>
                 <button
                   type="button"
                   class="btn btn-danger mb-3"
                   id="deleteListingButton"
+                  aria-label="Delete Listing"
                 >
                   Delete Listing
                 </button>
               </div>
-              <p id="deleteErrorFeedback" class="text-danger my-2"></p>
+              <p
+                id="deleteErrorFeedback"
+                class="text-danger mb-3 text-lg-center text-start"
+              ></p>
             </form>
           </div>
           <div class="modal-footer">
@@ -344,6 +346,7 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              aria-label="Close"
             >
               Close
             </button>
@@ -428,10 +431,11 @@
               </div>
             </div>
             <div
-              class="col-lg-6 col-12 d-flex align-items-start flex-column ms-auto"
+              id="iconContainer"
+              class="col-lg-6 col-12 d-flex align-items-start flex-column ms-auto pt-lg-0 pt-1 position-relative"
             >
               <!-- Title API -->
-              <h1 id="listingTitleDisplay" class="fs-3 mb-3 text-break">
+              <h1 id="listingTitleDisplay" class="fs-3 mb-3 text-break pe-5">
                 Title
               </h1>
               <p class="fs-5">Description:</p>

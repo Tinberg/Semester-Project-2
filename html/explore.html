@@ -157,7 +157,11 @@
                 </select>
               </div>
               <div class="border my-4"></div>
-              <button type="submit" class="btn btn-secondary my-2 px-5">
+              <button
+                type="submit"
+                class="btn btn-secondary my-2 px-5"
+                aria-label="Publish Listing"
+              >
                 Publish
               </button>
               <p
@@ -171,6 +175,7 @@
               type="button"
               class="btn btn-primary"
               data-bs-dismiss="modal"
+              aria-label="Close"
             >
               Close
             </button>
@@ -212,6 +217,7 @@
                   role="tab"
                   aria-controls="listings"
                   aria-selected="true"
+                  aria-label="Change to Listings"
                 >
                   Listings
                 </button>
@@ -226,6 +232,7 @@
                   role="tab"
                   aria-controls="profiles"
                   aria-selected="false"
+                  aria-label="Change to Profiles"
                 >
                   Profiles
                 </button>
@@ -242,7 +249,7 @@
                 <!-- Dynamic content for listings results here js-->
               </div>
               <div
-                class="tab-pane fade  mt-3"
+                class="tab-pane fade mt-3"
                 id="profiles"
                 role="tabpanel"
                 aria-labelledby="profiles-tab"
@@ -256,6 +263,7 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              aria-label="Close"
             >
               Close
             </button>

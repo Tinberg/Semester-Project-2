@@ -1,6 +1,5 @@
 
 
-- listing. make user that owns the listing have choice to edit or delete listing. 
 - img gallery on listing and when create listing
 
 - index js
