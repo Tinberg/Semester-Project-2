@@ -1,8 +1,7 @@
 //---------- Section 1 listing product ----------//
 //-- Listing
 .listing-img {
-  min-height: 300px;
-  max-height: 600px;
+  height: 550px;
 }
 
 //---------- Section 2 Seller and History ----------//
@@ -12,3 +11,14 @@
   height: 90px;
 }
 
+//---------- Section 1 Listing Image MQ for Hight----------//
+@media (max-width: 1200px) {
+  .listing-img {
+    height: 450px;
+  }
+}
+@media (max-width: 576px) {
+  .listing-img {
+    height: 375px;
+  }
+}

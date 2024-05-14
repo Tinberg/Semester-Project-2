@@ -17,7 +17,6 @@ import { timeSince } from "../modules/utility.js";
 //-- For map out the highest bid amount --> utility.js
 import { getHighestBidAmount } from "../modules/utility.js";
 
-
 //----------  URL parameters and listing ID ----------//
 const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
@@ -25,6 +24,45 @@ const listingId = urlParams.get("id");
 const errorMessageElement = document.getElementById("idErrorMessage");
 //-- global getToken for Auth(different layout)
 const token = getToken();
+
+//---------- Check for listing ID from the URL on page load ----------//
+// Add this to the top section of your JavaScript file
+let currentImageIndex = 0;
+let images = [];
+
+// Function to update the image and image number display
+function updateImageDisplay() {
+  const listingImgElement = document.getElementById("listingImg");
+  const numberImgElement = document.getElementById("numberImg");
+
+  if (images.length > 0) {
+    const { url, alt } = images[currentImageIndex];
+    listingImgElement.src = url;
+    listingImgElement.alt = alt;
+    numberImgElement.textContent = `Image ${currentImageIndex + 1} of ${
+      images.length
+    }`;
+  } else {
+    listingImgElement.src = "/images/no-img-listing.jpg";
+    listingImgElement.alt = "No images available";
+    numberImgElement.textContent = "Image 0 of 0";
+  }
+}
+
+// Event listeners for the image navigation buttons
+document.getElementById("prevImgBtn").addEventListener("click", () => {
+  if (currentImageIndex > 0) {
+    currentImageIndex--;
+    updateImageDisplay();
+  }
+});
+
+document.getElementById("nextImgBtn").addEventListener("click", () => {
+  if (currentImageIndex < images.length - 1) {
+    currentImageIndex++;
+    updateImageDisplay();
+  }
+});
 
 //---------- Check for listing ID from the URL on page load ----------//
 document.addEventListener("DOMContentLoaded", function () {
@@ -37,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //---------- Call fetchListingById with both includeSeller and includeBids set to true ----------//
   fetchListingById(listingId, true, true)
     .then((data) => {
+      console.log("Fetched Listing Data:", data);
       displayListingDetails(data);
       if (data.seller) displaySellerInfo(data.seller);
       if (data.bids) displayBidHistory(data.bids);
@@ -47,22 +86,15 @@ document.addEventListener("DOMContentLoaded", function () {
         "We encountered an issue loading the listing details. Some parts of this page may not display correctly. Please refresh the page or try again later.";
     });
 });
+
 //---------- Display listing Details ----------//
 function displayListingDetails(listing) {
   const loggedInUserName = localStorage.getItem("userName"); //-- To check if its the same as the listing (disable bid btn)
 
-  //--Image
-  const imageUrl =
-    listing.media && listing.media.length > 0
-      ? listing.media[0].url
-      : "/images/no-img-listing.jpg";
-  const imageAlt =
-    listing.media && listing.media.length > 0 && listing.media[0].alt
-      ? listing.media[0].alt
-      : "Listing image";
-
-  document.getElementById("listingImg").src = imageUrl;
-  document.getElementById("listingImg").alt = imageAlt;
+  // Update images array
+  images = listing.media || [];
+  currentImageIndex = 0;
+  updateImageDisplay();
 
   //-- Title
   document.getElementById("listingTitleDisplay").textContent =
@@ -325,7 +357,6 @@ document
   });
 
 //---------- Edit Listing ----------//
-
 //-- Display the edit icon if the user is the seller --//
 function displayEditIcon(listing) {
   const editIcon = document.createElement("i");
@@ -382,7 +413,8 @@ document
     errorFeedback.style.display = "none";
 
     // Initialize error message accumulator
-    const errorMessageEditListing = "Failed to edit Listing. Include a title and ensure it, along with description, are under 280 characters. If adding an image, descriptions should be under 120 characters and URLs must start with 'http://' or 'https://'. Adjust and retry.";
+    const errorMessageEditListing =
+      "Failed to edit Listing. Include a title and ensure it, along with description, are under 280 characters. If adding an image, descriptions should be under 120 characters and URLs must start with 'http://' or 'https://'. Adjust and retry.";
     let hasError = false;
 
     // Validation checks

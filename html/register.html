@@ -21,164 +21,169 @@
     ></script>
   </head>
   <body>
-     <!-- New Listing Modal -->
-     <div
-     class="modal modal-lg fade"
-     id="newListingModal"
-     tabindex="-1"
-     aria-labelledby="newListingModalLabel"
-     aria-hidden="true"
-   >
-     <div class="modal-dialog">
-       <div class="modal-content">
-         <div class="modal-header text-start">
-           <p
-             class="modal-title fs-5 fw-bolder w-100"
-             id="newListingModalLabel"
-           >
-             New Listing
-           </p>
-           <button
-             type="button"
-             class="btn-close"
-             data-bs-dismiss="modal"
-             aria-label="Close"
-           ></button>
-         </div>
-         <div class="modal-body">
-           <form id="newListingForm" class="text-center">
-             <div class="mb-3">
-               <label for="ListingImage" class="form-label fw-semibold"
-                 >Listing Image</label
-               >
-               <div class="d-flex justify-content-center">
-                 <div
-                   class="img-icon bg-primary d-inline-flex justify-content-center align-items-center mb-2 rounded"
-                 >
-                   <i class="fas fa-image fa-3x text-white"></i>
-                 </div>
-               </div>
-               <div class="form-text">Recommended aspect ratio: 1:1</div>
-               <input
-                 type="text"
-                 id="listingImage"
-                 placeholder="Image URL to a uploaded image "
-                 class="form-control mt-2 mx-auto"
-               />
-               <div class="mb-3">
-                 <label
-                   for="altText"
-                   id="imageDescriptionLabel"
-                   class="form-label fw-semibold d-none"
-                   >Image Description</label
-                 >
-                 <input
-                   type="text"
-                   id="altText"
-                   placeholder="Enter image description"
-                   class="form-control mt-3 mx-auto"
-                   aria-label="imageDescriptionLabel"
-                 />
-                 <div id="altTextFeedback" class="feedback form-text">
-                   0/120 characters
-                 </div>
-               </div>
-             </div>
-
-             <div class="border my-4"></div>
-             <div class="mb-3">
-               <label for="listingTitle" class="form-label fw-semibold"
-                 >Title (Required)</label
-               >
-               <input
-                 type="text"
-                 class="form-control mx-auto"
-                 id="listingTitle"
-                 placeholder="Enter title here"
-               />
-               <div id="titleFeedback" class="form-text">0/280 characters</div>
-             </div>
-             <div class="border my-4"></div>
-             <div class="mb-3">
-               <label for="listingDescription" class="form-label fw-semibold"
-                 >Description</label
-               >
-               <textarea
-                 class="form-control mx-auto"
-                 id="listingDescription"
-                 rows="5"
-                 placeholder="Write a Description..."
-               ></textarea>
-               <div id="descriptionFeedback" class="form-text">
-                 0/280 characters
-               </div>
-             </div>
-             <div class="mb-3">
-               <label for="endsAt" class="form-label fw-semibold"
-                 >Ends At (Required)</label
-               >
-               <input
-                 type="datetime-local"
-                 id="endsAt"
-                 class="form-control mx-auto"
-                 required
-               />
-             </div>
-             <div class="border my-4"></div>
-             <div class="mb-3">
-               <label for="categorySelect" class="form-label fw-semibold"
-                 >Category</label
-               >
-               <select class="form-select mx-auto" id="categorySelect">
-                 <option selected disabled>Choose a category</option>
-                 <option value="Art">Art</option>
-                 <option value="Antiques">Antiques</option>
-                 <option value="Vehicles">Vehicles</option>
-                 <option value="Fashion">Fashion</option>
-                 <option value="Jewelry">Jewelry</option>
-                 <option value="Furniture">Furniture</option>
-                 <option value="Electronics">Electronics</option>
-                 <option value="Books">Books</option>
-                 <option value="Collectibles">Collectibles</option>
-                 <option value="Watches">Watches</option>
-                 <option value="Toys">Toys</option>
-                 <option value="Instruments">Instruments</option>
-                 <option value="Memorabilia">Memorabilia</option>
-                 <option value="Coins">Coins</option>
-                 <option value="Stamps">Stamps</option>
-                 <option value="Decor">Decor</option>
-                 <option value="Gadgets">Gadgets</option>
-                 <option value="Sports">Sports</option>
-                 <option value="Ceramics">Ceramics</option>
-                 <option value="Textiles">Textiles</option>
-                 <option value="Photography">Photography</option>
-                 <option value="Gardening">Gardening</option>
-                 <option value="Tools">Tools</option>
-               </select>
-             </div>
-             <div class="border my-4"></div>
-             <button type="submit" class="btn btn-secondary my-2 px-5" aria-label="Publish Listing">
-               Publish
-             </button>
-             <p
-               id="listingErrorFeedback"
-               class="text-danger my-3 text-lg-center text-start"
-             ></p>
-           </form>
-         </div>
-         <div class="modal-footer">
-           <button
-             type="button"
-             class="btn btn-primary"
-             data-bs-dismiss="modal"
-             aria-label="Close"
-           >
-             Close
-           </button>
-         </div>
-       </div>
-     </div>
-   </div>
+    <!-- New Listing Modal -->
+    <div
+      class="modal modal-lg fade"
+      id="newListingModal"
+      tabindex="-1"
+      aria-labelledby="newListingModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header text-start">
+            <p
+              class="modal-title fs-5 fw-bolder w-100"
+              id="newListingModalLabel"
+            >
+              New Listing
+            </p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="newListingForm" class="text-center">
+              <div id="imagesContainer" class="mb-3">
+                <label class="form-label fw-semibold">Listing Images</label>
+                <div class="image-group">
+                  <div class="d-flex justify-content-center position-relative">
+                    <div
+                      class="img-icon bg-primary d-inline-flex justify-content-center align-items-center mb-2 rounded position-relative"
+                    >
+                      <i class="fas fa-image fa-3x text-white"></i>
+                      <img
+                        src=""
+                        class="img-preview position-absolute w-100 h-100 d-none img-cover top-0 left-0"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-text">Recommended aspect ratio: 1:1</div>
+                  <input
+                    type="text"
+                    class="form-control mt-2 mx-auto imageUrl"
+                    placeholder="Image URL to an uploaded image"
+                  />
+                  <input
+                    type="text"
+                    class="form-control mt-2 mx-auto imageAlt"
+                    placeholder="Enter image description"
+                  />
+                  <div class="feedback form-text imageFeedback">
+                    0/120 characters
+                  </div>
+                  <div class="border my-4"></div>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-secondary mb-3"
+                id="addImage"
+                aria-label="Add new image"
+              >
+                Add Another Image
+              </button>
+              <div class="border my-4"></div>
+              <div class="mb-3">
+                <label for="listingTitle" class="form-label fw-semibold"
+                  >Title (Required)</label
+                >
+                <input
+                  type="text"
+                  class="form-control mx-auto"
+                  id="listingTitle"
+                  placeholder="Enter title here"
+                />
+                <div id="titleFeedback" class="form-text">0/280 characters</div>
+              </div>
+              <div class="border my-4"></div>
+              <div class="mb-3">
+                <label for="listingDescription" class="form-label fw-semibold"
+                  >Description</label
+                >
+                <textarea
+                  class="form-control mx-auto"
+                  id="listingDescription"
+                  rows="5"
+                  placeholder="Write a Description..."
+                ></textarea>
+                <div id="descriptionFeedback" class="form-text">
+                  0/280 characters
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="endsAt" class="form-label fw-semibold"
+                  >Ends At (Required)</label
+                >
+                <input
+                  type="datetime-local"
+                  id="endsAt"
+                  class="form-control mx-auto"
+                  required
+                />
+              </div>
+              <div class="border my-4"></div>
+              <div class="mb-3">
+                <label for="categorySelect" class="form-label fw-semibold"
+                  >Category</label
+                >
+                <select class="form-select mx-auto" id="categorySelect">
+                  <option selected disabled>Choose a category</option>
+                  <option value="Art">Art</option>
+                  <option value="Antiques">Antiques</option>
+                  <option value="Vehicles">Vehicles</option>
+                  <option value="Fashion">Fashion</option>
+                  <option value="Jewelry">Jewelry</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Books">Books</option>
+                  <option value="Collectibles">Collectibles</option>
+                  <option value="Watches">Watches</option>
+                  <option value="Toys">Toys</option>
+                  <option value="Instruments">Instruments</option>
+                  <option value="Memorabilia">Memorabilia</option>
+                  <option value="Coins">Coins</option>
+                  <option value="Stamps">Stamps</option>
+                  <option value="Decor">Decor</option>
+                  <option value="Gadgets">Gadgets</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Ceramics">Ceramics</option>
+                  <option value="Textiles">Textiles</option>
+                  <option value="Photography">Photography</option>
+                  <option value="Gardening">Gardening</option>
+                  <option value="Tools">Tools</option>
+                </select>
+              </div>
+              <div class="border my-4"></div>
+              <button
+                type="submit"
+                class="btn btn-secondary my-2 px-5"
+                aria-label="Publish Listing"
+              >
+                Publish
+              </button>
+              <p
+                id="listingErrorFeedback"
+                class="text-danger my-3 text-lg-center text-start"
+              ></p>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!----------Header---------->
     <header>
       <nav
