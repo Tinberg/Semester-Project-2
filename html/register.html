@@ -48,7 +48,9 @@
           <div class="modal-body">
             <form id="newListingForm" class="text-center">
               <div id="imagesContainer" class="mb-3">
-                <label class="form-label fw-semibold">Listing Images</label>
+                <label for="listingMediaUrl" class="form-label fw-semibold"
+                  >Listing Images</label
+                >
                 <div class="image-group">
                   <div class="d-flex justify-content-center position-relative">
                     <div
@@ -56,8 +58,9 @@
                     >
                       <i class="fas fa-image fa-3x text-white"></i>
                       <img
-                        src=""
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                         class="img-preview img-thumbnail position-absolute w-100 h-100 d-none img-cover top-0 left-0"
+                        alt="Listing Image"
                       />
                     </div>
                   </div>
@@ -66,11 +69,18 @@
                     type="text"
                     class="form-control mt-2 mx-auto imageUrl"
                     placeholder="Image URL to an uploaded image"
+                    id="listingMediaUrl"
                   />
+                  <label
+                    for="listingMediaAlt"
+                    class="form-label fw-semibold mt-2"
+                    >Image Description</label
+                  >
                   <input
                     type="text"
                     class="form-control mt-2 mx-auto imageAlt"
                     placeholder="Enter image description"
+                    id="listingMediaAlt"
                   />
                   <div class="feedback form-text imageFeedback">
                     0/120 characters
@@ -380,13 +390,16 @@
           <div class="col-lg text-light">
             <p class="fw-bold text-light mt-3 mt-lg-0">Social</p>
             <div>
-              <a href="#" class="me-4"
+              <a href="https://www.facebook.com" class="me-4">
+                <span class="sr-only">Visit Facebook Website</span
                 ><i class="fa-brands fa-facebook text-light fa-2x"></i
               ></a>
-              <a href="#" class="me-4"
+              <a href="https://www.pinterest.com" class="me-4">
+                <span class="sr-only">Visit Pinterest Website</span
                 ><i class="fa-brands fa-pinterest text-light fa-2x"></i
               ></a>
-              <a href="#" class="me-4"
+              <a href="https://api.whatsapp.com" class="me-4">
+                <span class="sr-only">Visit WhatsApp Website</span
                 ><i class="fa-brands fa-whatsapp text-light fa-2x"></i
               ></a>
             </div>
