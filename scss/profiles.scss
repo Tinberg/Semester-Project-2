@@ -19,6 +19,20 @@
   width: 180px;
   height: 180px;
 }
+//Edit Profile Modal For My-Profile ONLY.
+.aspect-circle,
+.aspect-square {
+  background-color: #f0f0f0;
+  border: 2px solid #142f42; 
+}
+.aspect-circle {
+  width: 100px; 
+  height: 100px; 
+}
+.aspect-square {
+ height: 125px; 
+ width: 90%;
+}
 
 //---------- Section 2 Personal activity ----------//
 //--card img top right text/icon
