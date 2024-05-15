@@ -17,20 +17,15 @@ import { timeSince } from "../modules/utility.js";
 //-- For map out the highest bid amount --> utility.js
 import { getHighestBidAmount } from "../modules/utility.js";
 
-//----------  URL parameters and listing ID ----------//
+//----------  URL parameters and listing ID (error and auth) ----------//
 const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
-//-- Error message element
 const errorMessageElement = document.getElementById("idErrorMessage");
-//-- global getToken for Auth(different layout)
 const token = getToken();
-
-//---------- Check for listing ID from the URL on page load ----------//
-// Add this to the top section of your JavaScript file
 let currentImageIndex = 0;
 let images = [];
 
-// Function to update the image and image number display
+//-- Function to update the image and image number display
 function updateImageDisplay() {
   const listingImgElement = document.getElementById("listingImg");
   const numberImgElement = document.getElementById("numberImg");
@@ -38,25 +33,24 @@ function updateImageDisplay() {
   if (images.length > 0) {
     const { url, alt } = images[currentImageIndex];
     listingImgElement.src = url;
-    listingImgElement.alt = alt;
+    listingImgElement.alt = alt || "Listing Image"; 
     numberImgElement.textContent = `Image ${currentImageIndex + 1} of ${
       images.length
     }`;
   } else {
     listingImgElement.src = "/images/no-img-listing.jpg";
-    listingImgElement.alt = "No images available";
+    listingImgElement.alt = "Listing Image";
     numberImgElement.textContent = "Image 0 of 0";
   }
 }
 
-// Event listeners for the image navigation buttons
+//-- Event listeners for the image navigation buttons
 document.getElementById("prevImgBtn").addEventListener("click", () => {
   if (currentImageIndex > 0) {
     currentImageIndex--;
     updateImageDisplay();
   }
 });
-
 document.getElementById("nextImgBtn").addEventListener("click", () => {
   if (currentImageIndex < images.length - 1) {
     currentImageIndex++;
@@ -75,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //---------- Call fetchListingById with both includeSeller and includeBids set to true ----------//
   fetchListingById(listingId, true, true)
     .then((data) => {
-      console.log("Fetched Listing Data:", data);
+      console.log(data);
       displayListingDetails(data);
       if (data.seller) displaySellerInfo(data.seller);
       if (data.bids) displayBidHistory(data.bids);
@@ -135,7 +129,7 @@ function displayListingDetails(listing) {
   }
   if (listing.seller && loggedInUserName === listing.seller.name) {
     bidButton.disabled = true;
-    displayEditIcon(listing); // Call to display the edit icon
+    displayEditIcon(listing);
   }
 
   //-- Handle login state for bidding
@@ -150,7 +144,7 @@ function displayListingDetails(listing) {
       loginMessageContainer.style.display = "block";
     }
   } else {
-    // User logged in (auction not ended or loggedin is not seller display bid btn)
+    //-- User logged in (auction not ended or loggedin is not seller display bid btn)
     if (
       !auctionEnded &&
       !(listing.seller && loggedInUserName === listing.seller.name)
@@ -222,7 +216,6 @@ function addProfileRedirectionListeners(container, isAuthenticated) {
 //---------- Display bid History for listing and showMoreBtn ----------//
 //-- (including anchor tag around userName if Token is in localStorage)
 function displayBidHistory(bids) {
-  console.log("All bids fetched from the API:", bids);
   const bidHistoryElement = document.getElementById("bidHistory");
   const bidHistoryHeader = document.getElementById("bidHistoryHeader");
 
@@ -348,7 +341,6 @@ document
       alert(
         `Bid successfully submitted! You bid $${formattedBidAmount}. You can view bid history under the 'Bid History' section on this listing or in your profile under 'Bidding Activity'.`
       );
-      console.log("Bid Response:", bidResponse);
     } catch (error) {
       console.error("Failed to submit bid:", error);
       errorMessageElement.textContent =
@@ -361,14 +353,13 @@ document
 function displayEditIcon(listing) {
   const editIcon = document.createElement("i");
   editIcon.className =
-    "fa-regular fa-pen-to-square fs-3 text-primary  position-absolute top-0 end-0 pe-2 pt-1 ";
+    "fa-regular fa-pen-to-square fs-3 text-primary position-absolute top-0 end-0 pe-2 pt-1";
   editIcon.style.cursor = "pointer";
   editIcon.title = "Edit Listing";
   editIcon.setAttribute("data-bs-toggle", "tooltip");
   editIcon.setAttribute("data-bs-placement", "top");
-  editIcon.setAttribute("title", "Edit Listing");
 
-  //-- Bootstrap tooltip
+  // Bootstrap tooltip
   new bootstrap.Tooltip(editIcon);
 
   editIcon.addEventListener("click", () => {
@@ -378,61 +369,141 @@ function displayEditIcon(listing) {
   const iconContainer = document.querySelector("#iconContainer");
   iconContainer.appendChild(editIcon);
 }
-//-- Open the Edit Listing Modal and populate with current data
+
+//-- Open the Edit Listing Modal and populate with current data from API --//
 function openEditListingModal(listing) {
   const editListingModal = new bootstrap.Modal(
     document.getElementById("editListingModal")
   );
-  document.getElementById("editListingImage").value =
-    listing.media[0]?.url || "";
-  document.getElementById("editAltText").value = listing.media[0]?.alt || "";
   document.getElementById("editListingTitle").value = listing.title || "";
   document.getElementById("editListingDescription").value =
     listing.description || "";
+
   //-- Category
   const categorySelect = document.getElementById("editCategorySelect");
   const currentCategory =
     listing.tags && listing.tags.length > 0 ? listing.tags[0] : "";
   categorySelect.value = currentCategory;
 
+  //-- Primary Image
+  const primaryImageGroup = document.querySelector(
+    "#editImagesContainer .image-group"
+  );
+  const primaryImageUrl = primaryImageGroup.querySelector(".imageUrl");
+  const primaryImageAlt = primaryImageGroup.querySelector(".imageAlt");
+  const primaryImagePreview = primaryImageGroup.querySelector(".img-preview");
+
+  if (listing.media.length > 0) {
+    primaryImageUrl.value = listing.media[0].url || "";
+    primaryImageAlt.value = listing.media[0].alt || "";
+    if (listing.media[0].url) {
+      primaryImagePreview.src = listing.media[0].url;
+      primaryImagePreview.classList.remove("d-none");
+    } else {
+      primaryImagePreview.classList.add("d-none");
+    }
+  }
+
+  //-- Additional Images
+  const editImagesContainer = document.getElementById("editImagesContainer");
+  editImagesContainer
+    .querySelectorAll(".image-group")
+    .forEach((group, index) => {
+      if (index > 0) group.remove();
+    });
+
+  listing.media.slice(1).forEach((media) => {
+    addImageFields(editImagesContainer, media);
+  });
+
   updateEditFeedbacks();
   editListingModal.show();
 }
 
-//---------- Save changes made in the input for update Listing (API) ----------//
+//-- Add image fields to the form to upload more images
+function addImageFields(container, media = {}) {
+  const newImageGroup = document.createElement("div");
+  newImageGroup.classList.add("image-group", "position-relative", "mb-3");
+
+  newImageGroup.innerHTML = `
+    <div class="d-flex justify-content-center position-relative">
+      <div class="img-icon bg-primary d-inline-flex justify-content-center align-items-center mb-2 rounded position-relative">
+        <i class="fas fa-image fa-3x text-white"></i>
+        <img src="${
+          media.url || ""
+        }" class="img-preview img-thumbnail position-absolute w-100 h-100 ${
+    media.url ? "" : "d-none"
+  } img-cover top-0 left-0" />
+      </div>
+      <button type="button" class="btn-close position-absolute top-0 end-0 mt-1 me-1" aria-label="Remove"></button>
+    </div>
+    <div class="form-text">Recommended aspect ratio: 1:1</div>
+    <input type="text" class="form-control mt-2 imageUrl" placeholder="Image URL to an uploaded image" value="${
+      media.url || ""
+    }">
+    <input type="text" class="form-control mt-2 imageAlt" placeholder="Enter image description" value="${
+      media.alt || ""
+    }">
+    <div class="form-text imageFeedback">${
+      media.alt ? media.alt.length : 0
+    }/120 characters</div>
+    <div class="border my-4"></div>
+  `;
+  container.appendChild(newImageGroup);
+
+  //-- Event listener for the new image URL input
+  const imageUrlInput = newImageGroup.querySelector(".imageUrl");
+  imageUrlInput.addEventListener("input", updateImagePreview);
+
+  //-- Event listener for the new image alt text input
+  const imageAltInput = newImageGroup.querySelector(".imageAlt");
+  imageAltInput.addEventListener("input", updateEditAltTextFeedback);
+
+  //-- Event listener for the remove button
+  newImageGroup
+    .querySelector(".btn-close")
+    .addEventListener("click", function () {
+      newImageGroup.remove();
+      updateEditAltTextFeedback();
+    });
+  updateEditAltTextFeedback();
+}
+
+//--------- Save changes made in the input for update Listing (API) ---------//
 document
   .getElementById("saveListingChanges")
   .addEventListener("click", async () => {
     const title = document.getElementById("editListingTitle").value;
     const description = document.getElementById("editListingDescription").value;
     const category = document.getElementById("editCategorySelect").value;
-    const imageUrl = document.getElementById("editListingImage").value;
-    const altText = document.getElementById("editAltText").value;
+    const images = document.querySelectorAll(
+      "#editImagesContainer .image-group"
+    );
 
     const errorFeedback = document.getElementById("editErrorFeedback");
     errorFeedback.style.display = "none";
 
-    // Initialize error message accumulator
+    //-- ErrorMessage for edit listing
     const errorMessageEditListing =
       "Failed to edit Listing. Include a title and ensure it, along with description, are under 280 characters. If adding an image, descriptions should be under 120 characters and URLs must start with 'http://' or 'https://'. Adjust and retry.";
     let hasError = false;
 
-    // Validation checks
-    if (!title) {
+    //-- Validation checks
+    if (!title || title.length > 280 || description.length > 280) {
       hasError = true;
     }
-    if (title.length > 280) {
-      hasError = true;
-    }
-    if (description.length > 280) {
-      hasError = true;
-    }
-    if (altText.length > 120) {
-      hasError = true;
-    }
-    if (imageUrl && !/^https?:\/\//.test(imageUrl)) {
-      hasError = true;
-    }
+
+    const media = [];
+    images.forEach((group) => {
+      const url = group.querySelector(".imageUrl").value;
+      const alt = group.querySelector(".imageAlt").value;
+      if (alt.length > 120 || (url && !/^https?:\/\//.test(url))) {
+        hasError = true;
+      }
+      if (url) {
+        media.push({ url, alt });
+      }
+    });
 
     if (hasError) {
       errorFeedback.textContent = errorMessageEditListing;
@@ -444,12 +515,7 @@ document
       title,
       description,
       tags: [category],
-      media: [
-        {
-          url: imageUrl,
-          alt: altText,
-        },
-      ],
+      media,
     };
 
     try {
@@ -462,33 +528,43 @@ document
       errorFeedback.style.display = "block";
     }
   });
-//---------- Functions to update feedback for inputs dynamically ---------//
+
+//-- Functions to update feedback for inputs
 function updateEditFeedbacks() {
   updateEditTitleFeedback();
   updateEditDescriptionFeedback();
   updateEditAltTextFeedback();
 }
-//-- Update title characterCount
+
+//-- Update title character count
 function updateEditTitleFeedback() {
   const title = document.getElementById("editListingTitle").value;
   const feedback = document.getElementById("editTitleFeedback");
   feedback.textContent = `${title.length}/280 characters`;
   feedback.classList.toggle("text-danger", title.length > 280);
 }
-//-- update description characterCount
+
+//-- Update description character count
 function updateEditDescriptionFeedback() {
   const description = document.getElementById("editListingDescription").value;
   const feedback = document.getElementById("editDescriptionFeedback");
   feedback.textContent = `${description.length}/280 characters`;
   feedback.classList.toggle("text-danger", description.length > 280);
 }
-//-- Update alt text characterCount
+
+//-- Update alt text character count
 function updateEditAltTextFeedback() {
-  const altText = document.getElementById("editAltText").value;
-  const feedback = document.getElementById("editAltTextFeedback");
-  feedback.textContent = `${altText.length}/120 characters`;
-  feedback.classList.toggle("text-danger", altText.length > 120);
+  const imageGroups = document.querySelectorAll(
+    "#editImagesContainer .image-group"
+  );
+  imageGroups.forEach((group) => {
+    const altText = group.querySelector(".imageAlt").value;
+    const feedback = group.querySelector(".imageFeedback");
+    feedback.textContent = `${altText.length}/120 characters`;
+    feedback.classList.toggle("text-danger", altText.length > 120);
+  });
 }
+
 //-- Event listeners for live feedback in edit modal
 document
   .getElementById("editListingTitle")
@@ -497,8 +573,35 @@ document
   .getElementById("editListingDescription")
   .addEventListener("input", updateEditDescriptionFeedback);
 document
-  .getElementById("editAltText")
+  .getElementById("editImagesContainer")
   .addEventListener("input", updateEditAltTextFeedback);
+
+//-- Image URL input
+function updateImagePreview(event) {
+  const input = event.target;
+  const url = input.value;
+  const imgGroup = input.closest(".image-group");
+  if (!imgGroup) {
+    console.error("Image group not found");
+    return;
+  }
+  const img = imgGroup.querySelector(".img-preview");
+
+  if (img) {
+    if (url) {
+      img.src = url;
+      img.classList.remove("d-none");
+    } else {
+      img.classList.add("d-none");
+    }
+  }
+}
+
+//-- Add another image field
+document.getElementById("editAddImage").addEventListener("click", () => {
+  const editImagesContainer = document.getElementById("editImagesContainer");
+  addImageFields(editImagesContainer);
+});
 
 //---------- Delete the listing ----------//
 document

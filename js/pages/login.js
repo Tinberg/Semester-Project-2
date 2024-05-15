@@ -7,14 +7,14 @@ import { loginUser } from "../modules/api.js";
 //----------Import the JTW Function --> modules/utility.js ----------//
 import { storeToken } from "../modules/auth.js";
 
-//Handles login submissions
+//-- Handles login submissions
 document.addEventListener("DOMContentLoaded", function () {
   const emailInput = document.getElementById("loginEmail");
   const passwordInput = document.getElementById("loginPassword");
   const errorLogin = document.querySelector(".error-login");
   const successMessage = localStorage.getItem("registrationSuccess");
 
-  // Display the success message if it exists in localStorage(from successfully register)
+  //-- Display the success message if it exists in localStorage(from successfully register)
   if (successMessage) {
     errorLogin.textContent = successMessage;
     errorLogin.classList.add("text-secondary");
@@ -30,11 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       try {
         const result = await loginUser(email, password);
-        // Store JWT token to local storage
+        //-- Store JWT token to local storage
         storeToken(result.accessToken);
-        // Store the username to localstorage
+        //-- Store the username to localstorage
         localStorage.setItem("userName", result.name);
-        // Check for redirect query parameter if the user clicked log in on a specific listing, else redirect to my-profile
+        //-- Check for redirect query parameter if the user clicked log in on a specific listing, else redirect to my-profile
         const params = new URLSearchParams(window.location.search);
         const redirectId = params.get("redirect");
         const redirectPath = redirectId

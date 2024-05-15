@@ -171,13 +171,13 @@ function createCardBody(listing) {
   const cardBodyDiv = document.createElement("div");
   cardBodyDiv.classList.add("card-body", "bg-gray-custom");
 
-  // Title
+  //-- Title
   const titleP = document.createElement("p");
   titleP.classList.add("card-title", "fs-5", "text-truncate");
   titleP.textContent = listing.title;
   cardBodyDiv.appendChild(titleP);
 
-  // Highest Bid
+  //-- Highest Bid
   const highestBidAmount = getHighestBidAmount(listing);
   const highestBidP = document.createElement("p");
   highestBidP.classList.add("card-text");
@@ -186,7 +186,7 @@ function createCardBody(listing) {
   )}</span>`;
   cardBodyDiv.appendChild(highestBidP);
 
-  // End Time
+  //-- End Time
   const endTimeP = document.createElement("p");
   endTimeP.classList.add("card-text", "fw-light");
   const auctionIsActive = new Date(listing.endsAt) > new Date();
@@ -199,7 +199,7 @@ function createCardBody(listing) {
 
   cardBodyDiv.appendChild(endTimeP);
 
-  // Visual "View Auction/Auction Ended" btn. success if active and warning if ended.
+  //-- Visual "View Auction/Auction Ended" btn. success if active and warning if ended.
   const viewAuctionVisual = document.createElement("div");
   viewAuctionVisual.className = `btn ${
     auctionIsActive ? "btn-success" : "btn-warning"
@@ -272,7 +272,6 @@ function setupInfiniteScroll() {
     });
     globalFilter.infiniteScrollInitialized = true;
   } else {
-    console.log("Infinite Scroll is already initialized.");
   }
 }
 

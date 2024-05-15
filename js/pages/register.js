@@ -4,7 +4,7 @@ import "../../scss/loginRegister.scss";
 //---------- Import the API Function Register --> modules/api.js ----------//
 import { registerUser } from "../modules/api.js";
 
-//addeventlistner and fucntion handle for register api
+//-- addeventlistner and fucntion handle for register api
 document
   .getElementById("registerForm")
   .addEventListener("submit", async (event) => {
@@ -20,7 +20,7 @@ document
 
     try {
       const response = await registerUser(userData);
-      //If !response ok shows the latest errormessage from the api response
+      //-- If !response ok shows the latest errormessage from the api response
       if (!response.ok) {
         const errorData = await response.json();
         const registerErrorMessage =
@@ -29,9 +29,9 @@ document
             : "Registration failed. Please check your details and try again.";
         console.error("Registration failed:", errorData);
         errorRegistration.textContent = registerErrorMessage;
-        //direct the user to login on success register
+        //-- direct the user to login on success register
       } else {
-        //set message to localstorage for redirect on success
+        //-- set message to localstorage for redirect on success
         localStorage.setItem(
           "registrationSuccess",
           "Registration successful. Please log in."

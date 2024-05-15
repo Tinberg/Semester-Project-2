@@ -247,7 +247,7 @@ function addImageFields() {
     <div class="d-flex justify-content-center position-relative">
       <div class="img-icon bg-primary d-inline-flex justify-content-center align-items-center mb-2 rounded position-relative">
         <i class="fas fa-image fa-3x text-white"></i>
-        <img src="" class="img-preview position-absolute w-100 h-100 d-none img-cover" />
+        <img src="" class="img-preview position-absolute img-thumbnail  w-100 h-100 d-none img-cover" />
       </div>
       <button type="button" class="btn-close position-absolute top-0 end-0 mt-1 me-1" aria-label="Remove"></button>
     </div>
