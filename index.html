@@ -194,6 +194,111 @@
         </div>
       </div>
     </div>
+    <!-- Search Results Modal -->
+    <div
+      class="modal fade"
+      id="searchResultsModal"
+      tabindex="-1"
+      aria-labelledby="searchResultsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title fs-5 fw-bold" id="searchResultsModalLabel">
+              Search Results
+            </p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Navigation tabs for switching between profiles and listings -->
+            <ul class="nav nav-tabs" id="searchTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="listings-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#listings"
+                  type="button"
+                  role="tab"
+                  aria-controls="listings"
+                  aria-selected="true"
+                  aria-label="Change to Listings"
+                >
+                  Listings
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="profiles-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profiles"
+                  type="button"
+                  role="tab"
+                  aria-controls="profiles"
+                  aria-selected="false"
+                  aria-label="Change to Profiles"
+                >
+                  Profiles
+                </button>
+              </li>
+            </ul>
+            <!-- Tab content areas for profiles and listings results -->
+            <div class="tab-content" id="searchTabsContent">
+              <div
+                class="tab-pane fade show active mt-3"
+                id="listings"
+                role="tabpanel"
+                aria-labelledby="listings-tab"
+              >
+                <!-- Dynamic content for listings results here js-->
+              </div>
+              <div
+                class="tab-pane fade mt-3"
+                id="profiles"
+                role="tabpanel"
+                aria-labelledby="profiles-tab"
+              >
+                <!-- Dynamic content for profiles results here js -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Search Loader Modal -->
+    <div
+      class="modal fade"
+      id="searchLoaderModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0">
+          <div class="modal-body d-flex justify-content-center">
+            <div class="spinner-border text-light" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!----------Header---------->
     <header>
       <nav
@@ -259,24 +364,28 @@
                   Explore a wide range of auctions, with thousands of options
                   available for you to browse and find what you're looking for.
                 </p>
+                <!--Search Listings or profiles-->
                 <form
-                  class="my-4 my-xl-5 input-group"
                   id="searchForm"
+                  class="my-4 my-xl-5 input-group"
                   action="#"
                 >
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Start Searching..."
-                    aria-label="Start Searching"
-                  />
-                  <button
-                    class="btn btn-secondary px-sm-4 text-dark"
-                    type="submit"
-                    id="searchButton"
-                  >
-                    Search
-                  </button>
+                  <div class="input-group">
+                    <input
+                      id="searchInput"
+                      class="form-control"
+                      type="text"
+                      placeholder="Start Searching..."
+                      aria-label="Start Searching, listings or profiles"
+                    />
+                    <button
+                      id="searchButton"
+                      class="btn btn-secondary px-sm-4 text-dark"
+                      type="submit"
+                    >
+                      Search
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -300,85 +409,19 @@
                 <h2>Last Chance</h2>
               </div>
               <div class="d-flex align-items-end mb-2 fw-light">
-                <a href="#" class="underline">View More</a>
+                <a href="/html/explore.html" class="underline">View More</a>
               </div>
             </div>
           </div>
+          <!-- Loader -->
+          <div id="loaderLastChance" class="text-center pt-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
           <!-- Cards Container -->
-          <div class="row">
-            <!-- Card 1 -->
-            <div class="col-md-4 mb-4">
-              <div class="card text-primary">
-                <div class="card-img-top-container position-relative w-100">
-                  <img
-                    src="images/test4.jpg"
-                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                    alt="Item Image 1"
-                  />
-                </div>
-                <div class="card-body bg-gray-custom">
-                  <p class="card-title fs-5">Bouclé chair</p>
-                  <p class="card-text">
-                    Current Bid: <span class="currentBidLast">$100</span>
-                  </p>
-                  <p class="card-text fw-light">
-                    Ends in: <span class="endTimeLast">45m</span>
-                  </p>
-                  <a href="#" class="btn btn-success mt-auto w-100 text-primary"
-                    >Bid Now</a
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="col-md-4 mb-4">
-              <div class="card text-primary">
-                <div class="card-img-top-container position-relative w-100">
-                  <img
-                    src="images/test2.jpg"
-                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                    alt="Item Image 1"
-                  />
-                </div>
-                <div class="card-body bg-gray-custom">
-                  <p class="card-title fs-5">Item Title 2</p>
-                  <p class="card-text">
-                    Current Bid: <span class="currentBidLast">$200</span>
-                  </p>
-                  <p class="card-text fw-light">
-                    Ends in: <span class="endTimeLast">1h 45m</span>
-                  </p>
-                  <a href="#" class="btn btn-success mt-auto w-100 text-primary"
-                    >Bid Now</a
-                  >
-                </div>
-              </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="col-md-4 mb-4">
-              <div class="card text-primary">
-                <div class="card-img-top-container position-relative w-100">
-                  <img
-                    src="images/test1.jpg"
-                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                    alt="Item Image 1"
-                  />
-                </div>
-                <div class="card-body bg-gray-custom">
-                  <p class="card-title fs-5">Item Title 3</p>
-                  <p class="card-text">
-                    Current Bid: <span class="currentBidLast">$300</span>
-                  </p>
-                  <p class="card-text fw-light">
-                    Ends in <span class="endTimeLast">6h 45m</span>
-                  </p>
-                  <a href="#" class="btn btn-warning mt-auto w-100 text-primary"
-                    >Bid Now</a
-                  >
-                </div>
-              </div>
-            </div>
+          <div class="row ending-soon">
+            <!-- Cards will be dynamically with js -->
           </div>
         </div>
       </section>
@@ -391,7 +434,7 @@
               <h2>Popular Categories</h2>
             </div>
             <div class="d-flex align-items-end mb-2 fw-light">
-              <a href="#" class="underline">View More</a>
+              <a href="/html/explore.html" class="underline">View More</a>
             </div>
           </div>
           <div class="row g-4 justify-content-center">
@@ -403,7 +446,11 @@
                 class="img-fluid s3-image mb-3 w-95"
               />
               <p class="fs-4">Furniture</p>
-              <a href="#" class="btn btn-outline-primary mt-3">Discover</a>
+              <a
+                href="/html/explore.html?category=Furniture"
+                class="btn btn-outline-primary mt-3"
+                >Discover</a
+              >
             </div>
             <!--Toys-->
             <div class="col-md-4 text-center py-4 py-md-0">
@@ -413,7 +460,11 @@
                 class="img-fluid s3-image mb-3 w-95"
               />
               <p class="fs-4">Toys</p>
-              <a href="#" class="btn btn-outline-primary mt-3">Discover</a>
+              <a
+                href="/html/explore.html?category=Toys"
+                class="btn btn-outline-primary mt-3"
+                >Discover</a
+              >
             </div>
             <!--Electronics-->
             <div class="col-md-4 text-center">
@@ -423,7 +474,11 @@
                 class="img-fluid s3-image mb-3 w-95"
               />
               <p class="fs-4">Electronics</p>
-              <a href="#" class="btn btn-outline-primary mt-3">Discover</a>
+              <a
+                href="/html/explore.html?category=Electronics"
+                class="btn btn-outline-primary mt-3"
+                >Discover</a
+              >
             </div>
           </div>
         </div>
@@ -438,85 +493,19 @@
                 <h2>New Arrivals</h2>
               </div>
               <div class="d-flex align-items-end mb-2 fw-light">
-                <a href="#" class="underline">View More</a>
+                <a href="/html/explore.html" class="underline">View More</a>
               </div>
             </div>
           </div>
+          <!-- Loader -->
+          <div id="loaderNewArrivals" class="text-center pt-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
           <!-- Cards Container -->
-          <div class="row">
-            <!-- Card 1 -->
-            <div class="col-md-4 mb-4">
-              <div class="card text-primary">
-                <div class="card-img-top-container position-relative w-100">
-                  <img
-                    src="images/test4.jpg"
-                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                    alt="Item Image 1"
-                  />
-                </div>
-                <div class="card-body bg-gray-custom">
-                  <p class="card-title fs-5">Bouclé chair</p>
-                  <p class="card-text">
-                    Current Bid: <span class="currentBidNew">$100</span>
-                  </p>
-                  <p class="card-text fw-light">
-                    Ends in: <span class="endTimeNew">45m</span>
-                  </p>
-                  <a href="#" class="btn btn-success mt-auto w-100 text-primary"
-                    >Bid Now</a
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="col-md-4 mb-4">
-              <div class="card text-primary">
-                <div class="card-img-top-container position-relative w-100">
-                  <img
-                    src="images/test2.jpg"
-                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                    alt="Item Image 1"
-                  />
-                </div>
-                <div class="card-body bg-gray-custom">
-                  <p class="card-title fs-5">Item Title 2</p>
-                  <p class="card-text">
-                    Current Bid: <span class="currentBidNew">$200</span>
-                  </p>
-                  <p class="card-text fw-light">
-                    Ends in: <span class="endTimeNew">1h 45m</span>
-                  </p>
-                  <a href="#" class="btn btn-success mt-auto w-100 text-primary"
-                    >Bid Now</a
-                  >
-                </div>
-              </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="col-md-4 mb-4">
-              <div class="card text-primary">
-                <div class="card-img-top-container position-relative w-100">
-                  <img
-                    src="images/test1.jpg"
-                    class="card-img-top position-absolute w-100 h-100 top-0 start-0"
-                    alt="Item Image 1"
-                  />
-                </div>
-                <div class="card-body bg-gray-custom">
-                  <p class="card-title fs-5">Item Title 3</p>
-                  <p class="card-text">
-                    Current Bid: <span class="currentBidNew">$300</span>
-                  </p>
-                  <p class="card-text fw-light">
-                    Ends in <span class="endTimeNew">6h 45m</span>
-                  </p>
-                  <a href="#" class="btn btn-warning mt-auto w-100 text-primary"
-                    >Bid Now</a
-                  >
-                </div>
-              </div>
-            </div>
+          <div class="row newest-listings">
+            <!-- Cards will be dynamically JSS -->
           </div>
         </div>
       </section>

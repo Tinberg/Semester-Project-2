@@ -2,14 +2,10 @@
 import "../../scss/explore.scss";
 
 //---------- Import js from modules ----------/
-//-- GetToken to --> auth.js
-import { getToken } from "../modules/auth.js";
 //-- Api for fetch All Listings --> api.js
 import { fetchAllListings } from "../modules/api.js";
-//-- Api for fetch Profile Search --> api.js
-import { fetchProfilesSearch } from "../modules/api.js";
-//-- Api for  fetch Listing Search --> api.js
-import { fetchListingsSearch } from "../modules/api.js";
+//-- for searchbar --> searchbar.js
+import { initializeSearch } from "../modules/searchbar.js";
 //-- for time until end on auctions--> utility.js
 import { timeUntil } from "../modules/utility.js";
 //-- for description on overlay hover--> utility.js
@@ -34,10 +30,34 @@ let globalFilter = {
 
 //---------- Event listeners and initial setup ----------//
 document.addEventListener("DOMContentLoaded", function () {
+  //-- Read query parameters (set right category from index.html)
+  const params = new URLSearchParams(window.location.search);
+  const category = params.get("category");
+
+  //-- Set the category filter and check the corresponding radio button (if clicked from index.html)
+  if (category) {
+    globalFilter.categoryTag = category;
+    const categoryRadio = document.querySelector(
+      `input[name="filter"][value="${category}"]`
+    );
+    if (categoryRadio) {
+      categoryRadio.checked = true;
+    }
+  }
+
   //-- Call functions related to display listings
   displayListings();
   setupInfiniteScroll();
-  initializeSearch();
+
+  //-- Searchbar function from searchbar.js
+  initializeSearch(
+    "searchForm",
+    "searchInput",
+    "profiles",
+    "listings",
+    "searchResultsModal"
+  );
+
   //-- Reset filters and sortBy on page reload
   window.addEventListener("pageshow", function () {
     //-- Reset the "Sort by" dropdown to 'Newest'
@@ -48,9 +68,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const allAuctionsRadio = document.getElementById("allAuctions");
     allAuctionsRadio.checked = true;
 
-    //-- Reset the "All Categories" radio button
-    const noFilterRadio = document.getElementById("noFilter");
-    noFilterRadio.checked = true;
+    //-- Reset the "All Categories" radio button only if no category is specified in the URL(clicked from Index)
+    if (!category) {
+      const noFilterRadio = document.getElementById("noFilter");
+      noFilterRadio.checked = true;
+    } else {
+      //-- Set the category radio button based on the URL parameter
+      const categoryRadio = document.querySelector(
+        `input[name="filter"][value="${category}"]`
+      );
+      if (categoryRadio) {
+        categoryRadio.checked = true;
+      }
+    }
   });
 });
 
@@ -278,173 +308,4 @@ function setupInfiniteScroll() {
 //---------- Reset infinite scroll setup ----------//
 function resetInfiniteScroll() {
   globalFilter.infiniteScrollInitialized = false;
-}
-
-//---------- SearchBar ----------//
-
-function initializeSearch() {
-  const searchForm = document.getElementById("searchForm");
-  const searchInput = document.getElementById("searchInput");
-  const profilesContainer = document.getElementById("profiles");
-  const listingsContainer = document.getElementById("listings");
-  const searchResultsModal = new bootstrap.Modal(
-    document.getElementById("searchResultsModal")
-  );
-  //--global getToken for Auth
-  const token = getToken();
-
-  searchForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const query = searchInput.value.trim();
-    if (query) {
-      await searchListings(query);
-      await searchProfiles(query);
-      searchResultsModal.show();
-    }
-  });
-  //---------- Search Profiles ----------//
-  async function searchProfiles(query) {
-    try {
-      const response = await fetchProfilesSearch(query);
-      profilesContainer.innerHTML = "";
-
-      if (response.data.length === 0) {
-        const noResultMsg = document.createElement("p");
-        noResultMsg.textContent =
-          "No profiles found matching your search criteria.";
-        profilesContainer.appendChild(noResultMsg);
-      } else {
-        const profileList = document.createElement("ul");
-        profileList.className = "list-group";
-
-        response.data.forEach((profile) => {
-          const listItem = document.createElement("li");
-          listItem.className =
-            "list-group-item profile-result d-flex align-items-center search-item";
-          listItem.style.cursor = "pointer";
-          //-- Profile Img
-          const img = document.createElement("img");
-          img.src = profile.avatar.url;
-          img.alt = profile.avatar.alt || "Profile Image";
-          img.className = "rounded-circle-bottom searchImg me-3";
-          //-- Profile Name
-          const nameParagraph = document.createElement("p");
-          nameParagraph.className = "m-0";
-          nameParagraph.textContent = profile.name;
-
-          listItem.appendChild(img);
-          listItem.appendChild(nameParagraph);
-          profileList.appendChild(listItem);
-
-          //-- Add event listener for redirection to profile or my-profile if its the logged in users name
-          listItem.addEventListener("click", () => {
-            const currentUser = localStorage.getItem("userName");
-            const profileUrl =
-              profile.name === currentUser
-                ? "/html/my-profile.html"
-                : `/html/profile.html?userName=${encodeURIComponent(
-                    profile.name
-                  )}`;
-            window.location.href = profileUrl;
-          });
-        });
-
-        profilesContainer.appendChild(profileList);
-      }
-    } catch (error) {
-      //-- Display login/register message if user is not logged in or error message
-      console.error("Error fetching profiles:", error);
-      profilesContainer.innerHTML = "";
-
-      if (!token) {
-        profilesContainer.textContent = "Please ";
-
-        const loginLink = document.createElement("a");
-        loginLink.href = "login.html";
-        loginLink.textContent = "log in";
-        loginLink.className = "fw-bold text-secondary";
-
-        const registerLink = document.createElement("a");
-        registerLink.href = "register.html";
-        registerLink.textContent = "Sign up";
-        registerLink.className = "fw-bold text-secondary";
-
-        profilesContainer.appendChild(loginLink);
-        profilesContainer.appendChild(document.createTextNode(" or "));
-        profilesContainer.appendChild(registerLink);
-        profilesContainer.appendChild(
-          document.createTextNode(" to view profiles.")
-        );
-      } else {
-        profilesContainer.textContent =
-          "We're unable to fetch profiles at the moment. Please try again later.";
-        profilesContainer.classList.add("text-danger");
-      }
-    }
-  }
-  //---------- Search Listings ----------//
-  async function searchListings(query) {
-    try {
-      const response = await fetchListingsSearch(query);
-      listingsContainer.innerHTML = "";
-
-      if (response.data.length === 0) {
-        const noResultMsg = document.createElement("p");
-        noResultMsg.textContent =
-          "No listings found matching your search criteria.";
-        listingsContainer.appendChild(noResultMsg);
-      } else {
-        const listingList = document.createElement("ul");
-        listingList.className = "list-group";
-
-        response.data.forEach((listing) => {
-          const listItem = document.createElement("li");
-          listItem.className =
-            "list-group-item listing-result d-flex align-items-center search-item";
-          listItem.style.cursor = "pointer";
-          //-- Go to listing.html with the right id
-          listItem.addEventListener("click", () => {
-            window.location.href = `listing.html?id=${listing.id}`;
-          });
-          //-- Listing img
-          const img = document.createElement("img");
-          img.src =
-            listing.media && listing.media.length > 0
-              ? listing.media[0].url
-              : "/images/no-img-listing.jpg";
-          img.alt =
-            listing.media && listing.media.length > 0
-              ? listing.media[0].alt
-              : "Listing Image";
-          img.className = "rounded me-3 searchImg";
-          //- container for text
-          const textDiv = document.createElement("div");
-          textDiv.className = "text-truncate";
-          //-- Title
-          const titleParagraph = document.createElement("p");
-          titleParagraph.className = "m-0";
-          titleParagraph.textContent = listing.title;
-          //-- Highest Bid
-          const bidSmall = document.createElement("small");
-          bidSmall.className = "text-muted m-0";
-          const highestBidAmount = getHighestBidAmount(listing);
-          bidSmall.textContent = `Current bid: $${highestBidAmount.toFixed(2)}`;
-
-          textDiv.appendChild(titleParagraph);
-          textDiv.appendChild(bidSmall);
-
-          listItem.appendChild(img);
-          listItem.appendChild(textDiv);
-          listingList.appendChild(listItem);
-        });
-
-        listingsContainer.appendChild(listingList);
-      }
-    } catch (error) {
-      console.error("Error fetching listings:", error);
-      listingsContainer.textContent =
-        "We're unable to fetch listings at the moment. Please try again later.";
-      listingsContainer.classList.add("text-danger");
-    }
-  }
 }
