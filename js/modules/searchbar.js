@@ -8,7 +8,7 @@ import { getHighestBidAmount } from "./utility.js";
 import { getToken } from "./auth.js";
 
 //-- For search listings and profiles --> index.js and explore.js
-export { initializeSearch };
+export { initializeSearch }; //-------------------------------------------------------------- Line: 17
 
 //---------- SearchBar ----------//
 //--global getToken for Auth--//
@@ -26,7 +26,7 @@ function initializeSearch() {
     document.getElementById("searchLoaderModal")
   );
 
-  const minLoaderTime = 500; // Minimum display time for the loader in milliseconds
+  const minLoaderTime = 500; 
 
   searchForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -50,7 +50,7 @@ function initializeSearch() {
       }
     }
   });
-  
+
   //---------- Search Profiles ----------//
   async function searchProfiles(query) {
     try {

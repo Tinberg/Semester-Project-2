@@ -6,17 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Join Biddzy Auction House to start bidding on and listing unique treasures. Create an account to explore our extensive collection and find your next extraordinary find."
+      content="Explore Biddzy Auction House's extensive collection, where every auction is a doorway to unique treasures. Sort through the newest to oldest listings, filter by categories, and search to find exactly what you're looking for. Your next extraordinary find awaits."
     />
-    <title>Register: Join Biddzy Auction House and Start Bidding</title>
+    <title>
+      Explore Auctions: Discover Your Next Treasure at Biddzy Auction House
+    </title>
     <!--Js scripts-->
     <script type="module" src="/js/main.js"></script>
-    <script type="module" src="/js/pages/register.js"></script>
-    <!--Fontawsome script-->
-    <script
-      src="https://kit.fontawesome.com/0933736d52.js"
-      crossorigin="anonymous"
-    ></script>
+    <script type="module" src="/js/pages/about.js"></script>
   </head>
   <body>
     <!-- New Listing Modal -->
@@ -228,7 +225,7 @@
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link text-light" href="/html/about.html">About</a>
+                <a class="nav-link text-light" href="#">About</a>
               </li>
             </ul>
             <!--Navbar right side logged in or not logged in-->
@@ -242,86 +239,122 @@
     </header>
     <!----------Main---------->
     <main>
-      <div
-        class="img-container d-flex justify-content-center align-items-center"
-      >
-        <div class="container-fluid limited-width">
-          <div class="custom-card card text-start mx-auto">
-            <div class="card-body p-4 p-sm-5 text-light">
-              <h1 class="card-title mt-3 mb-2">Register to Biddzy</h1>
-              <p class="card-text mb-5 mt-3 text-light">
-                Discover Biddzy's auction community! Register now to bid on
-                unique items, sell your treasures, and embark on your auction
-                adventure today
-              </p>
-              <!-- === Register Form === -->
-              <form id="registerForm">
-                <div class="mb-3 row d-flex">
-                  <div class="col-12 col-sm-5">
-                    <label class="mb-2 text-light" for="registerName"
-                      >Username</label
-                    >
-                    <input
-                      type="text"
-                      id="registerName"
-                      placeholder="Enter your username"
-                      class="form-control"
-                      required
-                      minlength="4"
-                      autocomplete="username"
-                    />
-                  </div>
-                  <div class="col-12 col-sm-6 ms-auto">
-                    <label class="mb-2 text-light" for="registerEmail"
-                      >Email</label
-                    >
-                    <input
-                      type="text"
-                      id="registerEmail"
-                      placeholder="Enter your student email"
-                      class="form-control"
-                      required
-                      autocomplete="email"
-                    />
-                  </div>
-                </div>
-                <div class="mb-3 text-light">
-                  <label class="mb-2 text-light" for="registerPassword"
-                    >Password</label
-                  >
-                  <input
-                    type="password"
-                    id="registerPassword"
-                    placeholder="Create a strong password"
-                    class="form-control"
-                    required
-                    minlength="8"
-                    autocomplete="new-password"
-                  />
-                  <p class="text-end small-text mt-2 text-light">
-                    Forgotten your password?
-                  </p>
-                </div>
-                <p class="error-registration text-danger"></p>
-                <button
-                  type="submit"
-                  class="btn btn-secondary text-dark px-5 mb-2"
-                >
-                  Register
-                </button>
-                <p class="mt-3 small-text text-light">
-                  Already have an account?
-                  <a
-                    class="text-white fw-semibold ms-0 ms-sm-2 text-decoration-underline"
-                    href="/html/login.html"
-                    >Log in here.</a
-                  >
+      <!-- Hero Section -->
+      <section class="hero-section text-center">
+        <div class="py-5 bg-gray-custom">
+          <h1 class="mb-3">Welcome to Biddzy</h1>
+          <p class="lead">
+            Discover a world of exciting auctions and great deals.
+          </p>
+        </div>
+      </section>
+      <!-- Introduction Section -->
+      <section class="container-fluid limited-width mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+              <div class="card-body bg-light-gray p-4">
+                <h2 class="section-title text-center text-primary mb-4">
+                  About Biddzy
+                </h2>
+                <p class="section-content">
+                  Biddzy is your premier online auction house where you can bid
+                  on a wide variety of items, from electronics to furniture. We
+                  aim to provide a seamless and exciting bidding experience for
+                  our users.
                 </p>
-              </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+      <!-- How It Works Section -->
+      <section class="container-fluid limited-width mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+              <div class="card-body bg-dark-gray p-4">
+                <h2 class="section-title text-center text-primary mb-4">
+                  How It Works
+                </h2>
+                <p class="section-content">
+                  Participating in our auctions is easy:
+                </p>
+                <ul class="section-content ps-0 list-group list-group-flush">
+                  <li class="list-group-item">
+                    Register for a free account and receive a $1000 bonus.
+                  </li>
+                  <li class="list-group-item">Browse our wide range of auctions.</li>
+                  <li class="list-group-item">Place your bids and try to win amazing items.</li>
+                  <li class="list-group-item">
+                    If you win, the item is yours. If not, the money you spent
+                    on bidding is returned to your account.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Bidding Refund Policy -->
+      <section class="container-fluid limited-width mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+              <div class="card-body bg-light-gray p-4">
+                <h2 class="section-title text-center text-primary mb-4">
+                  Bidding Refund Policy
+                </h2>
+                <p class="section-content">
+                  At Biddzy, we believe in fair play. If you do not win an
+                  auction, the money you spent on bidding will be refunded to
+                  your account, allowing you to participate in future auctions
+                  without losing out.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Sign-Up Bonus -->
+      <section class="container-fluid limited-width mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+              <div class="card-body bg-dark-gray p-4">
+                <h2 class="section-title text-center text-primary mb-4">
+                  Sign-Up Bonus
+                </h2>
+                <p class="section-content">
+                  New users get a head start with a $1000 bonus upon
+                  registration. Use this bonus to place your bids and win
+                  fantastic items.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- General Information -->
+      <section class="container-fluid limited-width mt-5 mb-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+              <div class="card-body bg-light-gray p-4">
+                <h2 class="section-title text-center text-primary mb-4">
+                  General Information
+                </h2>
+                <p class="section-content">
+                  For any queries or support, feel free to contact us at
+                  <a href="mailto:support@biddzy.com">support@biddzy.com</a>. We
+                  are here to help you with any questions you may have.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
     <!----------Footer---------->
     <footer class="bg-primary text-light pb-2 pt-5">

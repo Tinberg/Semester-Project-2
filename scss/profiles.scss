@@ -10,7 +10,6 @@
   transform: translateX(-50%);
   max-height: 400px;
   max-width: 400px;
- 
 }
 .profileImg {
   border-color: rgba(255, 255, 255, 0.5);
@@ -23,15 +22,15 @@
 .aspect-circle,
 .aspect-square {
   background-color: #f0f0f0;
-  border: 2px solid #142f42; 
+  border: 2px solid #142f42;
 }
 .aspect-circle {
-  width: 100px; 
-  height: 100px; 
+  width: 100px;
+  height: 100px;
 }
 .aspect-square {
- height: 125px; 
- width: 90%;
+  height: 125px;
+  width: 90%;
 }
 
 //---------- Section 2 Personal activity ----------//
@@ -46,7 +45,7 @@
   background-color: rgba(49, 79, 83, 0.9);
 }
 .wonIcon {
-    .fa-crown {
-        color:rgba(245, 158, 11, 0.9); 
-    }
+  .fa-crown {
+    color: rgba(245, 158, 11, 0.9);
+  }
 }

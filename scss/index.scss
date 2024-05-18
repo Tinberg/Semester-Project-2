@@ -46,16 +46,5 @@
 
 //---------- Section 6 NewsLetter----------//
 .newsletterBG {
-  background-image: url(/images/newsLetterBG2.jpg);
-    background-size: cover;
+  background-image: url(/images/newsLetterBg.jpg);
 }
-
-//--Remove this if using newsLetterBG2.jpg 
-// //---------- Section 6 MQ -----------//
-// //--background image section 6 look better on lg screens and under.
-// @media (max-width: 992px) {
-//   .newsletterBG {
-//     background-repeat: no-repeat;
-//     background-size: cover;
-//   }
-// }

@@ -570,7 +570,7 @@ const biddingTab = document.getElementById("bidding-tab");
 const wonTab = document.getElementById("won-tab");
 const tabLoader = document.getElementById("loaderTabs");
 
-//-- BiddingTab
+//-- Bidding Tab
 biddingTab.addEventListener("show.bs.tab", async (e) => {
   const isMyProfile = window.location.pathname.includes("my-profile");
   const userName = isMyProfile

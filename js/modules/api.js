@@ -7,41 +7,40 @@ import { apiKey } from "./auth.js";
 
 //------ Export --------/
 //-- For fetch register user --> register.js
-export { registerUser }; //------------------------------------------------------------------- Line: 67
+export { registerUser }; //------------------------------------------------------------------- Line: 59
 //-- For fetch login user --> login.js
-export { loginUser }; //---------------------------------------------------------------------- Line: 82
+export { loginUser }; //---------------------------------------------------------------------- Line: 74
 //-- For fetch spesific user info --> my-profile.js
-export { fetchUserProfile }; //--------------------------------------------------------------- Line: 104
+export { fetchUserProfile }; //--------------------------------------------------------------- Line: 96
 //-- For fetching all listing by a profile --> my-profile.js and profile.js
-export { fetchListingsByProfile }; //--------------------------------------------------------- Line: 104
+export { fetchListingsByProfile }; //--------------------------------------------------------- Line: 120
 //-- For fetching all wins by a profile --> my-profile.js and profile.js
-export { fetchbidsByProfile }; //--------------------------------------------------------- Line: 104
+export { fetchbidsByProfile }; //------------------------------------------------------------- Line: 136
 //-- For fetching all wins by a profile --> my-profile.js and profile.js
-export { fetchWinsByProfile }; //--------------------------------------------------------- Line: 104
+export { fetchWinsByProfile }; //------------------------------------------------------------- Line: 154
 //-- For fetch create Listing --> Navbar.js
-export { createListing }; //--------------------------------------------------------------------- Line: 192
+export { createListing }; //------------------------------------------------------------------ Line: 172
 //-- For fetch all listings --> explore.js
-export { fetchAllListings }; //--------------------------------------------------------------------- Line: 192
+export { fetchAllListings }; //--------------------------------------------------------------- Line: 201
 //-- For Search profiles --> explore.js and index.js
-export { fetchProfilesSearch }; //--------------------------------------------------------------------- Line: 192
+export { fetchProfilesSearch }; //------------------------------------------------------------ Line: 233
 //-- For Search listings --> explore.js and index.js
-export { fetchListingsSearch }; //--------------------------------------------------------------------- Line: 192
+export { fetchListingsSearch }; //------------------------------------------------------------ Line: 249
 //-- For specific listing --> listing.js
-export { fetchListingById }; //--------------------------------------------------------------------- Line: 192
+export { fetchListingById }; //--------------------------------------------------------------- Line: 270
 //-- For bid on listing --> listing.js
-export { sendBid }; //--------------------------------------------------------------------- Line: 192
+export { sendBid }; //------------------------------------------------------------------------ Line: 286
 //-- For update profile info --> my-profile.js
-export { updateProfileMedia }; //--------------------------------------------------------------------- Line: 192
+export { updateProfileMedia }; //------------------------------------------------------------- Line: 311
 //-- For update listing --> listing.js
-export { updateListing };//--------------------------------------------------------------------- Line: 192
+export { updateListing }; //------------------------------------------------------------------ Line: 365
 //-- For delete listing --> listing.js
-export { deleteListing };//--------------------------------------------------------------------- Line: 192
+export { deleteListing }; //------------------------------------------------------------------ Line: 380
 
 //---------- Utility ----------//
 //-- This is the Base URL --//
 const API_BASE_URL = "https://v2.api.noroff.dev";
 
-// Headers and content-type for "Get", "Post", "Put", and "Delete" requests getHeaders(false) will exclude the ContentType
 function getHeaders(includeContentType = true) {
   const headers = {
     Authorization: `Bearer ${getToken()}`,
@@ -133,7 +132,6 @@ async function fetchListingsByProfile(userName, page = 1, limit = 6) {
   const result = await response.json();
   return result.data;
 }
-
 /**
  * fetch all bids by profile
  * @param {string} userName
@@ -268,7 +266,6 @@ async function fetchListingsSearch(query) {
 
   return response.json();
 }
-
 /**
  * Fetches a single auction listing by its ID with optional seller and bids information.
  * @param {string} listingId
@@ -285,7 +282,6 @@ async function fetchListingById(listingId) {
   const result = await response.json();
   return result.data;
 }
-
 /**
  * Send a bid for a specific listing.
  * @param {string} listingId
@@ -366,7 +362,7 @@ async function updateProfileMedia(
   return await response.json();
 }
 /**
- *
+ * Update Listing
  * @param {string} id
  * @param {object} data
  * @returns
@@ -381,7 +377,7 @@ async function updateListing(id, data) {
 }
 
 /**
- *
+ * Delete Listing
  * @param {string} id
  */
 async function deleteListing(id) {

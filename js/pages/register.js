@@ -4,7 +4,7 @@ import "../../scss/loginRegister.scss";
 //---------- Import the API Function Register --> modules/api.js ----------//
 import { registerUser } from "../modules/api.js";
 
-//-- addeventlistner and fucntion handle for register api
+//---------- Eventlistner and fucntion handle for register api --------//
 document
   .getElementById("registerForm")
   .addEventListener("submit", async (event) => {

@@ -1,17 +1,17 @@
 //------ Export --------/
 
 //-- Infinite scroll, triggering a callback when the user reaches the bottom of the page
-export { addInfiniteScroll }; //-------------------------------------------------------------------------------------------------------------> Line: 32
+export { addInfiniteScroll }; //-------------------------------------------------------------------------------------------------------------> Line: 16
 //-- For shorten the text on overlay text for posts --> explore.js, home.js, profile.js, and my-profile.js
-export { trimText }; //----------------------------------------------------------------------------------------------------------------------> Line: 88
+export { trimText }; //----------------------------------------------------------------------------------------------------------------------> Line: 36
 //-- For removing error message and element after a duration -->
-export { clearElementAfterDuration }; //-----------------------------------------------------------------------------------------------------> Line: 129
+export { clearElementAfterDuration }; //-----------------------------------------------------------------------------------------------------> Line: 53
 //-- For displaying time until auction ends --> my-profile.js profile.js index.js explore.js
-export { timeUntil }; //-----------------------------------------------------------------------------------------------------> Line: 129
+export { timeUntil }; //---------------------------------------------------------------------------------------------------------------------> Line: 71
 //-- For displaying how long the bid was bid --> my-profile.js profile.js, listing.js
-export { timeSince }; //-----------------------------------------------------------------------------------------------------> Line: 129
+export { timeSince }; //---------------------------------------------------------------------------------------------------------------------> Line: 97
 //-- For map out the highest bid amount --> my-profile.js profile.js, listing.js, explore.js
-export { getHighestBidAmount }; //-----------------------------------------------------------------------------------------------------> Line: 129
+export { getHighestBidAmount }; //-----------------------------------------------------------------------------------------------------------> Line: 126
 /**
  * Enables infinite scroll, triggering a callback when the user reaches the bottom of the page
  * @param {Function}

@@ -10,9 +10,9 @@ import { createListing } from "./api.js";
 
 //--------------------   Export For Navbar  -------------------- //
 //-- Initializes the navbar dynamically based on user authentication status
-export { initUserNavbar }; //-- Line: 11-86
-//-- Create New listing //-- Line: 89-
-export { setupNewListingForm };
+export { initUserNavbar }; //------------------------------------------------------------------- Line: 19
+//-- Create New listing
+export { setupNewListingForm }; //-------------------------------------------------------------- Line: 106
 
 //--------------------  Navbar Layout --------------------//
 //-- Initializes the navbar based on user authentication status, fetches user profile data, or shows login options if not authenticated.

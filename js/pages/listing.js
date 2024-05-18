@@ -33,7 +33,7 @@ function updateImageDisplay() {
   if (images.length > 0) {
     const { url, alt } = images[currentImageIndex];
     listingImgElement.src = url;
-    listingImgElement.alt = alt || "Listing Image"; 
+    listingImgElement.alt = alt || "Listing Image";
     numberImgElement.textContent = `Image ${currentImageIndex + 1} of ${
       images.length
     }`;
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "The URL is missing a valid listing ID. Please ensure the link is correct and try again, or return to the homepage.";
     return;
   }
-  //---------- Call fetchListingById with both includeSeller and includeBids set to true ----------//
+  //--Call fetchListingById with both includeSeller and includeBids set to true --//
   fetchListingById(listingId, true, true)
     .then((data) => {
       console.log(data);
@@ -267,7 +267,7 @@ function showMoreBids(bids, container) {
   addProfileRedirectionListeners(container, token);
 }
 
-//---------- Countdown for Auction ending (Unique to listing.js) ----------//
+//--Countdown for Auction ending (Unique to listing.js) --//
 function startCountdown(endsAt, elementId) {
   let interval;
   const updateCountdown = () => {

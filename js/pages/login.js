@@ -7,7 +7,7 @@ import { loginUser } from "../modules/api.js";
 //----------Import the JTW Function --> modules/utility.js ----------//
 import { storeToken } from "../modules/auth.js";
 
-//-- Handles login submissions
+//---------- Handles login submissions --------//
 document.addEventListener("DOMContentLoaded", function () {
   const emailInput = document.getElementById("loginEmail");
   const passwordInput = document.getElementById("loginPassword");
