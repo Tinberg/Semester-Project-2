@@ -7,7 +7,7 @@ export { getToken };
 export { clearToken };
 
 //API Key
-export const apiKey = "8cbb77a9-bf83-4c1a-a541-1e3936c3abd0";
+export const apiKey = "1ea7c8e6-fe0d-4a5e-8704-a8958935f873";
 
 
 //-------- JWT Token --------//
